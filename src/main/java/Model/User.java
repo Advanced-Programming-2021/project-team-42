@@ -11,7 +11,6 @@ public class User {
     private int balance;
     private int score;
     private int LP;
-    private boolean isLoggedIn;
 
     public User(String username, String password, String nickname){
         this.username = username;
@@ -21,14 +20,6 @@ public class User {
         this.score = 0;
         this.LP = 0;
         usersAllCards = new HashMap<>();
-    }
-
-    public boolean isLoggedIn() {
-        return isLoggedIn;
-    }
-
-    public void setLoggedIn(boolean loggedIn) {
-        isLoggedIn = loggedIn;
     }
 
     public int getLP() {

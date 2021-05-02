@@ -1,22 +1,96 @@
 package View;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainMenu extends Menu {
-    public MainMenu(Menu parentMenu){
-        super("Main Menu" , parentMenu);
-        subMenus.put(Pattern.compile("menu enter duel"), new DuelMenu(this));
-        subMenus.put(Pattern.compile("menu enter deck"), new DeckMenu(this));
-        subMenus.put(Pattern.compile("enter menu scoreboard"), new ScoreBoardMenu(this));
-        subMenus.put(Pattern.compile("enter menu profile"), new ProfileMenu(this));
-        subMenus.put(Pattern.compile("enter menu shop"), new ShopMenu(this));
-        subMenus.put(Pattern.compile("enter menu import/export"), new IECardMenu(this));
+    private static final HashMap<String, Pattern> PATTERN_COLLECTION;
+
+    static {
+        PATTERN_COLLECTION = new HashMap<>();
+        PATTERN_COLLECTION.put("Menu Exit Pattern", Pattern.compile("^menu exit$"));
+        PATTERN_COLLECTION.put("Show Current Menu Pattern", Pattern.compile("^menu show-current$"));
+        PATTERN_COLLECTION.put("Logout Pattern", Pattern.compile("user logout"));
     }
 
-    public void show(){
+    public MainMenu(Menu parentMenu) {
+        super("Main Menu", parentMenu);
+        subMenus.put(Pattern.compile("^menu enter duel$"), new DuelMenu(this));
+        subMenus.put(Pattern.compile("^menu enter deck$"), new DeckMenu(this));
+        subMenus.put(Pattern.compile("^menu enter scoreboard$"), new ScoreBoardMenu(this));
+        subMenus.put(Pattern.compile("^menu enter profile$"), new ProfileMenu(this));
+        subMenus.put(Pattern.compile("^menu enter shop$"), new ShopMenu(this));
+        subMenus.put(Pattern.compile("^menu enter import/export$"), new IECardMenu(this));
     }
 
-    public void execute(){
+    public void show() {
+        System.out.println("Use this Commands to Enter your desired Menu:");
+        for (Map.Entry<Pattern, Menu> entry : subMenus.entrySet())
+            System.out.println(entry.getValue().name + ": " + entry.getKey());
+        System.out.println("Logout: user logout");
+        System.out.println("Additional options:\n" +
+                "Exit this menu: menu exit\n" +
+                "Show current menu: menu show-current");
+    }
+
+    public void execute() {
+        String command = getValidCommand();
+        Matcher commandMatcher;
+        Menu nextMenu;
+        for (Map.Entry<Pattern, Menu> entry : subMenus.entrySet()) {
+            commandMatcher = entry.getKey().matcher(command);
+            if (commandMatcher.matches()) {
+                nextMenu = entry.getValue();
+                nextMenu.run();
+            }
+        }
+        commandMatcher = PATTERN_COLLECTION.get("Menu Exit Pattern").matcher(command);
+        if (commandMatcher.matches()) {
+            nextMenu = this.parentMenu;
+            nextMenu.run();
+        } else {
+            commandMatcher = PATTERN_COLLECTION.get("Logout Pattern").matcher(command);
+            if (commandMatcher.matches()) {
+                nextMenu = this.parentMenu;
+                nextMenu.run();
+            } else {
+                commandMatcher = PATTERN_COLLECTION.get("Show Current Menu Pattern").matcher(command);
+                if (commandMatcher.matches()) {
+                    System.out.println(this.name);
+                    execute();
+                }
+            }
+        }
+    }
+
+    public void run() {
+        show();
+        execute();
+    }
+
+    public String getValidCommand() {
+        String command;
+        Matcher matcher;
+        boolean check = false;
+        do {
+            command = Menu.scanner.nextLine();
+            for (Map.Entry<Pattern, Menu> entry : subMenus.entrySet()) {
+                matcher = entry.getKey().matcher(command);
+                if (matcher.matches())
+                    check = true;
+            }
+            for (Map.Entry<Pattern, Menu> entry : subMenus.entrySet()) {
+                matcher = entry.getKey().matcher(command);
+                if (matcher.matches())
+                    check = true;
+            }
+            if (!check)
+                System.out.println("invalid command\n" +
+                        "Try Again!");
+        } while (!check);
+        return command;
     }
 
 }
