@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class RegisterMenu extends Menu {
     private static String RESPONSE;
-    private static HashMap<String, Pattern> PATTERNS_COLLECTION;
+    private static final HashMap<String, Pattern> PATTERNS_COLLECTION;
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_RED = "\u001B[31m";
@@ -42,7 +42,17 @@ public class RegisterMenu extends Menu {
 
             @Override
             public void execute() {
+                String response = RESPONSE;
+                String username = null, password = null;
+                Matcher matcher = Pattern.compile("--username (\\w+)").matcher(response);
+                if(matcher.find())
+                    username = matcher.group(1);
 
+                matcher = Pattern.compile("--password (\\w+)").matcher(response);
+                if(matcher.find())
+                    password = matcher.group(1);
+
+                RegisterController.getInstance().loginUser(username, password, this.parentMenu);
             }
 
             @Override

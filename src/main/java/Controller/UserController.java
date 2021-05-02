@@ -14,28 +14,9 @@ public class UserController {
     private UserController() {
     }
 
-//    public boolean isUserExists(String username) {
-//        Gson gson = new Gson();
-//        try {
-//            File allUsers = new File(FILE_PATH);
-//            File[] allUsersArray = allUsers.listFiles();
-//            if (allUsersArray != null) {
-//                for (File file : allUsersArray) {
-//                    FileReader fileReader = new FileReader(FILE_PATH + "\\" + file.getName());
-//                    User user = gson.fromJson(fileReader, User.class);
-//                    if(user.getNickname().equals(username))
-//                        return true;
-//                }
-//            }
-//        }catch(IOException e){
-//            System.out.println("Could not read information from file");
-//        }
-//        return false;
-//    }
-
     public boolean isUserWithThisFieldExists(String field, int flag) {
-        Gson gson = new Gson();
         try {
+            Gson gson = new Gson();
             File allUsers = new File(FILE_PATH);
             File[] allUsersArray = allUsers.listFiles();
             if (allUsersArray != null) {
@@ -57,6 +38,7 @@ public class UserController {
         }
         return false;
     }
+
 
 
     public static UserController getInstance() {
