@@ -28,7 +28,7 @@ public class MainMenu extends Menu {
     public void show() {
         System.out.println("Use this Commands to Enter your desired Menu:");
         for (Map.Entry<Pattern, Menu> entry : subMenus.entrySet())
-            System.out.println(entry.getValue().name + ": " + entry.getKey());
+            System.out.println(entry.getValue().name + ": " + entry.getKey().toString().replaceAll("\\^|\\$", ""));
         System.out.println("Logout: user logout");
         System.out.println("Additional options:\n" +
                 "Exit this menu: menu exit\n" +
@@ -81,8 +81,8 @@ public class MainMenu extends Menu {
                 if (matcher.matches())
                     check = true;
             }
-            for (Map.Entry<Pattern, Menu> entry : subMenus.entrySet()) {
-                matcher = entry.getKey().matcher(command);
+            for (Map.Entry<String , Pattern> entry : PATTERN_COLLECTION.entrySet()) {
+                matcher = entry.getValue().matcher(command);
                 if (matcher.matches())
                     check = true;
             }

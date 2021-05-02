@@ -102,8 +102,7 @@ public class RegisterMenu extends Menu {
         System.out.println("Use this patterns to Login/Signup:\n" +
                 "Tip: You can enter fields with dash sign (--) by any desired order!");
         System.out.println("Login: user login --username <username> --password <password>\n" +
-                "Signup: user create --username <username> --nickname <nickname> --\n" +
-                "password <password>");
+                "Signup: user create --username <username> --nickname <nickname> --password <password>");
         System.out.println("Additional options:\n" +
                 "Exit the game: menu exit\n" +
                 "Enter a menu: menu enter <menu name>\n" +
