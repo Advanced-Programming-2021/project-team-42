@@ -26,13 +26,13 @@ public class MainMenu extends Menu {
     }
 
     public void show() {
-        System.out.println("Use this Commands to Enter your desired Menu:");
+        System.out.println("\033[1;92m" + "\t\tUse this Commands to Enter your desired Menu:" + ":\033[0m");
         for (Map.Entry<Pattern, Menu> entry : subMenus.entrySet())
-            System.out.println(entry.getValue().name + ": " + entry.getKey().toString().replaceAll("\\^|\\$", ""));
-        System.out.println("Logout: user logout");
-        System.out.println("Additional options:\n" +
-                "Exit this menu: menu exit\n" +
-                "Show current menu: menu show-current");
+            System.out.println("\033[0;97m" + entry.getValue().name + ":\033[0m " + entry.getKey().toString().replaceAll("\\^|\\$", ""));
+        System.out.println("\033[0;97m" + "Logout: user logout" + ":\033[0m");
+        System.out.println("\033[1;94m" + "\t\tAdditional options:\n" + "\033[0m" +
+                "\033[0;97m" + "Exit this menu:\033[0m menu exit\n" +
+                "\033[0;97m" + "Show current menu:\033[0m menu show-current\n");
     }
 
     public void execute() {
@@ -74,6 +74,7 @@ public class MainMenu extends Menu {
         String command;
         Matcher matcher;
         boolean check = false;
+        System.out.println("Enter your desired command:");
         do {
             command = Menu.scanner.nextLine();
             for (Map.Entry<Pattern, Menu> entry : subMenus.entrySet()) {

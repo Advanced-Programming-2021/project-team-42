@@ -11,15 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 public class RegisterMenu extends Menu {
     private static String RESPONSE;
     private static final HashMap<String, Pattern> PATTERNS_COLLECTION;
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BLACK = "\u001B[30m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_CYAN = "\u001B[36m";
-    public static final String ANSI_WHITE = "\u001B[37m";
 
     static{
         PATTERNS_COLLECTION = new HashMap<>();
@@ -99,14 +90,14 @@ public class RegisterMenu extends Menu {
     }
 
     public void show() {
-        System.out.println("Use this patterns to Login/Signup:\n" +
-                "Tip: You can enter fields with dash sign (--) by any desired order!");
-        System.out.println("Login: user login --username <username> --password <password>\n" +
-                "Signup: user create --username <username> --nickname <nickname> --password <password>");
-        System.out.println("Additional options:\n" +
-                "Exit the game: menu exit\n" +
-                "Enter a menu: menu enter <menu name>\n" +
-                "Show current menu: menu show-current");
+        System.out.println("\033[1;92m" + "\t\tUse this patterns to Login/Signup:\n" + "\033[0m" +
+                "\033[4;31m" + "Tip:\033[0m You can enter fields with dash sign (--) by any desired order!\n");
+        System.out.println("\033[0;97m" + "Login:\033[0m user login --username <username> --password <password>\n" +
+                "\033[0;97m" + "Signup:\033[0m user create --username <username> --nickname <nickname> --password <password>");
+        System.out.println("\033[1;94m" + "\t\tAdditional options:\n" + "\033[0m" +
+                "\033[0;97m" + "Exit the game:\033[0m menu exit\n" +
+                "\033[0;97m" + "Enter a menu:\033[0m menu enter <menu name>\n" +
+                "\033[0;97m" + "Show current menu:\033[0m menu show-current\n");
     }
 
     public void execute() {
