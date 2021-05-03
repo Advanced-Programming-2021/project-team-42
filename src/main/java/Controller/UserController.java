@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class UserController {
@@ -39,7 +40,72 @@ public class UserController {
         return false;
     }
 
+    public void changeNickname(String username, String nickname){
+        try {
+            if(checkNicknameExistence(nickname))
+                System.out.println("user with nickname " + nickname + " already exists");
+            else {
+                User user = User.getUserByUsername(username);
+                user.setNickname(nickname);
+                updateUsersFile(username, user);
+                System.out.println("Nickname successfully changed!");
+            }
+        }catch (Exception e){
+            System.out.println("Can not Change your Nickname!\n" +
+                    "Try again");
+            e.printStackTrace();
+        }
+    }
 
+    private void updateUsersFile(String username, User user) throws IOException {
+        Gson gson = new Gson();
+        File dir = new File(FILE_PATH);
+        File[] allFiles = dir.listFiles();
+        if (allFiles != null) {
+            for (File file : allFiles) {
+                if (file.getName().equals(username + ".json")) {
+                    FileWriter fileWriter = new FileWriter(FILE_PATH + "\\" + file.getName());
+                    gson.toJson(user, fileWriter);
+                    fileWriter.close();
+                }
+            }
+        }
+    }
+
+    public void changePassword(String username, String currentPassword, String newPassword){
+        try {
+            if (!isPasswordCorrect(username, currentPassword))
+                System.out.println("Current password is invalid");
+            else {
+                if (currentPassword.equals(newPassword))
+                    System.out.println("Please enter a new password");
+                else {
+                    User user = User.getUserByUsername(username);
+                    user.setPassword(newPassword);
+                    updateUsersFile(username, user);
+                    System.out.println("Password successfully changed!");
+                }
+            }
+        }catch (Exception e){
+            System.out.println("Can not Change your Password!\n" +
+                    "Try again");
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isPasswordCorrect(String username, String password){
+        User user = User.getUserByUsername(username);
+        return user.getPassword().equals(password);
+    }
+
+
+    public boolean checkNicknameExistence(String nickname){
+        for(User user : User.getAllUsers()){
+            if(user.getNickname().equals(nickname))
+                return true;
+        }
+        return false;
+    }
 
     public static UserController getInstance() {
         if (instance == null)

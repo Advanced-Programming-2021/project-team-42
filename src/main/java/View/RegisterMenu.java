@@ -15,7 +15,7 @@ public class RegisterMenu extends Menu {
     static{
         PATTERNS_COLLECTION = new HashMap<>();
         PATTERNS_COLLECTION.put("Exit Pattern", Pattern.compile("^menu exit$"));
-        PATTERNS_COLLECTION.put("Enter Menu Pattern", Pattern.compile("^menu enter (main menu|duel menu|deck menu|scoreboard menu|profile menu|shop menu|import/export menu)$"));
+        PATTERNS_COLLECTION.put("Enter Menu Pattern", Pattern.compile("^menu enter (main|duel|deck|scoreboard|profile|shop|import/export)$"));
         PATTERNS_COLLECTION.put("Show Current Menu Pattern", Pattern.compile("^menu show-current$"));
     }
 
@@ -44,6 +44,7 @@ public class RegisterMenu extends Menu {
                     password = matcher.group(1);
 
                 RegisterController.getInstance().loginUser(username, password, this.parentMenu);
+                parentMenu.execute();
             }
 
             @Override
@@ -116,7 +117,7 @@ public class RegisterMenu extends Menu {
         else {
             responseMatcher = PATTERNS_COLLECTION.get("Exit Pattern").matcher(response);
             if (responseMatcher.find())
-                System.exit(1);
+                System.exit(0);
             else {
                 responseMatcher = PATTERNS_COLLECTION.get("Enter Menu Pattern").matcher(response);
                 if (responseMatcher.find())
@@ -124,7 +125,7 @@ public class RegisterMenu extends Menu {
                 else {
                     responseMatcher = PATTERNS_COLLECTION.get("Show Current Menu Pattern").matcher(response);
                     if (responseMatcher.find())
-                        System.out.println("Register Menu");
+                        System.out.println(this.name);
                 }
                 execute();
             }

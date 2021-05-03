@@ -1,9 +1,11 @@
 package Model;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class User {
+    private static ArrayList<User> allUsers;
     private HashMap<String, Card> usersAllCards;
     private String username;
     private String password;
@@ -11,6 +13,11 @@ public class User {
     private int balance;
     private int score;
     private int LP;
+    private boolean isLoggedIn;
+
+    static {
+        allUsers = new ArrayList<>();
+    }
 
     public User(String username, String password, String nickname){
         this.username = username;
@@ -20,6 +27,30 @@ public class User {
         this.score = 0;
         this.LP = 0;
         usersAllCards = new HashMap<>();
+    }
+
+    public static User getUserByUsername(String username){
+        for(User user : allUsers){
+            if(user.getUsername().equals(username))
+                return user;
+        }
+        return null;
+    }
+
+    public static void addUserToList(User user){
+        allUsers.add(user);
+    }
+
+    public static ArrayList<User> getAllUsers(){
+        return allUsers;
+    }
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
     }
 
     public int getLP() {
