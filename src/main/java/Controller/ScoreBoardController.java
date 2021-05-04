@@ -15,6 +15,7 @@ public class ScoreBoardController {
         ArrayList<User> allUsers = User.getAllUsers();
         Comparator<User> sortUsers = Comparator.comparing(User::getScore , Comparator.reverseOrder()).
                 thenComparing(User::getNickname);
+        allUsers.sort(sortUsers);
         for(User user : allUsers) {
             System.out.println(rank + "- " + user.getNickname() + ": " + user.getScore());
             rank++;
