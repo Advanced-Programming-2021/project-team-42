@@ -6,7 +6,9 @@ import Model.Card;
 import java.util.HashMap;
 
 public class ShopController {
+    public ShopController(){
 
+    }
     public void sellCard(String userName,String cardName){
 
         User user = User.getUserByUsername(userName);

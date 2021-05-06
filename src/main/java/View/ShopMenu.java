@@ -1,5 +1,8 @@
 package View;
 
+import Controller.ShopController;
+
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ShopMenu extends Menu{
@@ -37,5 +40,28 @@ public class ShopMenu extends Menu{
         };
     }
 
-    public void run(){}
+    public void run(){
+        String command;
+        Pattern byeItemPattern = Pattern.compile("^shop bye ([a-zA-Z ]+)$");
+        Pattern showShopPattern = Pattern.compile("^show shop --all$");
+
+        while (!(command = Menu.scanner.nextLine()).equals("menu exit")){
+            Matcher byeItemMatcher = byeItemPattern.matcher(command);
+            Matcher showShopMatcher = showShopPattern.matcher(command);
+            if (byeItemMatcher.find()){
+                new ShopController().sellCard(this.usersName,byeItemMatcher.group(1).trim());
+                continue;
+            }
+            if (showShopMatcher.find()){
+                new ShopController().showAllCards();
+                continue;
+            }
+            System.out.println("invalid command");
+            System.out.println("try again");
+        }
+        MainMenu.mainMenu.run();
+    }
 }
+
+
+

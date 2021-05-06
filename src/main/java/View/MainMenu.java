@@ -94,4 +94,8 @@ public class MainMenu extends Menu {
         return command;
     }
 
+    public String getUserName(){
+        return this.usersName;
+    }
+
 }
