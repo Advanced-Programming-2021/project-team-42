@@ -1,9 +1,13 @@
 package Model;
 
+import java.util.HashMap;
+
 public abstract class Card {
     protected String name;
+    protected int cardPrice;
     protected int cardNumber;
     protected String description;
+    public static HashMap<String , Card> allCards;
 
     public String getDescription() {
         return description;
@@ -28,4 +32,9 @@ public abstract class Card {
     public void setName(String name) {
         this.name = name;
     }
+
+    public int getCardPrice(){
+        return this.cardPrice;
+    }
+
 }

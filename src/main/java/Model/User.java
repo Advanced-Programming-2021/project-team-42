@@ -7,6 +7,7 @@ import java.util.HashMap;
 public class User {
     private static ArrayList<User> allUsers;
     private HashMap<String, Card> usersAllCards;
+    private HashMap<String, Integer> numberOfCards;
     private String username;
     private String password;
     private String nickname;
@@ -23,7 +24,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
-        this.balance = 50000;
+        this.balance = 100000;
         this.score = 0;
         this.LP = 0;
         usersAllCards = new HashMap<>();
@@ -99,5 +100,17 @@ public class User {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public void increaseCard(String cardName){
+        int i = numberOfCards.get(cardName);
+        i++;
+        numberOfCards.put(cardName,i);
+    }
+
+    public void decreaseCard(String cardName){
+        int i = numberOfCards.get(cardName);
+        i--;
+        numberOfCards.put(cardName,i);
     }
 }
