@@ -59,7 +59,7 @@ public class ShopMenu extends Menu{
             System.out.println("invalid command");
             System.out.println("try again");
         }
-        MainMenu.mainMenu.run();
+        this.parentMenu.run();
     }
 }
 

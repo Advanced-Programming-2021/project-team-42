@@ -37,4 +37,9 @@ public abstract class Card {
         return this.cardPrice;
     }
 
+    public void setCardPrice(int price){
+        this.cardPrice = price;
+    }
+
+
 }
