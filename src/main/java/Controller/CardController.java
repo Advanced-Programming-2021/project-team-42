@@ -19,11 +19,11 @@ public class CardController {
 
     }
 
-    public void addCardToDeck(String userName, String deckName, String cardName){
+    public void addCardToDeck(String userName, String deckName, String cardName, boolean isSideDeck){
 
     }
 
-    public void removeCardFromDeck(String userName, String deckName, String cardName){
+    public void removeCardFromDeck(String userName, String deckName, String cardName, boolean isSideDeck){
 
     }
 

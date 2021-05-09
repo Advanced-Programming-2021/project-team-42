@@ -43,7 +43,7 @@ public class DeckMenu extends Menu{
                 Pattern pattern = Pattern.compile("deck create (\\w+)");
                 Matcher matcher = pattern.matcher(COMMAND);
                 if (matcher.find())
-                    deckName = matcher.group(1);
+                    deckName = matcher.group(1).trim();
                 CardController.getInstance().createDeck(this.parentMenu.parentMenu.usersName,deckName);
                 parentMenu.execute();
             }
@@ -63,7 +63,7 @@ public class DeckMenu extends Menu{
                 Pattern pattern = Pattern.compile("deck delete (\\w+)");
                 Matcher matcher = pattern.matcher(COMMAND);
                 if (matcher.find())
-                    deckName = matcher.group(1);
+                    deckName = matcher.group(1).trim();
                 CardController.getInstance().deleteDeck(this.parentMenu.parentMenu.usersName,deckName);
                 parentMenu.execute();
             }
@@ -83,7 +83,7 @@ public class DeckMenu extends Menu{
                 Pattern pattern = Pattern.compile("deck set-active (\\w+)");
                 Matcher matcher = pattern.matcher(COMMAND);
                 if (matcher.find())
-                    deckName = matcher.group(1);
+                    deckName = matcher.group(1).trim();
                 CardController.getInstance().setActiveDeck(this.parentMenu.parentMenu.usersName,deckName);
                 parentMenu.execute();
             }
@@ -99,7 +99,23 @@ public class DeckMenu extends Menu{
 
             @Override
             public void execute() {
-
+                String cardName = "";
+                String deckName = "";
+                boolean isSidedeck = false;
+                Pattern pattern = Pattern.compile("--card (\\w+)");
+                Matcher matcher = pattern.matcher(COMMAND);
+                if (matcher.find())
+                    cardName = matcher.group(1).trim();
+                pattern = Pattern.compile("--deck (\\w+)");
+                matcher = pattern.matcher(COMMAND);
+                if (matcher.find())
+                    deckName = matcher.group(1).trim();
+                pattern = Pattern.compile("--side");
+                matcher = pattern.matcher(COMMAND);
+                if (matcher.find())
+                    isSidedeck = true;
+                CardController.getInstance().addCardToDeck(this.parentMenu.parentMenu.usersName,deckName,cardName,isSidedeck);
+                parentMenu.execute();
             }
         };
     }
@@ -113,7 +129,23 @@ public class DeckMenu extends Menu{
 
             @Override
             public void execute() {
-
+                String cardName = "";
+                String deckName = "";
+                boolean isSidedeck = false;
+                Pattern pattern = Pattern.compile("--card (\\w+)");
+                Matcher matcher = pattern.matcher(COMMAND);
+                if (matcher.find())
+                    cardName = matcher.group(1).trim();
+                pattern = Pattern.compile("--deck (\\w+)");
+                matcher = pattern.matcher(COMMAND);
+                if (matcher.find())
+                    deckName = matcher.group(1).trim();
+                pattern = Pattern.compile("--side");
+                matcher = pattern.matcher(COMMAND);
+                if (matcher.find())
+                    isSidedeck = true;
+                CardController.getInstance().removeCardFromDeck(this.parentMenu.parentMenu.usersName,deckName,cardName,isSidedeck);
+                parentMenu.execute();
             }
         };
     }
@@ -142,10 +174,17 @@ public class DeckMenu extends Menu{
 
             @Override
             public void execute() {
-
-                String deckName = " ";
-                boolean sideOrNot = true;
-                CardController.getInstance().showDeck(this.parentMenu.parentMenu.usersName,deckName , sideOrNot);
+                String deckName = "";
+                boolean isSideDeck = false;
+                Pattern pattern = Pattern.compile("--deck-name (\\w+)");
+                Matcher matcher = pattern.matcher(COMMAND);
+                if (matcher.find())
+                    deckName = matcher.group(1).trim();
+                pattern = Pattern.compile("--side");
+                matcher = pattern.matcher(COMMAND);
+                if (matcher.find())
+                    isSideDeck = true;
+                CardController.getInstance().showDeck(this.parentMenu.parentMenu.usersName,deckName , isSideDeck);
                 parentMenu.execute();
             }
         };
