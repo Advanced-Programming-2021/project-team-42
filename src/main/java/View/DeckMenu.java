@@ -1,8 +1,23 @@
 package View;
 
+import Controller.CardController;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DeckMenu extends Menu{
+
+    private static String COMMAND;
+    private static final HashMap<String, Pattern> PATTERNS_COLLECTION;
+    static {
+        PATTERNS_COLLECTION = new HashMap<>();
+        PATTERNS_COLLECTION.put("Invalid Navigations Pattern", Pattern.compile("^menu enter (register|duel|deck|shop|import/export|scoreboard|profile)$"));
+        PATTERNS_COLLECTION.put("Valid Navigations Pattern", Pattern.compile("^menu enter main$"));
+        PATTERNS_COLLECTION.put("Current Menu Pattern", Pattern.compile("^menu show-current$"));
+        PATTERNS_COLLECTION.put("Exit Menu Pattern", Pattern.compile("^menu exit$"));
+    }
+
     public DeckMenu(Menu parentMenu){
         super("Deck Menu", parentMenu);
         subMenus.put(Pattern.compile("deck create"), createDeck());
@@ -10,9 +25,9 @@ public class DeckMenu extends Menu{
         subMenus.put(Pattern.compile("deck set-activate"), setActive());
         subMenus.put(Pattern.compile("deck add-card"), addCard());
         subMenus.put(Pattern.compile("deck rm-card"), removeCard());
-        subMenus.put(Pattern.compile("deck show"), showDecks());
+        subMenus.put(Pattern.compile("deck show --all"), showDecks());
         subMenus.put(Pattern.compile("deck show"), showDeck());
-        subMenus.put(Pattern.compile("deck show"), userCards());
+        subMenus.put(Pattern.compile("deck show --cards"), userCards());
     }
 
     public Menu createDeck(){
@@ -24,7 +39,13 @@ public class DeckMenu extends Menu{
 
             @Override
             public void execute() {
-
+                String deckName = null;
+                Pattern pattern = Pattern.compile("deck create (\\w+)");
+                Matcher matcher = pattern.matcher(COMMAND);
+                if (matcher.find())
+                    deckName = matcher.group(1);
+                CardController.getInstance().createDeck(this.parentMenu.parentMenu.usersName,deckName);
+                parentMenu.execute();
             }
         };
     }
@@ -38,7 +59,13 @@ public class DeckMenu extends Menu{
 
             @Override
             public void execute() {
-                super.execute();
+                String deckName = null;
+                Pattern pattern = Pattern.compile("deck delete (\\w+)");
+                Matcher matcher = pattern.matcher(COMMAND);
+                if (matcher.find())
+                    deckName = matcher.group(1);
+                CardController.getInstance().deleteDeck(this.parentMenu.parentMenu.usersName,deckName);
+                parentMenu.execute();
             }
         };
     }
@@ -52,7 +79,13 @@ public class DeckMenu extends Menu{
 
             @Override
             public void execute() {
-                super.execute();
+                String deckName = null;
+                Pattern pattern = Pattern.compile("deck set-active (\\w+)");
+                Matcher matcher = pattern.matcher(COMMAND);
+                if (matcher.find())
+                    deckName = matcher.group(1);
+                CardController.getInstance().setActiveDeck(this.parentMenu.parentMenu.usersName,deckName);
+                parentMenu.execute();
             }
         };
     }
@@ -66,7 +99,7 @@ public class DeckMenu extends Menu{
 
             @Override
             public void execute() {
-                super.execute();
+
             }
         };
     }
@@ -80,7 +113,7 @@ public class DeckMenu extends Menu{
 
             @Override
             public void execute() {
-                super.execute();
+
             }
         };
     }
@@ -94,7 +127,8 @@ public class DeckMenu extends Menu{
 
             @Override
             public void execute() {
-                super.execute();
+                CardController.getInstance().showAllDecks(this.parentMenu.parentMenu.usersName);
+                parentMenu.execute();
             }
         };
     }
@@ -108,7 +142,9 @@ public class DeckMenu extends Menu{
 
             @Override
             public void execute() {
-                super.execute();
+                String deckName = " ";
+                CardController.getInstance().showDeck(this.parentMenu.parentMenu.usersName,deckName);
+                parentMenu.execute();
             }
         };
     }
@@ -122,10 +158,79 @@ public class DeckMenu extends Menu{
 
             @Override
             public void execute() {
-                super.execute();
+                CardController.getInstance().showUserCards(this.parentMenu.parentMenu.usersName);
+                parentMenu.execute();
             }
         };
     }
 
-    public void run(){}
+    public void show(){
+
+    }
+
+    public void execute(){
+        String command = getValidCommand();
+        Matcher matcher;
+        Menu nextMenu = null;
+        for(Map.Entry<Pattern, Menu> entry : subMenus.entrySet()){
+            matcher = entry.getKey().matcher(command);
+            if(matcher.matches()){
+                nextMenu = entry.getValue();
+                COMMAND = command;
+            }
+        }
+        if(nextMenu != null)
+            nextMenu.execute();
+        else{
+            matcher = PATTERNS_COLLECTION.get("Valid Navigations Pattern").matcher(command);
+            if(matcher.matches())
+                this.parentMenu.run();
+            else{
+                matcher = PATTERNS_COLLECTION.get("Exit Menu Pattern").matcher(command);
+                if(matcher.matches())
+                    this.parentMenu.run();
+                else{
+                    matcher = PATTERNS_COLLECTION.get("Invalid Navigations Pattern").matcher(command);
+                    if(matcher.matches())
+                        System.out.println("Menu navigation is not possible!");
+                    else{
+                        matcher = PATTERNS_COLLECTION.get("Current Menu Pattern").matcher(command);
+                        if(matcher.matches())
+                            System.out.println(this.name);
+                    }
+                    execute();
+                }
+            }
+        }
+    }
+
+    public String getValidCommand(){
+        System.out.println("Enter your command:");
+        String command;
+        Matcher matcher;
+        boolean check = false;
+        do{
+            command = Menu.scanner.nextLine();
+            for(Map.Entry<Pattern, Menu> entry : subMenus.entrySet()){
+                matcher = entry.getKey().matcher(command);
+                if(matcher.matches()){
+                        check = true;
+                }
+            }
+            for(Map.Entry<String , Pattern> entry : PATTERNS_COLLECTION.entrySet()){
+                matcher = entry.getValue().matcher(command);
+                if(matcher.matches())
+                    check = true;
+            }
+            if(!check)
+                System.out.println("invalid command\n" +
+                        "Try Again!");
+        }while (!check);
+        return command;
+    }
+
+    public void run(){
+        show();
+        execute();
+    }
 }
