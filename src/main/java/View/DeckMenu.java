@@ -101,7 +101,7 @@ public class DeckMenu extends Menu{
             public void execute() {
                 String cardName = "";
                 String deckName = "";
-                boolean isSidedeck = false;
+                boolean isSideDeck = false;
                 Pattern pattern = Pattern.compile("--card (\\w+)");
                 Matcher matcher = pattern.matcher(COMMAND);
                 if (matcher.find())
@@ -113,8 +113,8 @@ public class DeckMenu extends Menu{
                 pattern = Pattern.compile("--side");
                 matcher = pattern.matcher(COMMAND);
                 if (matcher.find())
-                    isSidedeck = true;
-                CardController.getInstance().addCardToDeck(this.parentMenu.parentMenu.usersName,deckName,cardName,isSidedeck);
+                    isSideDeck = true;
+                CardController.getInstance().addCardToDeck(this.parentMenu.parentMenu.usersName,deckName,cardName,isSideDeck);
                 parentMenu.execute();
             }
         };
@@ -131,7 +131,7 @@ public class DeckMenu extends Menu{
             public void execute() {
                 String cardName = "";
                 String deckName = "";
-                boolean isSidedeck = false;
+                boolean isSideDeck = false;
                 Pattern pattern = Pattern.compile("--card (\\w+)");
                 Matcher matcher = pattern.matcher(COMMAND);
                 if (matcher.find())
@@ -143,8 +143,8 @@ public class DeckMenu extends Menu{
                 pattern = Pattern.compile("--side");
                 matcher = pattern.matcher(COMMAND);
                 if (matcher.find())
-                    isSidedeck = true;
-                CardController.getInstance().removeCardFromDeck(this.parentMenu.parentMenu.usersName,deckName,cardName,isSidedeck);
+                    isSideDeck = true;
+                CardController.getInstance().removeCardFromDeck(this.parentMenu.parentMenu.usersName,deckName,cardName,isSideDeck);
                 parentMenu.execute();
             }
         };
