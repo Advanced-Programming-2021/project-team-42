@@ -25,9 +25,9 @@ public class DeckMenu extends Menu{
         subMenus.put(Pattern.compile("deck set-activate"), setActive());
         subMenus.put(Pattern.compile("deck add-card"), addCard());
         subMenus.put(Pattern.compile("deck rm-card"), removeCard());
-        subMenus.put(Pattern.compile("deck show --all"), showDecks());
+        subMenus.put(Pattern.compile("^deck show --all$"), showDecks());
         subMenus.put(Pattern.compile("deck show"), showDeck());
-        subMenus.put(Pattern.compile("deck show --cards"), userCards());
+        subMenus.put(Pattern.compile("^deck show --cards$"), userCards());
     }
 
     public Menu createDeck(){
@@ -143,7 +143,8 @@ public class DeckMenu extends Menu{
             @Override
             public void execute() {
                 String deckName = " ";
-                CardController.getInstance().showDeck(this.parentMenu.parentMenu.usersName,deckName);
+                boolean sideOrNot = true;
+                CardController.getInstance().showDeck(this.parentMenu.parentMenu.usersName,deckName , sideOrNot);
                 parentMenu.execute();
             }
         };

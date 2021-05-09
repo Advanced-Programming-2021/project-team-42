@@ -31,7 +31,7 @@ public class CardController {
 
     }
 
-    public void showDeck(String userName ,String deckName){
+    public void showDeck(String userName ,String deckName ,boolean sideOrNot){
 
     }
 
