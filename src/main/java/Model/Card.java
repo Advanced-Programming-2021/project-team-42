@@ -3,11 +3,32 @@ package Model;
 import java.util.HashMap;
 
 public abstract class Card {
+    public static HashMap<String, Card> allCards;
     protected String name;
-    protected int cardPrice;
     protected int cardNumber;
+    protected int price;
     protected String description;
-    public static HashMap<String , Card> allCards;
+
+    static {
+        allCards = new HashMap<>();
+    }
+
+    public Card(String name, String description){
+        this.name = name;
+        this.description = description;
+    }
+
+    public Card(){
+
+    }
+
+    public static HashMap<String, Card> getAllCards(){
+        return allCards;
+    }
+
+    public static void addCardToList(Card card){
+        allCards.put(card.getName(), card);
+    }
 
     public String getDescription() {
         return description;
@@ -33,13 +54,11 @@ public abstract class Card {
         this.name = name;
     }
 
-    public int getCardPrice(){
-        return this.cardPrice;
+    public int getPrice() {
+        return price;
     }
 
-    public void setCardPrice(int price){
-        this.cardPrice = price;
+    public void setPrice(int price) {
+        this.price = price;
     }
-
-
 }
