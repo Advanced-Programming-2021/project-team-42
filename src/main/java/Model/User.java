@@ -3,10 +3,12 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.SplittableRandom;
 
 public class User {
     private static ArrayList<User> allUsers;
-    private HashMap<String, Integer> usersAllCards;
+    private HashMap<String , Integer> usersAllCards; //Integer is amount of each card of user
+    private HashMap<String , Deck> userDecks = new HashMap<>();
     private String username;
     private String password;
     private String nickname;
@@ -43,6 +45,10 @@ public class User {
 
     public static ArrayList<User> getAllUsers(){
         return allUsers;
+    }
+
+    public HashMap getUserDecks(){
+        return this.userDecks;
     }
 
     public void increaseCard(String cardName){
