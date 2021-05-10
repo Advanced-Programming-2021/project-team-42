@@ -1,6 +1,5 @@
 package View;
 
-import Controller.CardController;
 import Controller.DeckController;
 import org.apache.commons.lang3.StringUtils;
 
@@ -210,7 +209,7 @@ public class DeckMenu extends Menu {
     }
 
     public void show() {
-        System.out.println("\033[1;92m" + "\t\tUse this patterns to Login/Signup:\n" + "\033[0m" +
+        System.out.println("\033[1;92m" + "\t\tUse this patterns to manage Decks:\n" + "\033[0m" +
                 "\033[4;31m" + "Tip:\033[0m You can enter fields with dash sign (--) by any desired order!\n");
         System.out.println("\033[0;97m" + "Create New Deck:\033[0m deck create <deck name>\n" +
                 "\033[0;97m" + "Delete Deck:\033[0m deck delete <deck name>" +

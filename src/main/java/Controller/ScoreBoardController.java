@@ -1,35 +1,32 @@
-    package Controller;
+package Controller;
 
-    import java.util.*;
+import Model.User;
 
-    public class ScoreBoardController {
-        public Map<String, Integer> scores = new HashMap<String, Integer>();
-        void sortByValue(boolean order) {
-//convert HashMap into List
-            List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(scores.entrySet());
-//sorting the list elements
-            Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
-                public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-                    if (order) {
-//compare two object and return an integer
-                        return o1.getValue().compareTo(o2.getValue());
-                    } else {
-                        return o2.getValue().compareTo(o1.getValue());
-                    }
-                }
-            });
-//prints the sorted HashMap
-            Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
-            for (Map.Entry<String, Integer> entry : list) {
-                sortedMap.put(entry.getKey(), entry.getValue());
-            }
-            printMap(sortedMap);
+import java.util.ArrayList;
+import java.util.Comparator;
+
+public class ScoreBoardController {
+    private static ScoreBoardController instance = null;
+
+    private ScoreBoardController(){}
+
+    public void showScoreboard(){
+        int rank = 1;
+        ArrayList<User> allUsers = User.getAllUsers();
+        Comparator<User> sortUsers = Comparator.comparing(User::getScore , Comparator.reverseOrder()).
+                thenComparing(User::getNickname);
+        allUsers.sort(sortUsers);
+        for(User user : allUsers) {
+            System.out.println(rank + "- " + user.getNickname() + ": " + user.getScore());
+            rank++;
         }
-        public void printMap(Map<String, Integer> map) {
-            for (Map.Entry<String, Integer> entry : map.entrySet()) {
-                System.out.println("<" + entry.getKey() + ">" + ":" + "<" + entry.getValue() + ">");
-            }
-            System.out.println("\n");
-        }
+        System.out.println("\n");
     }
 
+
+    public static ScoreBoardController getInstance(){
+        if(instance == null)
+            instance = new ScoreBoardController();
+        return instance;
+    }
+}

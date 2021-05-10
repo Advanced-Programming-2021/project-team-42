@@ -2,7 +2,7 @@ package Model;
 
 import Enums.Attribute;
 import Enums.Effect;
-import Enums.Type;
+import Model.Enums.Type;
 
 public class MonsterCard extends Card {
     private Attribute attribute;

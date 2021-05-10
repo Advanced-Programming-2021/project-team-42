@@ -1,6 +1,6 @@
 package Model.Enums;
 
-public enum Type {
+public enum CardType {
     NORMAL,
     EFFECT,
     RITUAL
