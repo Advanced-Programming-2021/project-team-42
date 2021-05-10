@@ -4,7 +4,7 @@ import Enums.Attribute;
 import Enums.Effect;
 import Enums.Type;
 
-public class MonsterCard extends Card{
+public class MonsterCard extends Card {
     private Attribute attribute;
     private Type type;
     private Effect effect;
