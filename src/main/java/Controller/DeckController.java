@@ -1,10 +1,7 @@
 package Controller;
 
 import Model.*;
-
-import javax.jws.soap.SOAPBinding;
 import java.util.HashMap;
-import java.util.Map;
 
 public class DeckController {
     private static DeckController instance = null;
@@ -144,16 +141,16 @@ public class DeckController {
         }
         else{
             User user = User.getUserByUsername(username);
+            HashMap<String,Deck> userDecks = user.getUserDecks();
             if (!isSide){
                 System.out.println("main deck:");
                 System.out.println("monsters:");
-                HashMap<String, Integer> userAllCards = user.getUserAllCards();
-                for (Map.Entry<String, Integer> entry : userAllCards.entrySet()){
+                for (HashMap.Entry<String, Integer> entry : userDecks.get(deckName).getAllCards().entrySet()){
                     if (MonsterCard.getAllCards().containsKey(entry.getKey()))
                         System.out.println(MonsterCard.getAllCards().get(entry.getKey()).getName() + " : " + MonsterCard.getAllCards().get(entry.getKey()).getDescription());
                 }
                 System.out.println("spell and traps:");
-                for (Map.Entry<String, Integer> entry : userAllCards.entrySet()){
+                for (HashMap.Entry<String, Integer> entry : userDecks.get(deckName).getAllCards().entrySet()){
                     if (!MonsterCard.getAllCards().containsKey(entry.getKey()))
                         if (SpellCard.getAllCards().containsKey(entry.getKey()))
                         System.out.println(SpellCard.getAllCards().get(entry.getKey()).getName() + " : " + SpellCard.getAllCards().get(entry.getKey()).getDescription());
@@ -163,13 +160,12 @@ public class DeckController {
             else {
                 System.out.println("side deck:");
                 System.out.println("monsters:");
-                HashMap<String, Integer> userAllCards = user.getUserAllCards();
-                for (Map.Entry<String, Integer> entry : userAllCards.entrySet()){
+                for (HashMap.Entry<String, Integer> entry : userDecks.get(deckName).sideDeck.getAllCards().entrySet()){
                     if (MonsterCard.getAllCards().containsKey(entry.getKey()))
                         System.out.println(MonsterCard.getAllCards().get(entry.getKey()).getName() + " : " + MonsterCard.getAllCards().get(entry.getKey()).getDescription());
                 }
                 System.out.println("spell and traps:");
-                for (Map.Entry<String, Integer> entry : userAllCards.entrySet()){
+                for (HashMap.Entry<String, Integer> entry : userDecks.get(deckName).sideDeck.getAllCards().entrySet()){
                     if (!MonsterCard.getAllCards().containsKey(entry.getKey()))
                         if (SpellCard.getAllCards().containsKey(entry.getKey()))
                             System.out.println(SpellCard.getAllCards().get(entry.getKey()).getName() + " : " + SpellCard.getAllCards().get(entry.getKey()).getDescription());
@@ -180,13 +176,11 @@ public class DeckController {
     }
 
     public void showUserCards(String username){
+        for (HashMap.Entry<String, Integer> entry : User.getUserByUsername(username).getUserAllCards().entrySet()){
+            if (Card.getAllCards().containsKey(entry.getKey()))
+                System.out.println(entry.getKey() + " : " + Card.getAllCards().get(entry.getKey()).getDescription());
+        }
     }
-
-
-
-
-
-
 
     public static DeckController getInstance(){
         if(instance == null)

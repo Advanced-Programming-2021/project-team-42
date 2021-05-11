@@ -3,7 +3,6 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.SplittableRandom;
 
 public class User {
     private static ArrayList<User> allUsers;
@@ -47,11 +46,11 @@ public class User {
         return allUsers;
     }
 
-    public HashMap getUserDecks(){
+    public HashMap<String,Deck> getUserDecks(){
         return this.userDecks;
     }
 
-    public HashMap getUserAllCards(){
+    public HashMap<String,Integer> getUserAllCards(){
         return this.usersAllCards;
     }
 
