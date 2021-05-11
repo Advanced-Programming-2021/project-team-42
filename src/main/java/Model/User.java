@@ -51,6 +51,10 @@ public class User {
         return this.userDecks;
     }
 
+    public HashMap getUserAllCards(){
+        return this.usersAllCards;
+    }
+
     public void increaseCard(String cardName){
         usersAllCards.put(cardName, usersAllCards.get(cardName) + 1);
     }

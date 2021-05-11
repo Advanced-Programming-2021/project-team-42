@@ -187,7 +187,7 @@ public class DeckMenu extends Menu {
                 matcher = pattern.matcher(COMMAND);
                 if (matcher.find())
                     isSideDeck = true;
-                DeckController.getInstance().showDeck(deckName, isSideDeck);
+                DeckController.getInstance().showDeck(this.parentMenu.parentMenu.usersName,deckName, isSideDeck);
                 parentMenu.execute();
             }
         };
