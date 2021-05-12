@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class UserController {
     private static UserController instance = null;
-    private static final String FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database";
+    private static final String FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Users";
 
     private UserController() {
     }

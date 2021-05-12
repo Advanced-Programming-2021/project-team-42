@@ -1,20 +1,31 @@
 package Model;
 
-import Enums.Attribute;
-import Enums.Effect;
-import Model.Enums.Type;
+import Model.Enums.Attribute;
+import Model.Enums.CardType;
+import Model.Enums.MonsterType;
 
 public class MonsterCard extends Card {
     private Attribute attribute;
-    private Type type;
-    private Effect effect;
-    private String cardType = "Monster Card";
+    private MonsterType monsterType;
+    private CardType cardType;
+    private final String cardTypeStr = "Monster Card";
     private int level;
     private int attackPoint;
     private int defencePoint;
     private boolean isDefensive;
     private boolean isEffectEnable;
     private boolean isSet;
+
+    public MonsterCard (String name, String description, Attribute attribute,
+                        MonsterType monsterType, CardType cardType, int attackPoint, int defencePoint, int price, int level){
+        super(name, description, price);
+        this.attribute = attribute;
+        this.monsterType = monsterType;
+        this.cardType = cardType;
+        this.attackPoint = attackPoint;
+        this.defencePoint = defencePoint;
+        this.level = level;
+    }
 
     public boolean isSet() {
         return isSet;
@@ -30,14 +41,6 @@ public class MonsterCard extends Card {
 
     public void setEffectEnable(boolean effectEnable) {
         isEffectEnable = effectEnable;
-    }
-
-    public Effect getEffect() {
-        return effect;
-    }
-
-    public void setEffect(Effect effect) {
-        this.effect = effect;
     }
 
     public boolean isDefensive() {
@@ -64,16 +67,24 @@ public class MonsterCard extends Card {
         this.attribute = attribute;
     }
 
-    public Type getType() {
-        return type;
+    public CardType getCardType() {
+        return cardType;
     }
 
-    public void setType(Type type) {
-        this.type = type;
+    public void setCardType(CardType cardType) {
+        this.cardType = cardType;
     }
 
     public int getAttackPoint() {
         return attackPoint;
+    }
+
+    public MonsterType getMonsterType() {
+        return monsterType;
+    }
+
+    public void setMonsterType(MonsterType monsterType) {
+        this.monsterType = monsterType;
     }
 
     public void setAttackPoint(int attackPoint) {
@@ -88,12 +99,8 @@ public class MonsterCard extends Card {
         this.defencePoint = defencePoint;
     }
 
-    public String getCardType() {
-        return cardType;
-    }
-
-    public void setCardType(String cardType) {
-        this.cardType = cardType;
+    public String getCardTypeStr() {
+        return cardTypeStr;
     }
 }
 

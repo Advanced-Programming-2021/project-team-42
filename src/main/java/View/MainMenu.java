@@ -12,7 +12,7 @@ public class MainMenu extends Menu {
         PATTERN_COLLECTION = new HashMap<>();
         PATTERN_COLLECTION.put("Menu Exit Pattern", Pattern.compile("^menu exit$"));
         PATTERN_COLLECTION.put("Show Current Menu Pattern", Pattern.compile("^menu show-current$"));
-        PATTERN_COLLECTION.put("Logout Pattern", Pattern.compile("user logout"));
+        PATTERN_COLLECTION.put("Logout Pattern", Pattern.compile("^user logout$"));
     }
 
     public MainMenu(Menu parentMenu) {

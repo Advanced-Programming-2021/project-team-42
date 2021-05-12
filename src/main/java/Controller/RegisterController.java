@@ -12,7 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class RegisterController {
-    private static final String FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database";
+    private static final String FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Users";
     private static RegisterController instance = null;
 
     private RegisterController() {
@@ -53,6 +53,7 @@ public class RegisterController {
                     System.out.println("Username and Password did not match!");
                 else {
                     if(parseUsers()){
+                        CardController.parseCards();
                         System.out.println("You logged in successfully!");
                         MainMenu mainMenu = new MainMenu(parentMenu);
                         mainMenu.setUsersName(username);

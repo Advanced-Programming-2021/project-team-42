@@ -5,7 +5,6 @@ import java.util.HashMap;
 public abstract class Card {
     public static HashMap<String, Card> allCards;
     protected String name;
-    protected int cardNumber;
     protected int price;
     protected String description;
 
@@ -13,13 +12,10 @@ public abstract class Card {
         allCards = new HashMap<>();
     }
 
-    public Card(String name, String description){
+    public Card(String name, String description, int price){
         this.name = name;
         this.description = description;
-    }
-
-    public Card(){
-
+        this.price = price;
     }
 
     public static HashMap<String, Card> getAllCards(){
@@ -36,14 +32,6 @@ public abstract class Card {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public int getCardNumber() {
-        return cardNumber;
-    }
-
-    public void setCardNumber(int cardNumber) {
-        this.cardNumber = cardNumber;
     }
 
     public String getName() {
