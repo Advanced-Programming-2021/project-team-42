@@ -2,13 +2,29 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Deck {
-    String name;
-    boolean isActive;
-    private HashMap<String ,Integer> cards = new HashMap<>(); // name and amount of each card
-    private int amount;
-    public Deck sideDeck = new Deck();
+    private static ArrayList<Deck> allDecks;
+    private String name;
+    private String username;
+    private HashMap<String, Integer> mainDeckCards;
+    private HashMap<String, Integer> sideDeckCards;
+
+    static {
+        allDecks = new ArrayList<>();
+    }
+
+    public Deck(String name, String username){
+        this.name = name;
+        this.username = username;
+        mainDeckCards = new HashMap<>();
+        sideDeckCards = new HashMap<>();
+    }
+
+    public static void addDeckToList(Deck deck){
+        allDecks.add(deck);
+    }
 
     public String getName(){
         return this.name;
@@ -18,43 +34,94 @@ public class Deck {
         this.name = name;
     }
 
-    public boolean isActive(){
-        return this.isActive;
+    public int sideDeckSize(){
+        int size = 0;
+        for(Map.Entry<String, Integer> entry : sideDeckCards.entrySet())
+            size += entry.getValue();
+        return size;
     }
 
-    public void setActive(boolean isActive){
-        this.isActive = isActive;
+    public int mainDeckSize(){
+        int size = 0;
+        for(Map.Entry<String, Integer> entry : mainDeckCards.entrySet())
+            size += entry.getValue();
+        return size;
     }
 
-    public HashMap<String,Integer> getAllCards(){
-        return this.cards;
+    public int mainDecksCardCount(String cardName){
+        if(mainDeckCards.containsKey(cardName))
+            return mainDeckCards.get(cardName);
+        return 0;
     }
 
-    public int getMainDeckAmount(){
-        return this.amount;
+    public int sideDecksCardCount(String cardName){
+        if(sideDeckCards.containsKey(cardName))
+            return sideDeckCards.get(cardName);
+        return 0;
     }
 
-    public int getSideDeckAmount(){
-        return this.sideDeck.amount;
+    public String getUsername() {
+        return username;
     }
 
-    public void setAmount(int amount){
-        this.amount = amount;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void increaseCard(String cardName){
-        int x = cards.get(cardName);
-        cards.put(cardName, x+1);
-        this.amount += 1;
+    public boolean isValid() {
+        return (sideDeckSize() >= 0 && sideDeckSize() <= 15) &&
+                (mainDeckSize() >= 40 && mainDeckSize() <= 60);
     }
 
-    public void decreaseCard(String cardName){
-        int x = cards.get(cardName);
-        cards.put(cardName, x-1);
-        if (x-1 == 0)
-            cards.remove(cardName);
-        this.amount -= 1;
+    public void addCardToMainDeck(String cardName){
+        if(mainDeckCards.containsKey(cardName))
+            mainDeckCards.put(cardName, mainDeckCards.get(cardName) + 1);
+        else
+            mainDeckCards.put(cardName, 1);
     }
 
+    public void addCardToSideDeck(String cardName){
+        if(sideDeckCards.containsKey(cardName))
+            sideDeckCards.put(cardName, sideDeckCards.get(cardName) + 1);
+        else
+            sideDeckCards.put(cardName, 1);
+    }
+
+    public boolean doesMainDeckHasThisCard(String cardName){
+        for(Map.Entry<String, Integer> entry : mainDeckCards.entrySet()){
+            if(entry.getKey().equals(cardName))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean doesSideDeckHasThisCard(String cardName){
+        for(Map.Entry<String, Integer> entry : sideDeckCards.entrySet()){
+            if(entry.getKey().equals(cardName))
+                return true;
+        }
+        return false;
+    }
+
+
+    public void removeCardFromMainDeck(String cardName){
+        mainDeckCards.put(cardName, mainDeckCards.get(cardName) - 1);
+        if(mainDeckCards.get(cardName) == 0)
+            mainDeckCards.remove(cardName);
+    }
+
+    public void removeCardFromSideDeck(String cardName){
+        sideDeckCards.put(cardName, sideDeckCards.get(cardName) - 1);
+        if(sideDeckCards.get(cardName) == 0)
+            sideDeckCards.remove(cardName);
+    }
+
+    public HashMap<String, Integer> getSideDeckCards(){
+        return this.sideDeckCards;
+    }
+
+    public HashMap<String, Integer> getMainDeckCards(){
+        return this.mainDeckCards;
+    }
 
 }

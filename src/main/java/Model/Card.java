@@ -2,7 +2,7 @@ package Model;
 
 import java.util.HashMap;
 
-public abstract class Card {
+public abstract class  Card {
     public static HashMap<String, Card> allCards;
     protected String name;
     protected int price;
