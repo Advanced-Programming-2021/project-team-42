@@ -1,189 +1,266 @@
 package Controller;
 
 import Model.*;
-import java.util.HashMap;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 
 public class DeckController {
     private static DeckController instance = null;
+    private final static String DECKS_FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Decks";
+    private final static String MONSTER_CARDS_FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Cards\\Monsters";
+    private final static String SPELL_TRAP_CARDS_FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Cards\\SpellTraps";
+    private final static String USERS_FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Users";
 
-    private DeckController(){
+    private DeckController() {
     }
 
-    public void createDeck(String username, String deckName){
-        if (User.getUserByUsername(username).getUserDecks().containsKey(deckName))
-            System.out.println("deck with name " + deckName + " already exist");
-        else{
-            User.getUserByUsername(username).getUserDecks().put(deckName,new Model.Deck());
-            System.out.println("deck create successfully");
-        }
-    }
-
-    public void deleteDeck(String username, String deckName){
-        if (User.getUserByUsername(username).getUserDecks().containsKey(deckName)) {
-            User.getUserByUsername(username).getUserDecks().remove(deckName);
-            System.out.println("deck deleted successfully");
-        }
-        else System.out.println("deck with name " + deckName + " does not exist");
-    }
-
-    public void setActiveDeck(String username, String deckName){
-        if (User.getUserByUsername(username).getUserDecks().containsKey(deckName)){
-            System.out.println("deck with name " + deckName + " does not exist");
-        }
-        else {
-            HashMap<String , Deck> userDeck = User.getUserByUsername(username).getUserDecks();
-            for (HashMap.Entry<String, Deck> entry : userDeck.entrySet()){
-                if (entry.getValue().isActive())
-                    entry.getValue().setActive(false);
+    public static void parseDecks() {
+        Gson gson = new Gson();
+        try {
+            File directory = new File(DECKS_FILE_PATH);
+            File[] allDecks = directory.listFiles();
+            if (allDecks != null) {
+                for (File deckFile : allDecks) {
+                    FileReader fileReader = new FileReader(DECKS_FILE_PATH + "\\" + deckFile.getName());
+                    Deck deck = gson.fromJson(fileReader, Deck.class);
+                    Deck.addDeckToList(deck);
+                }
             }
-            userDeck.get(deckName).setActive(true);
+        }catch (IOException e){
+            System.out.println("An error occurred while parsing Cards!");
+        }
+    }
+
+    public void createDeck(String username, String deckName) {
+        if (deckNameCheck(deckName))
+            System.out.println("deck with name " + deckName + " already exists");
+        else {
+            try {
+                Deck deck = new Deck(deckName, username);
+                Gson gson = new GsonBuilder().create();
+                FileWriter fileWriter = new FileWriter(DECKS_FILE_PATH + "\\" + deckName + ".json");
+                gson.toJson(deck, fileWriter);
+                User.getUserByUsername(username).addDeckToList(deckName);
+                System.out.println("deck created successfully!");
+            } catch (IOException e) {
+                System.out.println("Can not create new Deck\n" +
+                        "Please try again!");
+            }
+        }
+    }
+
+    public boolean deckNameCheck(String deckName) {
+        File directory = new File(DECKS_FILE_PATH);
+        File[] allDecks = directory.listFiles();
+        if (allDecks != null) {
+            for (File deck : allDecks) {
+                if (deck.getName().equals(deckName + ".json"))
+                    return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public void deleteDeck(String username, String deckName) {
+        if (!deckNameCheck(deckName))
+            System.out.println("deck with name " + deckName + " does not exists");
+        else {
+            File directory = new File(DECKS_FILE_PATH);
+            File[] allDecks = directory.listFiles();
+            if (allDecks != null) {
+                for (int i = 0; i < allDecks.length; i++) {
+                    if (allDecks[i].getName().equals(deckName + ".json")) {
+                        if (allDecks[i].delete()) {
+                            System.out.println("deck deleted successfully");
+                            User.getUserByUsername(username).removeDeckFromList(deckName);
+                            break;
+                        } else
+                            System.out.println("Field to delete deck!");
+                    }
+                }
+            }
+        }
+    }
+
+    public void setActiveDeck(String username, String deckName) {
+        if (!deckNameCheck(deckName)) {
+            System.out.println("deck with name " + deckName + " does not exist");
+        } else {
+            User.getUserByUsername(username).setActiveDeck(deckName);
             System.out.println("deck activated successfully");
         }
 
     }
 
-    public void addCardToDeck(String username, String deckName, String cardName, boolean isSide){
-        HashMap<String , Card> Cards = Card.getAllCards();
-        if (!Cards.containsKey(cardName)){
+
+    public void addCardToDeck(String username, String deckName, String cardName, boolean isSide) {
+        User user = User.getUserByUsername(username);
+        if (!user.doesUserHasThisCard(cardName)) {
             System.out.println("card with name " + cardName + " does not exist");
-        }
-        else {
-            HashMap<String,Deck> userDecks = User.getUserByUsername(username).getUserDecks();
-            if (!userDecks.containsKey(deckName)){
+        } else {
+            if (!deckNameCheck(deckName)) {
                 System.out.println("deck with name " + deckName + " does not exist");
-            }
-            else {
-                int sideDeckAmount = userDecks.get(deckName).getSideDeckAmount();
-                if (sideDeckAmount >= 15 && isSide) {
-                    System.out.println("side deck is full");
-                }
-                else {
-                    int  mainDeckAmount = userDecks.get(deckName).getMainDeckAmount();
-                    if (mainDeckAmount >= 60 && (!isSide)){
-                        System.out.println("main deck is full");
-                    }
-                    else {
-                        int amountInMainDeck = 0;
-                        int amountInSideDeck = 0;
-                        if (userDecks.get(deckName).getAllCards().containsKey(cardName))
-                            amountInMainDeck = (int) userDecks.get(deckName).getAllCards().get(cardName);
-                        if (userDecks.get(deckName).sideDeck.getAllCards().containsKey(cardName))
-                            amountInSideDeck = (int) userDecks.get(deckName).sideDeck.getAllCards().get(cardName);
-                        if (amountInMainDeck + amountInSideDeck >= 3){
-                            System.out.println("there are already three cards with name " + cardName + " in deck " + deckName);
-                        }
+            } else {
+                try {
+                    FileReader fileReader = new FileReader(DECKS_FILE_PATH + "\\" + deckName + ".json");
+                    Deck deck = new GsonBuilder().create().fromJson(fileReader, Deck.class);
+                    int mainDeckAmount = deck.mainDeckSize();
+                    int sideDeckAmount = deck.sideDeckSize();
+                    if (isSide) {
+                        if (sideDeckAmount == 15)
+                            System.out.println("side deck is full");
                         else {
-                            if(isSide) {
-                                userDecks.get(deckName).sideDeck.increaseCard(cardName);
+                            int cardCount = deck.mainDecksCardCount(cardName) + deck.sideDecksCardCount(cardName);
+                            if (cardCount == 3)
+                                System.out.println("there are already three cards with name " + cardName + " in deck " + deckName);
+                            else {
+                                user.decreaseCard(cardName);
+                                deck.addCardToSideDeck(cardName);
                                 System.out.println("card added to deck successfully");
                             }
+                        }
+                    } else {
+                        if (mainDeckAmount == 60)
+                            System.out.println("main deck is full");
+                        else {
+                            int cardCount = deck.mainDecksCardCount(cardName) + deck.sideDecksCardCount(cardName);
+                            if (cardCount == 3)
+                                System.out.println("there are already three cards with name " + cardName + " in deck " + deckName);
                             else {
-                                userDecks.get(deckName).increaseCard(cardName);
+                                user.decreaseCard(cardName);
+                                deck.addCardToMainDeck(cardName);
                                 System.out.println("card added to deck successfully");
                             }
                         }
                     }
+                } catch (IOException e) {
+                    System.out.println("An error occurred while adding Card to Deck!");
                 }
             }
         }
     }
 
-    public void removeCardFromDeck(String username, String deckName, String cardName, boolean isSide){
-        HashMap<String,Deck> userDecks = User.getUserByUsername(username).getUserDecks();
-        if (!userDecks.containsKey(deckName)){
+    public void removeCardFromDeck(String username, String deckName, String cardName, boolean isSide) {
+        User user = User.getUserByUsername(username);
+        if (!deckNameCheck(deckName)) {
             System.out.println("deck with name " + deckName + " does not exist");
+        } else {
+            try {
+                Gson gson = new GsonBuilder().create();
+                FileReader fileReader = new FileReader(DECKS_FILE_PATH + "\\" + deckName + ".json");
+                Deck deck = gson.fromJson(fileReader, Deck.class);
+                if (!isSide) {
+                    if (!deck.doesMainDeckHasThisCard(cardName))
+                        System.out.println("card with name " + cardName + " does not exist in main deck");
+                    else {
+                        user.increaseCard(cardName);
+                        deck.removeCardFromMainDeck(cardName);
+                        System.out.println("card removed form deck successfully");
+                    }
+                } else {
+                    if (!deck.doesSideDeckHasThisCard(deckName))
+                        System.out.println("card with name " + cardName + " does not exist in side deck");
+                    else {
+                        user.increaseCard(cardName);
+                        deck.removeCardFromSideDeck(cardName);
+                        System.out.println("card removed form deck successfully");
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("An error occurred while deleting Card from Deck!");
+            }
         }
+    }
+
+    public void showAllDecks(String username) {
+        User user = User.getUserByUsername(username);
+        ArrayList<String> usersAllDecks = user.getUserDecks();
+        String activeDeck = user.getActiveDeck();
+        usersAllDecks.sort(Comparator.naturalOrder());
+        System.out.println("Decks:");
+        System.out.println("Active Deck:");
+        if (activeDeck != null)
+            printDeck(activeDeck);
+        System.out.println("Other Decks:");
+        for (String deckName : usersAllDecks)
+            printDeck(deckName);
+    }
+
+    public void printDeck(String deckName) {
+        try {
+            FileReader fileReader = new FileReader(DECKS_FILE_PATH + "\\" + deckName + ".json");
+            Gson gson = new GsonBuilder().create();
+            Deck deck = gson.fromJson(fileReader, Deck.class);
+            boolean isValid = deck.isValid();
+            if (isValid)
+                System.out.println(deck.getName() + ": main deck " + deck.mainDeckSize() +
+                        ",side deck " + deck.sideDeckSize() + ", valid");
+            else
+                System.out.println(deck.getName() + ": main deck " + deck.mainDeckSize() +
+                        ",side deck " + deck.sideDeckSize() + ", invalid");
+        } catch (IOException e) {
+            System.out.println("An error occurred while printing Deck!\n" +
+                    "Deck did not found");
+        }
+    }
+
+    public void showDeck(String username, String deckName, boolean isSide) {
+        if (!deckNameCheck(deckName))
+            System.out.println("deck with name " + deckName + " does not exists");
         else {
-            HashMap<String , Card> Cards = Card.getAllCards();
-            if (!Cards.containsKey(cardName)){
-                System.out.println("card with name " + cardName + " does not exist");
-            }
-            else {
+            try {
+                FileReader fileReader = new FileReader(DECKS_FILE_PATH + "\\" + deckName + ".json");
+                Gson gson = new GsonBuilder().create();
+                Deck deck = gson.fromJson(fileReader, Deck.class);
+                System.out.println("Deck name: " + deckName);
                 if (isSide) {
-                    userDecks.get(deckName).sideDeck.decreaseCard(cardName);
-                    System.out.println("card removed successfully");
+                    System.out.println("Side Deck:");
+                    printDeckCards(deck.getSideDeckCards());
+                } else {
+                    System.out.println("Main Deck:");
+                    printDeckCards(deck.getMainDeckCards());
                 }
-                else {
-                    userDecks.get(deckName).decreaseCard(cardName);
-                    System.out.println("card removed successfully");
-                }
+            }catch (IOException e){
+                System.out.println("An error occurred while showing Deck!");
             }
         }
     }
 
-    public void showAllDecks(String username){
-        System.out.println("active deck:");
-        HashMap<String,Deck> userDecks = User.getUserByUsername(username).getUserDecks();
-        for (HashMap.Entry<String, Deck> entry : userDecks.entrySet()){
-            if (entry.getValue().isActive()){
-                int mainDeckAmount = entry.getValue().getMainDeckAmount();
-                int sideDeckAmount = entry.getValue().getSideDeckAmount();
-                if (mainDeckAmount >= 40 && mainDeckAmount <= 60 && sideDeckAmount >= 0 && sideDeckAmount <= 15)
-                    System.out.println(entry.getKey() + ": main deck " + mainDeckAmount + " side deck " + sideDeckAmount + " valid");
-                else System.out.println(entry.getKey() + ": main deck " + mainDeckAmount + " side deck " + sideDeckAmount + " invalid");
-            }
-        }
-        System.out.println("other decks:");
-        for (HashMap.Entry<String, Deck> entry : userDecks.entrySet()){
-            if (!entry.getValue().isActive()){
-                int mainDeckAmount = entry.getValue().getMainDeckAmount();
-                int sideDeckAmount = entry.getValue().getSideDeckAmount();
-                if (mainDeckAmount >= 40 && mainDeckAmount <= 60 && sideDeckAmount >= 0 && sideDeckAmount <= 15)
-                    System.out.println(entry.getKey() + ": main deck " + mainDeckAmount + " side deck " + sideDeckAmount + " valid");
-                else System.out.println(entry.getKey() + ": main deck " + mainDeckAmount + " side deck " + sideDeckAmount + " invalid");
-            }
+    public void printDeckCards(HashMap<String, Integer> deck) {
+        TreeMap<String, Integer> sortedDeck = new TreeMap<>(deck);
+        Gson gson = new GsonBuilder().create();
+        System.out.println("Monsters:");
+        for (Map.Entry<String, Integer> entry : sortedDeck.entrySet()) {
+            printCard(entry);
         }
     }
 
-    public void showDeck(String username ,String deckName, boolean isSide){
-        if (!User.getUserByUsername(username).getUserDecks().containsKey(deckName)){
-            System.out.println("deck with this name does not exist");
-        }
-        else{
-            User user = User.getUserByUsername(username);
-            HashMap<String,Deck> userDecks = user.getUserDecks();
-            if (!isSide){
-                System.out.println("main deck:");
-                System.out.println("monsters:");
-                for (HashMap.Entry<String, Integer> entry : userDecks.get(deckName).getAllCards().entrySet()){
-                    if (MonsterCard.getAllCards().containsKey(entry.getKey()))
-                        System.out.println(MonsterCard.getAllCards().get(entry.getKey()).getName() + " : " + MonsterCard.getAllCards().get(entry.getKey()).getDescription());
-                }
-                System.out.println("spell and traps:");
-                for (HashMap.Entry<String, Integer> entry : userDecks.get(deckName).getAllCards().entrySet()){
-                    if (!MonsterCard.getAllCards().containsKey(entry.getKey()))
-                        if (SpellCard.getAllCards().containsKey(entry.getKey()))
-                        System.out.println(SpellCard.getAllCards().get(entry.getKey()).getName() + " : " + SpellCard.getAllCards().get(entry.getKey()).getDescription());
-                        else System.out.println(TrapCard.getAllCards().get(entry.getKey()).getName() + " : " + TrapCard.getAllCards().get(entry.getKey()).getDescription());
-                }
-            }
-            else {
-                System.out.println("side deck:");
-                System.out.println("monsters:");
-                for (HashMap.Entry<String, Integer> entry : userDecks.get(deckName).sideDeck.getAllCards().entrySet()){
-                    if (MonsterCard.getAllCards().containsKey(entry.getKey()))
-                        System.out.println(MonsterCard.getAllCards().get(entry.getKey()).getName() + " : " + MonsterCard.getAllCards().get(entry.getKey()).getDescription());
-                }
-                System.out.println("spell and traps:");
-                for (HashMap.Entry<String, Integer> entry : userDecks.get(deckName).sideDeck.getAllCards().entrySet()){
-                    if (!MonsterCard.getAllCards().containsKey(entry.getKey()))
-                        if (SpellCard.getAllCards().containsKey(entry.getKey()))
-                            System.out.println(SpellCard.getAllCards().get(entry.getKey()).getName() + " : " + SpellCard.getAllCards().get(entry.getKey()).getDescription());
-                        else System.out.println(TrapCard.getAllCards().get(entry.getKey()).getName() + " : " + TrapCard.getAllCards().get(entry.getKey()).getDescription());
-                }
-            }
+    public void showUserCards(String username) {
+        TreeMap<String, Integer> sortedCards = new TreeMap<>(User.getUserByUsername(username).getUserAllCards());
+        for (Map.Entry<String, Integer> entry : sortedCards.entrySet()) {
+            printCard(entry);
         }
     }
 
-    public void showUserCards(String username){
-        for (HashMap.Entry<String, Integer> entry : User.getUserByUsername(username).getUserAllCards().entrySet()){
-            if (Card.getAllCards().containsKey(entry.getKey()))
-                System.out.println(entry.getKey() + " : " + Card.getAllCards().get(entry.getKey()).getDescription());
+    public void printCard(Map.Entry<String, Integer> entry) {
+        if (MonsterCard.isMonsterCard(entry.getKey())) {
+            MonsterCard monsterCard = MonsterCard.getMonsterCardByName(entry.getKey());
+            System.out.println(monsterCard.getName() + ": " + monsterCard.getDescription());
+        } else {
+            SpellTrapCard spellTrapCard = SpellTrapCard.getSpellTrapCardByName(entry.getKey());
+            System.out.println(spellTrapCard.getName() + ": " + spellTrapCard.getDescription());
         }
     }
 
-    public static DeckController getInstance(){
-        if(instance == null)
+    public static DeckController getInstance() {
+        if (instance == null)
             instance = new DeckController();
         return instance;
     }
