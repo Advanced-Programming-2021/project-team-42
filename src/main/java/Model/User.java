@@ -3,14 +3,16 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class User {
     private static ArrayList<User> allUsers;
-    private HashMap<String , Integer> usersAllCards; //Integer is amount of each card of user
-    private HashMap<String , Deck> userDecks = new HashMap<>();
+    private HashMap<String, Integer> usersAllCards; //Integer is amount of each card of user
+    private ArrayList<String> userDecks;
     private String username;
     private String password;
     private String nickname;
+    private String activeDeck;
     private int balance;
     private int score;
     private int LP;
@@ -20,42 +22,74 @@ public class User {
         allUsers = new ArrayList<>();
     }
 
-    public User(String username, String password, String nickname){
+    public User(String username, String password, String nickname) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
+        this.activeDeck = null;
         this.balance = 100000;
         this.score = 0;
         this.LP = 0;
         usersAllCards = new HashMap<>();
+        userDecks = new ArrayList<>();
     }
 
-    public static User getUserByUsername(String username){
-        for(User user : allUsers){
-            if(user.getUsername().equals(username))
+    public static User getUserByUsername(String username) {
+        for (User user : allUsers) {
+            if (user.getUsername().equals(username))
                 return user;
         }
         return null;
     }
 
-    public static void addUserToList(User user){
+    public void addDeckToList(String deckName){
+        userDecks.add(deckName);
+    }
+
+    public void removeDeckFromList(String deckName){
+        userDecks.remove(deckName);
+    }
+
+    public static void addUserToList(User user) {
         allUsers.add(user);
     }
 
-    public static ArrayList<User> getAllUsers(){
+    public void setActiveDeck(String activeDeck) {
+        this.activeDeck = activeDeck;
+    }
+
+    public String getActiveDeck() {
+        return activeDeck;
+    }
+
+    public boolean doesUserHasThisCard(String cardName){
+        for(Map.Entry<String, Integer> entry : usersAllCards.entrySet()){
+            if(entry.getKey().equals(cardName))
+                return true;
+        }
+        return false;
+    }
+
+    public static ArrayList<User> getAllUsers() {
         return allUsers;
     }
 
-    public HashMap<String,Deck> getUserDecks(){
+    public ArrayList<String> getUserDecks() {
         return this.userDecks;
     }
 
-    public HashMap<String,Integer> getUserAllCards(){
+    public HashMap<String, Integer> getUserAllCards() {
         return this.usersAllCards;
     }
 
-    public void increaseCard(String cardName){
+    public void increaseCard(String cardName) {
         usersAllCards.put(cardName, usersAllCards.get(cardName) + 1);
+    }
+
+    public void decreaseCard(String cardName){
+        usersAllCards.put(cardName, usersAllCards.get(cardName) - 1);
+        if(usersAllCards.get(cardName) == 0)
+            usersAllCards.remove(cardName);
     }
 
     public boolean isLoggedIn() {

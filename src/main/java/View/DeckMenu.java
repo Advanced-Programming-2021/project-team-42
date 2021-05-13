@@ -83,7 +83,7 @@ public class DeckMenu extends Menu {
             @Override
             public void execute() {
                 String deckName = null;
-                Pattern pattern = Pattern.compile("deck set-active (\\w+)");
+                Pattern pattern = Pattern.compile("deck set-activate (\\w+)");
                 Matcher matcher = pattern.matcher(COMMAND);
                 if (matcher.find())
                     deckName = matcher.group(1).trim();
@@ -212,12 +212,12 @@ public class DeckMenu extends Menu {
         System.out.println("\033[1;92m" + "\t\tUse this patterns to manage Decks:\n" + "\033[0m" +
                 "\033[4;31m" + "Tip:\033[0m You can enter fields with dash sign (--) by any desired order!\n");
         System.out.println("\033[0;97m" + "Create New Deck:\033[0m deck create <deck name>\n" +
-                "\033[0;97m" + "Delete Deck:\033[0m deck delete <deck name>" +
-                "\033[0;97m" + "Set Deck Active:\033[0m deck set-activate <deck name>" +
-                "\033[0;97m" + "Add Card To Deck:\033[0m deck add-card --card <card name> --deck <deck name> --side(optional)" +
-                "\033[0;97m" + "Remove Card From Deck:\033[0m deck rm-card --card <card name> --deck <deck name> --side(optional)" +
-                "\033[0;97m" + "Show User All Decks:\033[0m deck show --all" +
-                "\033[0;97m" + "Show Deck:\033[0m deck show --deck-name <deck name> --side(Opt)");
+                "\033[0;97m" + "Delete Deck:\033[0m deck delete <deck name>\n" +
+                "\033[0;97m" + "Set Deck Active:\033[0m deck set-activate <deck name>\n" +
+                "\033[0;97m" + "Add Card To Deck:\033[0m deck add-card --card <card name> --deck <deck name> --side(optional)\n" +
+                "\033[0;97m" + "Remove Card From Deck:\033[0m deck rm-card --card <card name> --deck <deck name> --side(optional)\n" +
+                "\033[0;97m" + "Show User All Decks:\033[0m deck show --all\n" +
+                "\033[0;97m" + "Show Deck:\033[0m deck show --deck-name <deck name> --side(Opt)\n");
         System.out.println("\033[1;94m" + "\t\tAdditional options:\n" + "\033[0m" +
                 "\033[0;97m" + "Exit the game:\033[0m menu exit\n" +
                 "\033[0;97m" + "Enter a menu:\033[0m menu enter <menu name>\n" +

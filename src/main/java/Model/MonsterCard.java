@@ -4,7 +4,10 @@ import Model.Enums.Attribute;
 import Model.Enums.CardType;
 import Model.Enums.MonsterType;
 
+import java.util.ArrayList;
+
 public class MonsterCard extends Card {
+    private static ArrayList<MonsterCard> allMonsterCards;
     private Attribute attribute;
     private MonsterType monsterType;
     private CardType cardType;
@@ -16,6 +19,10 @@ public class MonsterCard extends Card {
     private boolean isEffectEnable;
     private boolean isSet;
 
+    static {
+        allMonsterCards = new ArrayList<>();
+    }
+
     public MonsterCard (String name, String description, Attribute attribute,
                         MonsterType monsterType, CardType cardType, int attackPoint, int defencePoint, int price, int level){
         super(name, description, price);
@@ -25,6 +32,31 @@ public class MonsterCard extends Card {
         this.attackPoint = attackPoint;
         this.defencePoint = defencePoint;
         this.level = level;
+    }
+
+    public static ArrayList<MonsterCard> getAllMonsterCards (){
+        return allMonsterCards;
+    }
+
+    public static MonsterCard getMonsterCardByName(String monsterCardName){
+        for(MonsterCard monsterCard : allMonsterCards){
+            if(monsterCard.getName().equals(monsterCardName))
+                return monsterCard;
+        }
+        return null;
+    }
+
+    public static boolean isMonsterCard(String monsterCardName){
+        for(MonsterCard monsterCard : allMonsterCards){
+            if (monsterCard.getName().equals(monsterCardName))
+                return true;
+        }
+        return false;
+    }
+
+
+    public static void addMonsterCardToList(MonsterCard monsterCard){
+        allMonsterCards.add(monsterCard);
     }
 
     public boolean isSet() {

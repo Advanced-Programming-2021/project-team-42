@@ -1,15 +1,16 @@
 package Model;
 
-import java.util.HashMap;
+
+import java.util.ArrayList;
 
 public abstract class Card {
-    public static HashMap<String, Card> allCards;
+    private static ArrayList<Card> allCards;
     protected String name;
     protected int price;
     protected String description;
 
     static {
-        allCards = new HashMap<>();
+        allCards = new ArrayList<>();
     }
 
     public Card(String name, String description, int price){
@@ -18,12 +19,28 @@ public abstract class Card {
         this.price = price;
     }
 
-    public static HashMap<String, Card> getAllCards(){
+    public static void addCardToList(Card card){
+        allCards.add(card);
+    }
+
+    public static ArrayList<Card> getAllCards(){
         return allCards;
     }
 
-    public static void addCardToList(Card card){
-        allCards.put(card.getName(), card);
+    public static boolean isCardExists(String cardName){
+        for(Card card : allCards){
+            if(card.getName().equals(cardName))
+                return true;
+        }
+        return false;
+    }
+
+    public static Card getCardByName(String cardName){
+        for(Card card : allCards){
+            if(card.getName().equals(cardName))
+                return card;
+        }
+        return null;
     }
 
     public String getDescription() {

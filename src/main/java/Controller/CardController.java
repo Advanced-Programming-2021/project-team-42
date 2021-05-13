@@ -37,6 +37,7 @@ public class CardController {
                 Gson gson = new GsonBuilder().create();
                 FileWriter fileWriter = new FileWriter("C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Cards" + "\\" + monsterCard.getName() + ".json");
                 gson.toJson(monsterCard, fileWriter);
+                MonsterCard.addMonsterCardToList(monsterCard);
                 fileWriter.close();
             }
             FileReader fileReaderSpellTrap = new FileReader(FILE_PATH + "\\SpellTrap (1).csv");
@@ -54,10 +55,11 @@ public class CardController {
                 Gson gson = new GsonBuilder().create();
                 FileWriter fileWriter = new FileWriter("C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Cards" + "\\" + spellTrapCard.getName() + ".json");
                 gson.toJson(spellTrapCard, fileWriter);
+                SpellTrapCard.addSpellTrapCardToList(spellTrapCard);
                 fileWriter.close();
             }
         }catch (Exception e){
-            System.out.println("an error ocurred");
+            System.out.println("An Error occurred");
         }
     }
 

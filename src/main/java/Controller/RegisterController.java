@@ -54,6 +54,7 @@ public class RegisterController {
                 else {
                     if(parseUsers()){
                         CardController.parseCards();
+                        DeckController.parseDecks();
                         System.out.println("You logged in successfully!");
                         MainMenu mainMenu = new MainMenu(parentMenu);
                         mainMenu.setUsersName(username);

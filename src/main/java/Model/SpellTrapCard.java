@@ -3,12 +3,19 @@ package Model;
 import Model.Enums.Icon;
 import Model.Enums.Status;
 
+import java.util.ArrayList;
+
 public class SpellTrapCard extends Card{
+    private static ArrayList<SpellTrapCard> allSpellTrapCards;
     private String cardType;
     private Icon icon;
     private Status status;
     private boolean isEffectEnable;
     private boolean isSet;
+
+    static {
+        allSpellTrapCards = new ArrayList<>();
+    }
 
     public SpellTrapCard (String name, String description, String cardType, Icon icon,
                       Status status, int price){
@@ -16,6 +23,22 @@ public class SpellTrapCard extends Card{
         this.icon = icon;
         this.status = status;
         this.cardType = cardType;
+    }
+
+    public static ArrayList<SpellTrapCard> getAllSpellTrapCards(){
+        return allSpellTrapCards;
+    }
+
+    public static void addSpellTrapCardToList(SpellTrapCard spellTrapCard){
+        allSpellTrapCards.add(spellTrapCard);
+    }
+
+    public static SpellTrapCard getSpellTrapCardByName(String cardName){
+        for(SpellTrapCard spellTrapCard : allSpellTrapCards){
+            if(spellTrapCard.getName().equals(cardName))
+                return spellTrapCard;
+        }
+        return null;
     }
 
     public boolean isSet() {
