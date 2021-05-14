@@ -3,12 +3,10 @@ package View;
 import Controller.IAndEController;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class IECardMenu extends Menu{
-    private static String COMMAND;
     private static final HashMap<String, Pattern> PATTERNS_COLLECTION;
 
     static {
@@ -31,14 +29,14 @@ public class IECardMenu extends Menu{
             }
 
             @Override
-            public void execute() {
+            public void executeCommand(String command) {
                 String cardName = null;
-                Matcher matcher = Pattern.compile("import card ([A-Za-z ]+)").matcher(COMMAND);
+                Matcher matcher = Pattern.compile("import card ([A-Za-z ]+)").matcher(command);
                 if(matcher.find())
                     cardName = matcher.group(1);
 
                 IAndEController.getInstance().importCard(cardName);
-                parentMenu.execute();
+                parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };
     }
@@ -50,23 +48,19 @@ public class IECardMenu extends Menu{
             }
 
             @Override
-            public void execute() {
+            public void executeCommand(String command) {
                 String cardName = null;
-                Matcher matcher = Pattern.compile("export card ([A-Za-z ]+)").matcher(COMMAND);
+                Matcher matcher = Pattern.compile("export card ([A-Za-z ]+)").matcher(command);
                 if(matcher.find())
                     cardName = matcher.group(1);
 
                 IAndEController.getInstance().exportCard(cardName);
-                parentMenu.execute();
+                parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };
     }
 
-    public void run(){
-        show();
-        execute();
-    }
-
+    @Override
     public void show(){
         System.out.println("\033[1;92m" + "\t\tUse this patterns to Import/Export cards:\n" + "\033[0m" +
         "\033[0;97m" + "Import Card:\033[0m import card <cardname>" +
@@ -77,64 +71,8 @@ public class IECardMenu extends Menu{
                 "\033[0;97m" + "Show current menu:\033[0m menu show-current\n");
     }
 
-    public void execute(){
-        String command = getValidCommand();
-        Matcher matcher;
-        Menu nextMenu = null;
-        for(Map.Entry<Pattern, Menu> entry : subMenus.entrySet()){
-            matcher = entry.getKey().matcher(command);
-            if(matcher.matches()) {
-                COMMAND = command;
-                nextMenu = entry.getValue();
-            }
-        }
-        if(nextMenu != null)
-            nextMenu.execute();
-        else{
-            matcher = PATTERNS_COLLECTION.get("Valid Navigations Pattern").matcher(command);
-            if(matcher.matches())
-                this.parentMenu.run();
-            else{
-                matcher = PATTERNS_COLLECTION.get("Exit Menu Pattern").matcher(command);
-                if(matcher.matches())
-                    this.parentMenu.run();
-                else{
-                    matcher = PATTERNS_COLLECTION.get("Invalid Navigations Pattern").matcher(command);
-                    if(matcher.matches())
-                        System.out.println("Menu navigation is not possible!");
-                    else{
-                        matcher = PATTERNS_COLLECTION.get("Current Menu Pattern").matcher(command);
-                        if(matcher.matches())
-                            System.out.println(this.name);
-                    }
-                    execute();
-                }
-            }
-        }
-    }
-
-    public String getValidCommand() {
-        System.out.println("Enter your desired command:");
-        String command;
-        Matcher matcher;
-        boolean check = false;
-        do {
-            command = Menu.scanner.nextLine();
-            for (Map.Entry<Pattern, Menu> entry : subMenus.entrySet()) {
-                matcher = entry.getKey().matcher(command);
-                if (matcher.matches()) {
-                    check = true;
-                }
-            }
-            for (Map.Entry<String, Pattern> entry : PATTERNS_COLLECTION.entrySet()) {
-                matcher = entry.getValue().matcher(command);
-                if (matcher.matches())
-                    check = true;
-            }
-            if (!check)
-                System.out.println("invalid command\n" +
-                        "Try Again!");
-        } while (!check);
-        return command;
+    public void run() {
+        show();
+        execute(this, PATTERNS_COLLECTION);
     }
 }

@@ -46,7 +46,10 @@ public class DeckController {
                 Gson gson = new GsonBuilder().create();
                 FileWriter fileWriter = new FileWriter(DECKS_FILE_PATH + "\\" + deckName + ".json");
                 gson.toJson(deck, fileWriter);
-                User.getUserByUsername(username).addDeckToList(deckName);
+                User user = User.getUserByUsername(username);
+                user.addDeckToList(deckName);
+                fileWriter = new FileWriter(USERS_FILE_PATH + "\\" + username + ".json");
+                gson.toJson(user, fileWriter);
                 System.out.println("deck created successfully!");
             } catch (IOException e) {
                 System.out.println("Can not create new Deck\n" +
@@ -78,9 +81,16 @@ public class DeckController {
                 for (int i = 0; i < allDecks.length; i++) {
                     if (allDecks[i].getName().equals(deckName + ".json")) {
                         if (allDecks[i].delete()) {
-                            System.out.println("deck deleted successfully");
-                            User.getUserByUsername(username).removeDeckFromList(deckName);
-                            break;
+                            try {
+                                User user = User.getUserByUsername(username);
+                                user.removeDeckFromList(deckName);
+                                FileWriter fileWriter = new FileWriter(USERS_FILE_PATH + "\\" + username + ".json");
+                                new Gson().toJson(user, fileWriter);
+                                System.out.println("deck deleted successfully");
+                                break;
+                            }catch (Exception e){
+                                System.out.println("Can not delete deck!");
+                            }
                         } else
                             System.out.println("Field to delete deck!");
                     }
@@ -93,8 +103,15 @@ public class DeckController {
         if (!deckNameCheck(deckName)) {
             System.out.println("deck with name " + deckName + " does not exist");
         } else {
-            User.getUserByUsername(username).setActiveDeck(deckName);
-            System.out.println("deck activated successfully");
+            try {
+                User user = User.getUserByUsername(username);
+                user.setActiveDeck(deckName);
+                FileWriter fileWriter = new FileWriter(USERS_FILE_PATH + "\\" + username + ".json");
+                new Gson().toJson(user, fileWriter);
+                System.out.println("deck activated successfully");
+            }catch (Exception e){
+                System.out.println("Can not do activation process!");
+            }
         }
 
     }
@@ -123,6 +140,10 @@ public class DeckController {
                             else {
                                 user.decreaseCard(cardName);
                                 deck.addCardToSideDeck(cardName);
+                                FileWriter fileWriter = new FileWriter(USERS_FILE_PATH + "\\" + username + ".json");
+                                new Gson().toJson(user, fileWriter);
+                                fileWriter = new FileWriter(DECKS_FILE_PATH + "\\" + deckName + ".json");
+                                new Gson().toJson(deck, fileWriter);
                                 System.out.println("card added to deck successfully");
                             }
                         }
@@ -136,6 +157,10 @@ public class DeckController {
                             else {
                                 user.decreaseCard(cardName);
                                 deck.addCardToMainDeck(cardName);
+                                FileWriter fileWriter = new FileWriter(USERS_FILE_PATH + "\\" + username + ".json");
+                                new Gson().toJson(user, fileWriter);
+                                fileWriter = new FileWriter(DECKS_FILE_PATH + "\\" + deckName + ".json");
+                                new Gson().toJson(deck, fileWriter);
                                 System.out.println("card added to deck successfully");
                             }
                         }
@@ -162,6 +187,10 @@ public class DeckController {
                     else {
                         user.increaseCard(cardName);
                         deck.removeCardFromMainDeck(cardName);
+                        FileWriter fileWriter = new FileWriter(USERS_FILE_PATH + "\\" + username + ".json");
+                        new Gson().toJson(user, fileWriter);
+                        fileWriter = new FileWriter(DECKS_FILE_PATH + "\\" + deckName + ".json");
+                        new Gson().toJson(deck, fileWriter);
                         System.out.println("card removed form deck successfully");
                     }
                 } else {
@@ -170,6 +199,10 @@ public class DeckController {
                     else {
                         user.increaseCard(cardName);
                         deck.removeCardFromSideDeck(cardName);
+                        FileWriter fileWriter = new FileWriter(USERS_FILE_PATH + "\\" + username + ".json");
+                        new Gson().toJson(user, fileWriter);
+                        fileWriter = new FileWriter(DECKS_FILE_PATH + "\\" + deckName + ".json");
+                        new Gson().toJson(deck, fileWriter);
                         System.out.println("card removed form deck successfully");
                     }
                 }
@@ -235,10 +268,19 @@ public class DeckController {
 
     public void printDeckCards(HashMap<String, Integer> deck) {
         TreeMap<String, Integer> sortedDeck = new TreeMap<>(deck);
-        Gson gson = new GsonBuilder().create();
         System.out.println("Monsters:");
         for (Map.Entry<String, Integer> entry : sortedDeck.entrySet()) {
-            printCard(entry);
+            if (MonsterCard.isMonsterCard(entry.getKey())) {
+                MonsterCard monsterCard = MonsterCard.getMonsterCardByName(entry.getKey());
+                System.out.println(monsterCard.getName() + ": " + monsterCard.getDescription());
+            }
+        }
+        System.out.println("Spell and Traps:");
+        for (Map.Entry<String, Integer> entry : sortedDeck.entrySet()) {
+            if (!MonsterCard.isMonsterCard(entry.getKey())) {
+                MonsterCard monsterCard = MonsterCard.getMonsterCardByName(entry.getKey());
+                System.out.println(monsterCard.getName() + ": " + monsterCard.getDescription());
+            }
         }
     }
 

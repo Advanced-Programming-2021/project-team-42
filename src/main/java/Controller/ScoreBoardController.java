@@ -20,7 +20,6 @@ public class ScoreBoardController {
             System.out.println(rank + "- " + user.getNickname() + ": " + user.getScore());
             rank++;
         }
-        System.out.println("\n");
     }
 
 

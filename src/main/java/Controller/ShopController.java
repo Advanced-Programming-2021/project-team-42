@@ -4,12 +4,14 @@ import Model.Card;
 import Model.MonsterCard;
 import Model.SpellTrapCard;
 import Model.User;
+import com.google.gson.Gson;
 
-import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class ShopController {
     public static ShopController instance = null;
+    private final static String USERS_FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Users";
 
     private ShopController() {
     }
@@ -25,9 +27,15 @@ public class ShopController {
             if (userBalance < cardPrice) {
                 System.out.println("not enough money");
             } else {
-                user.setBalance(userBalance - cardPrice);
-                user.increaseCard(cardName);
-                System.out.println("card " + cardName + " added to your cards successfully");
+                try {
+                    user.setBalance(userBalance - cardPrice);
+                    user.increaseCard(cardName);
+                    FileWriter fileWriter = new FileWriter(USERS_FILE_PATH + "\\" + username + ".json");
+                    new Gson().toJson(user, fileWriter);
+                    System.out.println("card " + cardName + " added to your cards successfully");
+                } catch (Exception e){
+                    System.out.println("Can not add card to user cards");
+                }
             }
         }
     }

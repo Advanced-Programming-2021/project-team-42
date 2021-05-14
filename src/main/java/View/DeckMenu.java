@@ -1,16 +1,13 @@
 package View;
 
 import Controller.DeckController;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DeckMenu extends Menu {
 
-    private static String COMMAND;
     private static final HashMap<String, Pattern> PATTERNS_COLLECTION;
 
     static {
@@ -36,19 +33,14 @@ public class DeckMenu extends Menu {
     public Menu createDeck() {
         return new Menu("Create New Deck", this) {
             @Override
-            public void show() {
-
-            }
-
-            @Override
-            public void execute() {
+            public void executeCommand(String command) {
                 String deckName = null;
                 Pattern pattern = Pattern.compile("deck create (\\w+)");
-                Matcher matcher = pattern.matcher(COMMAND);
+                Matcher matcher = pattern.matcher(command);
                 if (matcher.find())
                     deckName = matcher.group(1).trim();
                 DeckController.getInstance().createDeck(this.parentMenu.parentMenu.usersName, deckName);
-                parentMenu.execute();
+                parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };
     }
@@ -56,19 +48,14 @@ public class DeckMenu extends Menu {
     public Menu deleteDeck() {
         return new Menu("Delete Deck", this) {
             @Override
-            public void show() {
-                super.show();
-            }
-
-            @Override
-            public void execute() {
+            public void executeCommand(String command) {
                 String deckName = null;
                 Pattern pattern = Pattern.compile("deck delete (\\w+)");
-                Matcher matcher = pattern.matcher(COMMAND);
+                Matcher matcher = pattern.matcher(command);
                 if (matcher.find())
                     deckName = matcher.group(1).trim();
                 DeckController.getInstance().deleteDeck(this.parentMenu.parentMenu.usersName, deckName);
-                parentMenu.execute();
+                parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };
     }
@@ -76,19 +63,14 @@ public class DeckMenu extends Menu {
     public Menu setActive() {
         return new Menu("Set Deck Active", this) {
             @Override
-            public void show() {
-                super.show();
-            }
-
-            @Override
-            public void execute() {
+            public void executeCommand(String command) {
                 String deckName = null;
                 Pattern pattern = Pattern.compile("deck set-activate (\\w+)");
-                Matcher matcher = pattern.matcher(COMMAND);
+                Matcher matcher = pattern.matcher(command);
                 if (matcher.find())
                     deckName = matcher.group(1).trim();
                 DeckController.getInstance().setActiveDeck(this.parentMenu.parentMenu.usersName, deckName);
-                parentMenu.execute();
+                parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };
     }
@@ -96,29 +78,8 @@ public class DeckMenu extends Menu {
     public Menu addCard() {
         return new Menu("Add Card To Deck", this) {
             @Override
-            public void show() {
-                super.show();
-            }
-
-            @Override
-            public void execute() {
-                String cardName = "";
-                String deckName = "";
-                boolean isSideDeck = false;
-                Pattern pattern = Pattern.compile("--card (\\w+)");
-                Matcher matcher = pattern.matcher(COMMAND);
-                if (matcher.find())
-                    cardName = matcher.group(1).trim();
-                pattern = Pattern.compile("--deck (\\w+)");
-                matcher = pattern.matcher(COMMAND);
-                if (matcher.find())
-                    deckName = matcher.group(1).trim();
-                pattern = Pattern.compile("--side");
-                matcher = pattern.matcher(COMMAND);
-                if (matcher.find())
-                    isSideDeck = true;
-                DeckController.getInstance().addCardToDeck(this.parentMenu.parentMenu.usersName, deckName, cardName, isSideDeck);
-                parentMenu.execute();
+            public void executeCommand(String command) {
+                processingCard(command, 1);
             }
         };
     }
@@ -126,44 +87,46 @@ public class DeckMenu extends Menu {
     public Menu removeCard() {
         return new Menu("Remove Card From Deck", this) {
             @Override
-            public void show() {
-                super.show();
+            public void executeCommand(String command) {
+                processingCard(command, 0);
             }
 
-            @Override
-            public void execute() {
-                String cardName = "";
-                String deckName = "";
-                boolean isSideDeck = false;
-                Pattern pattern = Pattern.compile("--card (\\w+)");
-                Matcher matcher = pattern.matcher(COMMAND);
-                if (matcher.find())
-                    cardName = matcher.group(1).trim();
-                pattern = Pattern.compile("--deck (\\w+)");
-                matcher = pattern.matcher(COMMAND);
-                if (matcher.find())
-                    deckName = matcher.group(1).trim();
-                pattern = Pattern.compile("--side");
-                matcher = pattern.matcher(COMMAND);
-                if (matcher.find())
-                    isSideDeck = true;
-                DeckController.getInstance().removeCardFromDeck(this.parentMenu.parentMenu.usersName, deckName, cardName, isSideDeck);
-                parentMenu.execute();
-            }
         };
     }
+
+    private void processingCard(String command, int flag) {
+        String cardName = null, deckName = null;
+        boolean isSideDeck = false;
+        Pattern pattern = Pattern.compile("--card (\\w+)");
+        Matcher matcher = pattern.matcher(command);
+        if (matcher.find())
+            cardName = matcher.group(1).trim();
+        pattern = Pattern.compile("--deck (\\w+)");
+        matcher = pattern.matcher(command);
+        if (matcher.find())
+            deckName = matcher.group(1).trim();
+        pattern = Pattern.compile("--side");
+        matcher = pattern.matcher(command);
+        if (matcher.find())
+            isSideDeck = true;
+        if(cardName != null && deckName != null) {
+            if (flag == 0)
+                DeckController.getInstance().removeCardFromDeck(this.parentMenu.parentMenu.usersName, deckName, cardName, isSideDeck);
+            else
+                DeckController.getInstance().addCardToDeck(this.parentMenu.parentMenu.usersName, deckName, cardName, isSideDeck);
+        }
+        else
+            System.out.println("invalid command!");
+        this.execute(this, PATTERNS_COLLECTION);
+    }
+
 
     public Menu showDecks() {
         return new Menu("Show User All Decks", this) {
             @Override
-            public void show() {
-                super.show();
-            }
-
-            @Override
-            public void execute() {
+            public void executeCommand(String command) {
                 DeckController.getInstance().showAllDecks(this.parentMenu.parentMenu.usersName);
-                parentMenu.execute();
+                parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };
     }
@@ -171,24 +134,19 @@ public class DeckMenu extends Menu {
     public Menu showDeck() {
         return new Menu("Show Deck", this) {
             @Override
-            public void show() {
-                super.show();
-            }
-
-            @Override
-            public void execute() {
-                String deckName = "";
+            public void executeCommand(String command) {
+                String deckName = null;
                 boolean isSideDeck = false;
                 Pattern pattern = Pattern.compile("--deck-name (\\w+)");
-                Matcher matcher = pattern.matcher(COMMAND);
+                Matcher matcher = pattern.matcher(command);
                 if (matcher.find())
                     deckName = matcher.group(1).trim();
                 pattern = Pattern.compile("--side");
-                matcher = pattern.matcher(COMMAND);
+                matcher = pattern.matcher(command);
                 if (matcher.find())
                     isSideDeck = true;
                 DeckController.getInstance().showDeck(this.parentMenu.parentMenu.usersName,deckName, isSideDeck);
-                parentMenu.execute();
+                parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };
     }
@@ -196,18 +154,14 @@ public class DeckMenu extends Menu {
     public Menu userCards() {
         return new Menu("Show User All Cards", this) {
             @Override
-            public void show() {
-                super.show();
-            }
-
-            @Override
-            public void execute() {
+            public void executeCommand(String command) {
                 DeckController.getInstance().showUserCards(this.parentMenu.parentMenu.usersName);
-                parentMenu.execute();
+                parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };
     }
 
+    @Override
     public void show() {
         System.out.println("\033[1;92m" + "\t\tUse this patterns to manage Decks:\n" + "\033[0m" +
                 "\033[4;31m" + "Tip:\033[0m You can enter fields with dash sign (--) by any desired order!\n");
@@ -224,71 +178,8 @@ public class DeckMenu extends Menu {
                 "\033[0;97m" + "Show current menu:\033[0m menu show-current\n");
     }
 
-    public void execute() {
-        String command = getValidCommand();
-        Matcher matcher;
-        Menu nextMenu = null;
-        for (Map.Entry<Pattern, Menu> entry : subMenus.entrySet()) {
-            matcher = entry.getKey().matcher(command);
-            if (matcher.matches()) {
-                nextMenu = entry.getValue();
-                COMMAND = command;
-            }
-        }
-        if (nextMenu != null)
-            nextMenu.execute();
-        else {
-            matcher = PATTERNS_COLLECTION.get("Valid Navigations Pattern").matcher(command);
-            if (matcher.matches())
-                this.parentMenu.run();
-            else {
-                matcher = PATTERNS_COLLECTION.get("Exit Menu Pattern").matcher(command);
-                if (matcher.matches())
-                    this.parentMenu.run();
-                else {
-                    matcher = PATTERNS_COLLECTION.get("Invalid Navigations Pattern").matcher(command);
-                    if (matcher.matches())
-                        System.out.println("Menu navigation is not possible!");
-                    else {
-                        matcher = PATTERNS_COLLECTION.get("Current Menu Pattern").matcher(command);
-                        if (matcher.matches())
-                            System.out.println(this.name);
-                    }
-                    execute();
-                }
-            }
-        }
-    }
-
-    public String getValidCommand() {
-        System.out.println("Enter your command:");
-        String command;
-        Matcher matcher;
-        boolean check = false;
-        do {
-            command = Menu.scanner.nextLine();
-            for (Map.Entry<Pattern, Menu> entry : subMenus.entrySet()) {
-                matcher = entry.getKey().matcher(command);
-                if (matcher.matches()) {
-                    if (!(StringUtils.countMatches(command, "--deck") > 1 ||
-                            StringUtils.countMatches(command, "--card") > 1))
-                        check = true;
-                }
-            }
-            for (Map.Entry<String, Pattern> entry : PATTERNS_COLLECTION.entrySet()) {
-                matcher = entry.getValue().matcher(command);
-                if (matcher.matches())
-                    check = true;
-            }
-            if (!check)
-                System.out.println("invalid command\n" +
-                        "Try Again!");
-        } while (!check);
-        return command;
-    }
-
     public void run() {
         show();
-        execute();
+        execute(this, PATTERNS_COLLECTION);
     }
 }

@@ -6,7 +6,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainMenu extends Menu {
-    private static final HashMap<String, Pattern> PATTERN_COLLECTION;
+    public static final HashMap<String, Pattern> PATTERN_COLLECTION;
+    private static MainMenu instance = null;
 
     static {
         PATTERN_COLLECTION = new HashMap<>();
@@ -15,7 +16,7 @@ public class MainMenu extends Menu {
         PATTERN_COLLECTION.put("Logout Pattern", Pattern.compile("^user logout$"));
     }
 
-    public MainMenu(Menu parentMenu) {
+    private MainMenu(Menu parentMenu) {
         super("Main Menu", parentMenu);
         subMenus.put(Pattern.compile("^menu enter duel$"), new DuelMenu(this));
         subMenus.put(Pattern.compile("^menu enter deck$"), new DeckMenu(this));
@@ -35,67 +36,36 @@ public class MainMenu extends Menu {
                 "\033[0;97m" + "Show current menu:\033[0m menu show-current\n");
     }
 
-    public void execute() {
-        String command = getValidCommand();
-        Matcher commandMatcher;
-        Menu nextMenu;
-        for (Map.Entry<Pattern, Menu> entry : subMenus.entrySet()) {
-            commandMatcher = entry.getKey().matcher(command);
-            if (commandMatcher.matches()) {
-                nextMenu = entry.getValue();
-                nextMenu.run();
-            }
-        }
-        commandMatcher = PATTERN_COLLECTION.get("Menu Exit Pattern").matcher(command);
-        if (commandMatcher.matches()) {
-            nextMenu = this.parentMenu;
-            nextMenu.run();
-        } else {
-            commandMatcher = PATTERN_COLLECTION.get("Logout Pattern").matcher(command);
-            if (commandMatcher.matches()) {
-                nextMenu = this.parentMenu;
-                nextMenu.run();
+    public void run() {
+        show();
+        execute(this, PATTERN_COLLECTION);
+    }
+
+
+    public static MainMenu getInstance(Menu parentMenu) {
+        if (instance == null)
+            instance = new MainMenu(parentMenu);
+        return instance;
+    }
+
+    @Override
+    public void menuCheck(String command, Menu currentMenu, HashMap<String, Pattern> patternCollection) {
+        Matcher matcher = PATTERN_COLLECTION.get("Menu Exit Pattern").matcher(command);
+        if (matcher.matches())
+            this.parentMenu.run();
+        else {
+            matcher = PATTERN_COLLECTION.get("Logout Pattern").matcher(command);
+            if (matcher.matches()) {
+                this.parentMenu.setUsersName(null);
+                this.parentMenu.run();
             } else {
-                commandMatcher = PATTERN_COLLECTION.get("Show Current Menu Pattern").matcher(command);
-                if (commandMatcher.matches()) {
+                matcher = PATTERN_COLLECTION.get("Show Current Menu Pattern").matcher(command);
+                if (matcher.matches()) {
                     System.out.println(this.name);
-                    execute();
+                    execute(this, PATTERN_COLLECTION);
                 }
             }
         }
-    }
-
-    public void run() {
-        show();
-        execute();
-    }
-
-    public String getValidCommand() {
-        String command;
-        Matcher matcher;
-        boolean check = false;
-        System.out.println("Enter your desired command:");
-        do {
-            command = Menu.scanner.nextLine();
-            for (Map.Entry<Pattern, Menu> entry : subMenus.entrySet()) {
-                matcher = entry.getKey().matcher(command);
-                if (matcher.matches())
-                    check = true;
-            }
-            for (Map.Entry<String , Pattern> entry : PATTERN_COLLECTION.entrySet()) {
-                matcher = entry.getValue().matcher(command);
-                if (matcher.matches())
-                    check = true;
-            }
-            if (!check)
-                System.out.println("invalid command\n" +
-                        "Try Again!");
-        } while (!check);
-        return command;
-    }
-
-    public String getUserName(){
-        return this.usersName;
     }
 
 }

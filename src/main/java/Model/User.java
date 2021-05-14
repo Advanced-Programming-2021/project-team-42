@@ -16,7 +16,6 @@ public class User {
     private int balance;
     private int score;
     private int LP;
-    private boolean isLoggedIn;
 
     static {
         allUsers = new ArrayList<>();
@@ -90,14 +89,6 @@ public class User {
         usersAllCards.put(cardName, usersAllCards.get(cardName) - 1);
         if(usersAllCards.get(cardName) == 0)
             usersAllCards.remove(cardName);
-    }
-
-    public boolean isLoggedIn() {
-        return isLoggedIn;
-    }
-
-    public void setLoggedIn(boolean loggedIn) {
-        isLoggedIn = loggedIn;
     }
 
     public int getLP() {
