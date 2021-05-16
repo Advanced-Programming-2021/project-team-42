@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.Card;
 import Model.Enums.*;
 import Model.MonsterCard;
 import Model.SpellTrapCard;
@@ -14,6 +15,7 @@ import java.io.FileWriter;
 public class CardController {
     private static CardController instance = null;
     private static final String FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\CardsData";
+    private static FileWriter FILE_WRITER;
 
     private CardController(){}
 
@@ -35,10 +37,11 @@ public class CardController {
                 MonsterCard monsterCard = new MonsterCard(name, description, attribute, monsterType,
                         cardType, attackPoint, defencePoint, price, level);
                 Gson gson = new GsonBuilder().create();
-                FileWriter fileWriter = new FileWriter("C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Cards" + "\\" + monsterCard.getName() + ".json");
-                gson.toJson(monsterCard, fileWriter);
+                FILE_WRITER = new FileWriter("C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Cards" + "\\" + monsterCard.getName() + ".json");
+                gson.toJson(monsterCard, FILE_WRITER);
                 MonsterCard.addMonsterCardToList(monsterCard);
-                fileWriter.close();
+                Card.addCardToList(monsterCard);
+                FILE_WRITER.close();
             }
             FileReader fileReaderSpellTrap = new FileReader(FILE_PATH + "\\SpellTrap (1).csv");
             Iterable<CSVRecord> recordsSpellTrap = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(fileReaderSpellTrap);
@@ -53,10 +56,11 @@ public class CardController {
                 SpellTrapCard spellTrapCard = new SpellTrapCard(name, description, type + " Card",
                         icon, status, price);
                 Gson gson = new GsonBuilder().create();
-                FileWriter fileWriter = new FileWriter("C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Cards" + "\\" + spellTrapCard.getName() + ".json");
-                gson.toJson(spellTrapCard, fileWriter);
+                FILE_WRITER = new FileWriter("C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Cards" + "\\" + spellTrapCard.getName() + ".json");
+                gson.toJson(spellTrapCard, FILE_WRITER);
                 SpellTrapCard.addSpellTrapCardToList(spellTrapCard);
-                fileWriter.close();
+                Card.addCardToList(spellTrapCard);
+                FILE_WRITER.close();
             }
         }catch (Exception e){
             System.out.println("An Error occurred");

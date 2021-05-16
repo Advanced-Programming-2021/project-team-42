@@ -20,7 +20,7 @@ public class ShopMenu extends Menu {
     public ShopMenu(Menu parentMenu) {
         super("Shop Menu", parentMenu);
         subMenus.put(Pattern.compile("^shop buy ([a-zA-Z ]+)$"), buyItem());
-        subMenus.put(Pattern.compile("^show shop --all$"), showCards());
+        subMenus.put(Pattern.compile("^shop show --all$"), showCards());
     }
 
     public Menu buyItem() {

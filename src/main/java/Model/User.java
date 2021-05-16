@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class User {
     private static ArrayList<User> allUsers;
-    private HashMap<String, Integer> usersAllCards; //Integer is amount of each card of user
+    private HashMap<String, Integer> usersAllCards;
     private ArrayList<String> userDecks;
     private String username;
     private String password;
@@ -31,6 +31,7 @@ public class User {
         this.LP = 0;
         usersAllCards = new HashMap<>();
         userDecks = new ArrayList<>();
+        allUsers.add(this);
     }
 
     public static User getUserByUsername(String username) {
@@ -82,7 +83,10 @@ public class User {
     }
 
     public void increaseCard(String cardName) {
-        usersAllCards.put(cardName, usersAllCards.get(cardName) + 1);
+        if(usersAllCards.containsKey(cardName))
+            usersAllCards.put(cardName, usersAllCards.get(cardName) + 1);
+        else
+            usersAllCards.put(cardName, 1);
     }
 
     public void decreaseCard(String cardName){

@@ -14,6 +14,8 @@ import java.io.IOException;
 public class RegisterController {
     private static final String FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Users";
     private static RegisterController instance = null;
+    private static FileWriter FILE_WRITER;
+    private static FileReader FILE_READER;
 
     private RegisterController() {
     }
@@ -28,9 +30,9 @@ public class RegisterController {
                 try {
                     User user = new User(username, password, nickname);
                     Gson gson = new GsonBuilder().create();
-                    FileWriter fileWriter = new FileWriter(FILE_PATH + "\\" + user.getUsername() + ".json");
-                    gson.toJson(user, fileWriter);
-                    fileWriter.close();
+                    FILE_WRITER = new FileWriter(FILE_PATH + "\\" + user.getUsername() + ".json");
+                    gson.toJson(user, FILE_WRITER);
+                    FILE_WRITER.close();
                     System.out.println("User created successfully");
 
                 } catch (IOException e) {
@@ -47,8 +49,8 @@ public class RegisterController {
             if (!UserController.getInstance().isUserWithThisFieldExists(username, 0))
                 System.out.println("Username and Password did not match!");
             else {
-                FileReader fileReader = new FileReader(FILE_PATH + "\\" + username + ".json");
-                User user = gson.fromJson(fileReader, User.class);
+                FILE_READER = new FileReader(FILE_PATH + "\\" + username + ".json");
+                User user = gson.fromJson(FILE_READER, User.class);
                 if (!user.getPassword().equals(password))
                     System.out.println("Username and Password did not match!");
                 else {
@@ -75,14 +77,13 @@ public class RegisterController {
     public boolean parseUsers(){
         try {
             User user;
-            FileReader fileReader;
             Gson gson = new Gson();
             File directory = new File(FILE_PATH);
             File[] usersArray = directory.listFiles();
             if (usersArray != null) {
                 for (File file : usersArray) {
-                    fileReader = new FileReader(FILE_PATH + "\\" + file.getName());
-                    user = gson.fromJson(fileReader, User.class);
+                    FILE_READER = new FileReader(FILE_PATH + "\\" + file.getName());
+                    user = gson.fromJson(FILE_READER, User.class);
                     User.addUserToList(user);
                 }
             }

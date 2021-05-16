@@ -2,6 +2,7 @@ package Controller;
 
 import Model.User;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.io.FileReader;
@@ -10,6 +11,8 @@ import java.io.IOException;
 
 public class UserController {
     private static UserController instance = null;
+    private static FileWriter FILE_WRITER;
+    private static FileReader FILE_READER;
     private static final String FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Users";
 
     private UserController() {
@@ -22,8 +25,8 @@ public class UserController {
             File[] allUsersArray = allUsers.listFiles();
             if (allUsersArray != null) {
                 for (File file : allUsersArray) {
-                    FileReader fileReader = new FileReader(FILE_PATH + "\\" + file.getName());
-                    User user = gson.fromJson(fileReader, User.class);
+                    FILE_READER = new FileReader(FILE_PATH + "\\" + file.getName());
+                    User user = gson.fromJson(FILE_READER, User.class);
                     if(flag == 1) {
                         if (user.getNickname().equals(field))
                             return true;
@@ -33,6 +36,7 @@ public class UserController {
                             return true;
                     }
                 }
+                return false;
             }
         }catch(IOException e){
             System.out.println("Could not read information from file");
@@ -58,18 +62,22 @@ public class UserController {
     }
 
     private void updateUsersFile(String username, User user) throws IOException {
-        Gson gson = new Gson();
-        File dir = new File(FILE_PATH);
-        File[] allFiles = dir.listFiles();
-        if (allFiles != null) {
-            for (File file : allFiles) {
-                if (file.getName().equals(username + ".json")) {
-                    FileWriter fileWriter = new FileWriter(FILE_PATH + "\\" + file.getName());
-                    gson.toJson(user, fileWriter);
-                    fileWriter.close();
-                }
-            }
-        }
+//        Gson gson = new Gson();
+//        File dir = new File(FILE_PATH);
+//        File[] allFiles = dir.listFiles();
+//        if (allFiles != null) {
+//            for (File file : allFiles) {
+//                if (file.getName().equals(username + ".json")) {
+//                    FileWriter fileWriter = new FileWriter(FILE_PATH + "\\" + file.getName());
+//                    gson.toJson(user, fileWriter);
+//                    fileWriter.close();
+//                }
+//            }
+//        }
+        Gson gson = new GsonBuilder().create();
+        FILE_WRITER = new FileWriter(FILE_PATH + "\\" + username + ".json");
+        gson.toJson(user, FILE_WRITER);
+        FILE_WRITER.close();
     }
 
     public void changePassword(String username, String currentPassword, String newPassword){

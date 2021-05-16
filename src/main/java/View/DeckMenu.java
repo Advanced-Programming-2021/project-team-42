@@ -23,8 +23,8 @@ public class DeckMenu extends Menu {
         subMenus.put(Pattern.compile("^deck create (\\w+)$"), createDeck());
         subMenus.put(Pattern.compile("^deck delete (\\w+)$"), deleteDeck());
         subMenus.put(Pattern.compile("^deck set-activate (\\w+)$"), setActive());
-        subMenus.put(Pattern.compile("^deck add-card --(card|deck) (\\w+) --(deck|card) (\\w+)( --side)?$"), addCard());
-        subMenus.put(Pattern.compile("^deck rm-card --(card|deck) (\\w+) --(deck|card) (\\w+)( --side)?$"), removeCard());
+        subMenus.put(Pattern.compile("^deck add-card --(card|deck) ([A-Za-z0-9 ]+) --(deck|card) ([A-Za-z0-9 ]+)( --side)?$"), addCard());
+        subMenus.put(Pattern.compile("^deck rm-card --(card|deck) ([A-Za-z0-9 ]+) --(deck|card) ([A-Za-z0-9 ]+)( --side)?$"), removeCard());
         subMenus.put(Pattern.compile("^deck show --all$"), showDecks());
         subMenus.put(Pattern.compile("^deck show --deck-name (\\w+)( --side)?$"), showDeck());
         subMenus.put(Pattern.compile("^deck show --cards$"), userCards());
@@ -97,11 +97,11 @@ public class DeckMenu extends Menu {
     private void processingCard(String command, int flag) {
         String cardName = null, deckName = null;
         boolean isSideDeck = false;
-        Pattern pattern = Pattern.compile("--card (\\w+)");
+        Pattern pattern = Pattern.compile("--card ([A-Za-z ]+)");
         Matcher matcher = pattern.matcher(command);
         if (matcher.find())
             cardName = matcher.group(1).trim();
-        pattern = Pattern.compile("--deck (\\w+)");
+        pattern = Pattern.compile("--deck ([A-Za-z0-9 ]+)");
         matcher = pattern.matcher(command);
         if (matcher.find())
             deckName = matcher.group(1).trim();
@@ -111,9 +111,9 @@ public class DeckMenu extends Menu {
             isSideDeck = true;
         if(cardName != null && deckName != null) {
             if (flag == 0)
-                DeckController.getInstance().removeCardFromDeck(this.parentMenu.parentMenu.usersName, deckName, cardName, isSideDeck);
+                DeckController.getInstance().removeCardFromDeck(this.parentMenu.usersName, deckName, cardName, isSideDeck);
             else
-                DeckController.getInstance().addCardToDeck(this.parentMenu.parentMenu.usersName, deckName, cardName, isSideDeck);
+                DeckController.getInstance().addCardToDeck(this.parentMenu.usersName, deckName, cardName, isSideDeck);
         }
         else
             System.out.println("invalid command!");
@@ -171,6 +171,7 @@ public class DeckMenu extends Menu {
                 "\033[0;97m" + "Add Card To Deck:\033[0m deck add-card --card <card name> --deck <deck name> --side(optional)\n" +
                 "\033[0;97m" + "Remove Card From Deck:\033[0m deck rm-card --card <card name> --deck <deck name> --side(optional)\n" +
                 "\033[0;97m" + "Show User All Decks:\033[0m deck show --all\n" +
+                "\033[0;97m" + "Show User Cards:\033[0m deck show --cards\n" +
                 "\033[0;97m" + "Show Deck:\033[0m deck show --deck-name <deck name> --side(Opt)\n");
         System.out.println("\033[1;94m" + "\t\tAdditional options:\n" + "\033[0m" +
                 "\033[0;97m" + "Exit the game:\033[0m menu exit\n" +
