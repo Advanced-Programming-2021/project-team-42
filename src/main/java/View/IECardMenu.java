@@ -63,7 +63,7 @@ public class IECardMenu extends Menu{
     @Override
     public void show(){
         System.out.println("\033[1;92m" + "\t\tUse this patterns to Import/Export cards:\n" + "\033[0m" +
-        "\033[0;97m" + "Import Card:\033[0m import card <cardname>" +
+        "\033[0;97m" + "Import Card:\033[0m import card <cardname>\n" +
         "\033[0;97m" + "Export Card:\033[0m export card <cardname>");
         System.out.println("\033[1;94m" + "\t\tAdditional options:\n" + "\033[0m" +
                 "\033[0;97m" + "Exit the game:\033[0m menu exit\n" +

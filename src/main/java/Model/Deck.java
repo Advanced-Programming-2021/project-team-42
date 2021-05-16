@@ -28,12 +28,20 @@ public class Deck {
         allDecks.add(deck);
     }
 
+    public static Deck getDeckByName (String deckName){
+        for(Deck deck : allDecks){
+            if(deck.getName().equals(deckName))
+                return deck;
+        }
+        return null;
+    }
+
     public static String getUsernameByDeckName(String deckName) {
         for (Deck deck : allDecks) {
             if (deck.getName().equals(deckName))
                 return deck.getUsername();
         }
-        return "null";
+        return null;
     }
 
     public String getName() {

@@ -4,18 +4,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GameBoard {
-    private HashMap<Integer, Card> places = new HashMap<>();
-    private ArrayList<Card> graveYard = new ArrayList<>();
-    private ArrayList<Card> cardsInHand = new ArrayList<>();
-    private ArrayList<Card> remainedCards = new ArrayList<>();
+    private User player;
+    private HashMap<Integer, Card> monstersPlace;
+    private HashMap<Integer, Card> spellTrapsPlace;
+    private ArrayList<Card> graveYard;
+    private ArrayList<Card> cardsInHand;
     private Card fieldZone = null;
 
-    public Card getCardByPlace(int place){
-        return places.get(place);
+    public GameBoard (User player){
+        this.player = player;
+        monstersPlace = new HashMap<>();
+        spellTrapsPlace = new HashMap<>();
+        graveYard = new ArrayList<>();
+        cardsInHand = new ArrayList<>();
     }
 
-    public void placeCardByPlace(int place, Card card){
-        places.put(place, card);
+    public void setFieldZone (Card fieldZone){
+        this.fieldZone = fieldZone;
+    }
+
+    public Card getFieldZone() {
+        return fieldZone;
     }
 
     public ArrayList<Card> getGraveYard() {
@@ -26,12 +35,28 @@ public class GameBoard {
         return cardsInHand;
     }
 
-    public ArrayList<Card> getRemainedCards() {
-        return remainedCards;
+    public HashMap<Integer, Card> getMonstersPlace(){
+        return this.monstersPlace;
     }
 
-    public Card getFieldZone() {
-        return fieldZone;
+    public HashMap<Integer, Card> getSpellTrapsPlace(){
+        return this.spellTrapsPlace;
+    }
+
+    public void setMonstersPlace(Card monstersCard, int place){
+        monstersPlace.put(place, monstersCard);
+    }
+
+    public Card getMonsterCardByPlace(int place){
+        return monstersPlace.get(place);
+    }
+
+    public void setSpellTrapsPlace(Card spellTrapCard, int place){
+        monstersPlace.put(place, spellTrapCard);
+    }
+
+    public Card getSpellTrapCardByPlace(int place){
+        return spellTrapsPlace.get(place);
     }
 
     public void drawBoard(){}

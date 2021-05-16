@@ -35,7 +35,7 @@ public class DuelMenu extends Menu {
                     rounds = matcher.group(1);
 
                 if(secondPlayerName != null && rounds != null)
-                    DuelController.getInstance().startNewDuel(this.parentMenu.parentMenu.usersName, secondPlayerName, rounds);
+                    DuelController.getInstance().startNewDuel(this.parentMenu.parentMenu.usersName, secondPlayerName, rounds, this.parentMenu);
                 else
                     System.out.println("invalid command!");
 
