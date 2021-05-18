@@ -8,7 +8,8 @@ import java.util.regex.Pattern;
 public class GamePlay extends Menu{
     private GameBoard fistPlayersBoard;
     private GameBoard secondPlayersBoard;
-    private GamePhases currentPhase;
+    private GamePhases currentPhase = GamePhases.DRAW;
+    private boolean isFirstTime = true;
 
     public GamePlay(Menu parentMenu, GameBoard fistPlayersBoard, GameBoard secondPlayersBoard){
         super("Game Play", parentMenu);
@@ -129,6 +130,18 @@ public class GamePlay extends Menu{
 
     public void setCurrentPhase (GamePhases currentPhase){
         this.currentPhase = currentPhase;
+    }
+
+    public GamePhases getCurrentPhase(){
+        return this.currentPhase;
+    }
+
+    public boolean isFirstTime() {
+        return isFirstTime;
+    }
+
+    public void setFirstTime(boolean firstTime) {
+        isFirstTime = firstTime;
     }
 
     public void swapPlayers (GameBoard fistPlayersBoard, GameBoard secondPlayersBoard){

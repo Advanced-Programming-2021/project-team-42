@@ -10,8 +10,6 @@ public class SpellTrapCard extends Card{
     private String cardType;
     private Icon icon;
     private Status status;
-    private boolean isEffectEnable;
-    private boolean isSet;
 
     static {
         allSpellTrapCards = new ArrayList<>();
@@ -39,22 +37,6 @@ public class SpellTrapCard extends Card{
                 return spellTrapCard;
         }
         return null;
-    }
-
-    public boolean isSet() {
-        return isSet;
-    }
-
-    public void setSet(boolean set) {
-        isSet = set;
-    }
-
-    public boolean isEffectEnable() {
-        return isEffectEnable;
-    }
-
-    public void setEffectEnable(boolean effectEnable) {
-        isEffectEnable = effectEnable;
     }
 
     public String getType() {

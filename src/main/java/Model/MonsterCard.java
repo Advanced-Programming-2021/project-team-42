@@ -15,9 +15,6 @@ public class MonsterCard extends Card {
     private int level;
     private int attackPoint;
     private int defencePoint;
-    private boolean isDefensive;
-    private boolean isEffectEnable;
-    private boolean isSet;
 
     static {
         allMonsterCards = new ArrayList<>();
@@ -57,30 +54,6 @@ public class MonsterCard extends Card {
 
     public static void addMonsterCardToList(MonsterCard monsterCard){
         allMonsterCards.add(monsterCard);
-    }
-
-    public boolean isSet() {
-        return isSet;
-    }
-
-    public void setSet(boolean set) {
-        isSet = set;
-    }
-
-    public boolean isEffectEnable() {
-        return isEffectEnable;
-    }
-
-    public void setEffectEnable(boolean effectEnable) {
-        isEffectEnable = effectEnable;
-    }
-
-    public boolean isDefensive() {
-        return isDefensive;
-    }
-
-    public void setDefensive(boolean defensive) {
-        isDefensive = defensive;
     }
 
     public int getLevel() {
