@@ -66,4 +66,8 @@ public abstract class Card {
     public void setPrice(int price) {
         this.price = price;
     }
+
+    public String toString(){
+        return "\033[0;97m" + this.name + "\033[0m: " + this.description;
+    }
 }

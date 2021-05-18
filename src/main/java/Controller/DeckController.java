@@ -276,34 +276,24 @@ public class DeckController {
         for (Map.Entry<String, Integer> entry : sortedDeck.entrySet()) {
             if (MonsterCard.isMonsterCard(entry.getKey())) {
                 MonsterCard monsterCard = MonsterCard.getMonsterCardByName(entry.getKey());
-                System.out.println(monsterCard.getName() + ": " + monsterCard.getDescription());
+                System.out.println(monsterCard);
             }
         }
         System.out.println("Spell and Traps:");
         for (Map.Entry<String, Integer> entry : sortedDeck.entrySet()) {
             if (!MonsterCard.isMonsterCard(entry.getKey())) {
                 SpellTrapCard spellTrapCard = SpellTrapCard.getSpellTrapCardByName(entry.getKey());
-                System.out.println(spellTrapCard.getName() + ": " + spellTrapCard.getDescription());
+                System.out.println(spellTrapCard);
             }
         }
     }
 
     public void showUserCards(String username) {
         TreeMap<String, Integer> sortedCards = new TreeMap<>(User.getUserByUsername(username).getUserAllCards());
-        for (Map.Entry<String, Integer> entry : sortedCards.entrySet()) {
-            printCard(entry);
-        }
+        for (Map.Entry<String, Integer> entry : sortedCards.entrySet())
+            System.out.println(Card.getCardByName(entry.getKey()));
     }
 
-    public void printCard(Map.Entry<String, Integer> entry) {
-        if (MonsterCard.isMonsterCard(entry.getKey())) {
-            MonsterCard monsterCard = MonsterCard.getMonsterCardByName(entry.getKey());
-            System.out.println(monsterCard.getName() + ": " + monsterCard.getDescription());
-        } else {
-            SpellTrapCard spellTrapCard = SpellTrapCard.getSpellTrapCardByName(entry.getKey());
-            System.out.println(spellTrapCard.getName() + ": " + spellTrapCard.getDescription());
-        }
-    }
 
     public static DeckController getInstance() {
         if (instance == null)

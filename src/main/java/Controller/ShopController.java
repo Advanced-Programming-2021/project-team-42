@@ -45,12 +45,9 @@ public class ShopController {
     }
 
     public void showAllCards() {
-        ArrayList<MonsterCard> allMonsterCards = MonsterCard.getAllMonsterCards();
-        ArrayList<SpellTrapCard> allSpellTrapCards = SpellTrapCard.getAllSpellTrapCards();
-        for(MonsterCard monsterCard : allMonsterCards)
-            System.out.println("\033[0;97m" + monsterCard.getName() + "\033[0m: " + monsterCard.getDescription());
-        for(SpellTrapCard spellTrapCard : allSpellTrapCards)
-            System.out.println("\033[0;97m" + spellTrapCard.getName() + "\033[0m: " + spellTrapCard.getDescription());
+        ArrayList<Card> allCards = Card.getAllCards();
+        for(Card card : allCards)
+            System.out.println(card);
     }
 
 
