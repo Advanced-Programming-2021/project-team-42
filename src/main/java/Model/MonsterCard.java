@@ -15,6 +15,9 @@ public class MonsterCard extends Card {
     private int level;
     private int attackPoint;
     private int defencePoint;
+    private boolean isSet;
+    private boolean isSummoned;
+    private boolean isDefensive;
 
     static {
         allMonsterCards = new ArrayList<>();
@@ -56,6 +59,12 @@ public class MonsterCard extends Card {
         allMonsterCards.add(monsterCard);
     }
 
+    public static MonsterCard getInstance(MonsterCard monsterCard){
+        return new MonsterCard(monsterCard.getName(), monsterCard.getDescription(), monsterCard.getAttribute(),
+                monsterCard.getMonsterType(), monsterCard.getCardType(), monsterCard.getAttackPoint(),
+                monsterCard.getDefencePoint(), monsterCard.getPrice(), monsterCard.getLevel());
+    }
+
     public int getLevel() {
         return level;
     }
@@ -70,6 +79,30 @@ public class MonsterCard extends Card {
 
     public void setAttribute(Attribute attribute) {
         this.attribute = attribute;
+    }
+
+    public boolean isSet() {
+        return isSet;
+    }
+
+    public void setSet(boolean set) {
+        isSet = set;
+    }
+
+    public boolean isSummoned() {
+        return isSummoned;
+    }
+
+    public void setSummoned(boolean summoned) {
+        isSummoned = summoned;
+    }
+
+    public boolean isDefensive() {
+        return isDefensive;
+    }
+
+    public void setDefensive(boolean defensive) {
+        isDefensive = defensive;
     }
 
     public CardType getCardType() {

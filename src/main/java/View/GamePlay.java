@@ -9,12 +9,14 @@ public class GamePlay extends Menu{
     private GameBoard fistPlayersBoard;
     private GameBoard secondPlayersBoard;
     private GamePhases currentPhase = GamePhases.DRAW;
+    private int rounds;
     private boolean isFirstTime = true;
 
-    public GamePlay(Menu parentMenu, GameBoard fistPlayersBoard, GameBoard secondPlayersBoard){
+    public GamePlay(Menu parentMenu, GameBoard fistPlayersBoard, GameBoard secondPlayersBoard, int rounds){
         super("Game Play", parentMenu);
         this.fistPlayersBoard = fistPlayersBoard;
         this.secondPlayersBoard = secondPlayersBoard;
+        this.rounds = rounds;
         subMenus.put(Pattern.compile(""), selectCard());
         subMenus.put(Pattern.compile(""), deselectCard());
         subMenus.put(Pattern.compile(""), setCard());

@@ -18,6 +18,7 @@ public class GameBoard {
     private Card handSelectedCard = null;
     private Card fieldZoneSelectedCard = null;
     private Card fieldZone = null;
+    private int WinsCount = 0;
 
     public GameBoard(User player, ArrayList<Card> mainDeckCards, ArrayList<Card> sideDeckCards) {
         this.player = player;
@@ -84,6 +85,14 @@ public class GameBoard {
 
     public ArrayList<Card> getRemainedCards() {
         return remainedCards;
+    }
+
+    public int getWinsCount() {
+        return WinsCount;
+    }
+
+    public void setWinsCount(int winsCount) {
+        WinsCount = winsCount;
     }
 
     public void setMonstersPlace(HashMap<Integer, MonsterCard> monstersPlace) {
@@ -171,7 +180,7 @@ public class GameBoard {
     }
 
     public void drawBoardAsYourself() {
-        System.out.println((fieldZone == null ? "E" : "O") + "\t\t\t\t\t\t" + graveYard.size() );
+        System.out.println((fieldZone == null ? "E" : "O") + "\t\t\t\t\t\t" + graveYard.size());
         //TODO: monster cards
         //TODO: spellTrap cards
         System.out.println("\t\t\t\t\t\t" + remainedCards.size());

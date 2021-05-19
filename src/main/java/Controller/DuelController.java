@@ -1,9 +1,6 @@
 package Controller;
 
-import Model.Card;
-import Model.Deck;
-import Model.GameBoard;
-import Model.User;
+import Model.*;
 import View.GamePlay;
 import View.Menu;
 
@@ -39,7 +36,7 @@ public class DuelController {
                             else {
                                 System.out.println("new game between " + player1 + " and " +
                                         player2 + " started");
-                                gamePreparation(parentMenu, User.getUserByUsername(player1), User.getUserByUsername(player2));
+                                gamePreparation(parentMenu, User.getUserByUsername(player1), User.getUserByUsername(player2), Integer.parseInt(rounds));
                             }
                         }
                     }
@@ -48,7 +45,7 @@ public class DuelController {
         }
     }
 
-    public void gamePreparation(Menu parentMenu, User firstPlayer, User secondPlayer) {
+    public void gamePreparation(Menu parentMenu, User firstPlayer, User secondPlayer, int rounds) {
         ArrayList<Card> firstPlayersMainCards = createCardsFromDeck(Deck.getDeckByName(firstPlayer.getActiveDeck()).getMainDeckCards());
         ArrayList<Card> firstPlayersSideCards = createCardsFromDeck(Deck.getDeckByName(firstPlayer.getActiveDeck()).getSideDeckCards());
         ArrayList<Card> secondPlayersMainCards = createCardsFromDeck(Deck.getDeckByName(secondPlayer.getActiveDeck()).getMainDeckCards());
@@ -57,7 +54,7 @@ public class DuelController {
         Collections.shuffle(secondPlayersMainCards);
         GameBoard firstPlayersBoard = new GameBoard(firstPlayer, firstPlayersMainCards, firstPlayersSideCards);
         GameBoard secondPlayersBoard = new GameBoard(secondPlayer, secondPlayersMainCards, secondPlayersSideCards);
-        GamePlay gamePlay = new GamePlay(parentMenu, firstPlayersBoard, secondPlayersBoard);
+        GamePlay gamePlay = new GamePlay(parentMenu, firstPlayersBoard, secondPlayersBoard, rounds);
         gamePlay.run();
     }
 
@@ -65,8 +62,12 @@ public class DuelController {
     public ArrayList<Card> createCardsFromDeck(HashMap<String, Integer> deckCards) {
         ArrayList<Card> cards = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : deckCards.entrySet()) {
-            for (int i = 0; i < entry.getValue(); i++)
-                cards.add(Card.getCardByName(entry.getKey()));
+            for (int i = 0; i < entry.getValue(); i++) {
+                if(MonsterCard.isMonsterCard(entry.getKey()))
+                    cards.add(MonsterCard.getInstance(MonsterCard.getMonsterCardByName(entry.getKey())));
+                else
+                    cards.add(SpellTrapCard.getInstance(SpellTrapCard.getSpellTrapCardByName(entry.getKey())));
+            }
         }
         return cards;
     }
