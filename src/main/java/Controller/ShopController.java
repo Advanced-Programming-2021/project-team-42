@@ -20,7 +20,7 @@ public class ShopController {
 
     public void buyCard(String username, String cardName) {
         User user = User.getUserByUsername(username);
-        if (!Card.isCardExists(cardName))
+        if (Card.getCardByName(cardName) == null)
             System.out.println("there is no card with this name");
         else {
             Card card = Card.getCardByName(cardName);

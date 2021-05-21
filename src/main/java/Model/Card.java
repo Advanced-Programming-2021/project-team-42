@@ -27,14 +27,6 @@ public abstract class Card {
         return allCards;
     }
 
-    public static boolean isCardExists(String cardName){
-        for(Card card : allCards){
-            if(card.getName().equals(cardName))
-                return true;
-        }
-        return false;
-    }
-
     public static Card getCardByName(String cardName){
         for(Card card : allCards){
             if(card.getName().equals(cardName))

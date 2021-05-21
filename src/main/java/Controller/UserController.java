@@ -62,18 +62,6 @@ public class UserController {
     }
 
     private void updateUsersFile(String username, User user) throws IOException {
-//        Gson gson = new Gson();
-//        File dir = new File(FILE_PATH);
-//        File[] allFiles = dir.listFiles();
-//        if (allFiles != null) {
-//            for (File file : allFiles) {
-//                if (file.getName().equals(username + ".json")) {
-//                    FileWriter fileWriter = new FileWriter(FILE_PATH + "\\" + file.getName());
-//                    gson.toJson(user, fileWriter);
-//                    fileWriter.close();
-//                }
-//            }
-//        }
         Gson gson = new GsonBuilder().create();
         FILE_WRITER = new FileWriter(FILE_PATH + "\\" + username + ".json");
         gson.toJson(user, FILE_WRITER);
@@ -99,6 +87,14 @@ public class UserController {
                     "Try again");
             e.printStackTrace();
         }
+    }
+
+    public void increaseMoney(User user, int amount){
+        user.setBalance(user.getBalance() + amount);
+    }
+
+    public void increaseLP(User user, int LP){
+        user.setLP(user.getLP() + LP);
     }
 
     public boolean isPasswordCorrect(String username, String password){

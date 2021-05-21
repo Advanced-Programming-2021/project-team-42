@@ -72,6 +72,37 @@ public class DuelController {
         return cards;
     }
 
+    public void addCardToHand(GameBoard gameBoard, String cardName){
+        if(Card.getCardByName(cardName) == null)
+            System.out.println("There is no Card with given name!");
+        else{
+            Card card = Card.getCardByName(cardName);
+            gameBoard.addCardToHand(card);
+            System.out.println("Card added to your Hand successfully!");
+        }
+    }
+
+    public boolean setDuelWinner(String nickName,
+                              GameBoard firstPlayerBoard, GameBoard secondPlayerBoard, int rounds){
+        if(!firstPlayerBoard.getPlayer().getNickname().equals(nickName) &&
+                !secondPlayerBoard.getPlayer().getNickname().equals(nickName)) {
+            System.out.println("Entered NickName does not matches players nickname");
+            return false;
+        }
+        else{
+            if(firstPlayerBoard.getPlayer().getNickname().equals(nickName)){
+                firstPlayerBoard.getPlayer().setBalance(firstPlayerBoard.getPlayer().getBalance() + rounds * (1000 + firstPlayerBoard.getMaxLP()));
+                secondPlayerBoard.getPlayer().setBalance(secondPlayerBoard.getPlayer().getBalance() + rounds * 100);
+            }
+            else{
+                secondPlayerBoard.getPlayer().setBalance(secondPlayerBoard.getPlayer().getBalance() + rounds * (1000 + secondPlayerBoard.getMaxLP()));
+                firstPlayerBoard.getPlayer().setBalance(firstPlayerBoard.getPlayer().getBalance() + rounds * 100);
+            }
+            System.out.println("Player with Nickname " + nickName + "Wins the game!");
+            return true;
+        }
+    }
+
     public static DuelController getInstance() {
         if (instance == null)
             instance = new DuelController();
