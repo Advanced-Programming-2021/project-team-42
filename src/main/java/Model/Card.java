@@ -8,6 +8,7 @@ public abstract class Card {
     protected String name;
     protected int price;
     protected String description;
+    private boolean isSet;
 
     static {
         allCards = new ArrayList<>();
@@ -61,5 +62,9 @@ public abstract class Card {
 
     public String toString(){
         return "\033[0;97m" + this.name + "\033[0m: " + this.description;
+    }
+
+    public boolean isSet(){
+        return this.isSet;
     }
 }

@@ -66,6 +66,50 @@ public class GameBoard {
         WinsCount = winsCount;
     }
 
+    public MonsterCard getMonsterSelectedCard() {
+        return monsterSelectedCard;
+    }
+
+    public void setMonsterSelectedCard(MonsterCard monsterSelectedCard) {
+        this.monsterSelectedCard = monsterSelectedCard;
+    }
+
+    public SpellTrapCard getSpellTrapSelectedCard() {
+        return spellTrapSelectedCard;
+    }
+
+    public void setSpellTrapSelectedCard(SpellTrapCard spellTrapSelectedCard) {
+        this.spellTrapSelectedCard = spellTrapSelectedCard;
+    }
+
+    public Card getGraveyardSelectedCard() {
+        return graveyardSelectedCard;
+    }
+
+    public void setGraveyardSelectedCard(Card graveyardSelectedCard) {
+        this.graveyardSelectedCard = graveyardSelectedCard;
+    }
+
+    public Card getHandSelectedCard() {
+        return handSelectedCard;
+    }
+
+    public void setHandSelectedCard(Card handSelectedCard) {
+        this.handSelectedCard = handSelectedCard;
+    }
+
+    public Card getFieldZoneSelectedCard() {
+        return fieldZoneSelectedCard;
+    }
+
+    public void setFieldZoneSelectedCard(Card fieldZoneSelectedCard) {
+        this.fieldZoneSelectedCard = fieldZoneSelectedCard;
+    }
+
+    public ArrayList<Card> getCardsInHand() {
+        return cardsInHand;
+    }
+
     public int getMaxLP() {
         return maxLP;
     }
@@ -76,6 +120,22 @@ public class GameBoard {
 
     public void setMonstersPlace(MonsterCard monstersCard, int place) {
         monstersPlace.put(place, monstersCard);
+    }
+
+    public HashMap<Integer,MonsterCard> getMonstersPlace(){
+        return this.monstersPlace;
+    }
+
+    public void removeFromMonsterPlace(int number){
+        this.monstersPlace.remove(number);
+    }
+
+    public ArrayList<Card> getGraveYard() {
+        return graveYard;
+    }
+
+    public void addToGraveyard(Card card){
+        this.graveYard.add(card);
     }
 
     public Card getMonsterCardByPlace(int place) {

@@ -38,10 +38,10 @@ public class GamePlay extends Menu {
         subMenus.put(Pattern.compile(""), summonCard());
         subMenus.put(Pattern.compile(""), changeCardPosition());
         subMenus.put(Pattern.compile(""), flipSummonCard());
-        subMenus.put(Pattern.compile(""), attackToCard());
-        subMenus.put(Pattern.compile(""), directAttack());
-        subMenus.put(Pattern.compile(""), showGraveyard());
-        subMenus.put(Pattern.compile(""), showSelectedCard());
+        subMenus.put(Pattern.compile("^attack ([1-5])$"), attackToCard());
+        subMenus.put(Pattern.compile("^direct attack$"), directAttack());
+        subMenus.put(Pattern.compile("^show graveyard$"), showGraveyard());
+        subMenus.put(Pattern.compile("^card show --selected$"), showSelectedCard());
         subMenus.put(Pattern.compile(""), changePhase());
         subMenus.put(Pattern.compile(""), surrender());
     }
@@ -104,7 +104,11 @@ public class GamePlay extends Menu {
         return new Menu("Attack to Card", this) {
             @Override
             public void executeCommand(String command) {
-
+                Pattern pattern = Pattern.compile("(\\d)");
+                Matcher matcher = pattern.matcher(command);
+                int number = Integer.parseInt(matcher.group(1));
+                if (DuelController.getInstance().canAttackToCard(fistPlayersBoard,secondPlayersBoard,currentPhase,number))
+                    DuelController.getInstance().attackToCard(fistPlayersBoard,secondPlayersBoard,number);
             }
         };
     }
@@ -113,7 +117,7 @@ public class GamePlay extends Menu {
         return new Menu("Direct Attack", this) {
             @Override
             public void executeCommand(String command) {
-
+                DuelController.getInstance().directAttack(fistPlayersBoard,secondPlayersBoard,currentPhase);
             }
         };
     }
@@ -122,7 +126,7 @@ public class GamePlay extends Menu {
         return new Menu("Show Graveyard", this) {
             @Override
             public void executeCommand(String command) {
-
+                DuelController.getInstance().showGraveyard(fistPlayersBoard,secondPlayersBoard);
             }
         };
     }
@@ -131,7 +135,7 @@ public class GamePlay extends Menu {
         return new Menu("Show Selected Card", this) {
             @Override
             public void executeCommand(String command) {
-
+                DuelController.getInstance().showSelectedCard(fistPlayersBoard,secondPlayersBoard);
             }
         };
     }

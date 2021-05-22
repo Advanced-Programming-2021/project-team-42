@@ -12,12 +12,14 @@ public class MonsterCard extends Card {
     private MonsterType monsterType;
     private CardType cardType;
     private final String cardTypeStr = "Monster Card";
+    private int number;
     private int level;
     private int attackPoint;
     private int defencePoint;
     private boolean isSet;
     private boolean isSummoned;
     private boolean isDefensive;
+    private boolean isReadyToAttack;
 
     static {
         allMonsterCards = new ArrayList<>();
@@ -139,6 +141,18 @@ public class MonsterCard extends Card {
 
     public String getCardTypeStr() {
         return cardTypeStr;
+    }
+
+    public boolean isReadyToAttack(){
+        return this.isReadyToAttack;
+    }
+
+    public void setReadyToAttack(boolean isReadyToAttack){
+        this.isReadyToAttack = isReadyToAttack;
+    }
+
+    public int getNumber(){
+        return this.number;
     }
 }
 

@@ -103,6 +103,10 @@ public class User {
         this.LP = LP;
     }
 
+    public void decreaseLP(int LP){
+        this.LP -= LP;
+    }
+
     public String getUsername() {
         return username;
     }
