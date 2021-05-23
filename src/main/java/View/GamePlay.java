@@ -37,7 +37,7 @@ public class GamePlay extends Menu {
         subMenus.put(Pattern.compile(""), setCard());
         subMenus.put(Pattern.compile(""), summonCard());
         subMenus.put(Pattern.compile(""), changeCardPosition());
-        subMenus.put(Pattern.compile(""), flipSummonCard());
+        subMenus.put(Pattern.compile("^flip-summon$"), flipSummonCard());
         subMenus.put(Pattern.compile("^attack ([1-5])$"), attackToCard());
         subMenus.put(Pattern.compile("^direct attack$"), directAttack());
         subMenus.put(Pattern.compile("^show graveyard$"), showGraveyard());
@@ -95,7 +95,8 @@ public class GamePlay extends Menu {
         return new Menu("Flip-Summon Card", this) {
             @Override
             public void executeCommand(String command) {
-
+                DuelController.getInstance().flipSummon(fistPlayersBoard,secondPlayersBoard,currentPhase);
+                parentMenu.run();
             }
         };
     }
@@ -109,6 +110,7 @@ public class GamePlay extends Menu {
                 int number = Integer.parseInt(matcher.group(1));
                 if (DuelController.getInstance().canAttackToCard(fistPlayersBoard,secondPlayersBoard,currentPhase,number))
                     DuelController.getInstance().attackToCard(fistPlayersBoard,secondPlayersBoard,number);
+                parentMenu.run();
             }
         };
     }
@@ -118,6 +120,7 @@ public class GamePlay extends Menu {
             @Override
             public void executeCommand(String command) {
                 DuelController.getInstance().directAttack(fistPlayersBoard,secondPlayersBoard,currentPhase);
+                parentMenu.run();
             }
         };
     }
@@ -127,6 +130,7 @@ public class GamePlay extends Menu {
             @Override
             public void executeCommand(String command) {
                 DuelController.getInstance().showGraveyard(fistPlayersBoard,secondPlayersBoard);
+                parentMenu.run();
             }
         };
     }
@@ -136,6 +140,7 @@ public class GamePlay extends Menu {
             @Override
             public void executeCommand(String command) {
                 DuelController.getInstance().showSelectedCard(fistPlayersBoard,secondPlayersBoard);
+                parentMenu.run();
             }
         };
     }
@@ -144,7 +149,8 @@ public class GamePlay extends Menu {
         return new Menu("Show Selected Card", this) {
             @Override
             public void executeCommand(String command) {
-
+                DuelController.getInstance().resetMonsters(fistPlayersBoard);
+                parentMenu.run();
             }
         };
     }

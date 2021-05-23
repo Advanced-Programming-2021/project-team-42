@@ -19,7 +19,7 @@ public class MonsterCard extends Card {
     private boolean isSet;
     private boolean isSummoned;
     private boolean isDefensive;
-    private boolean isReadyToAttack;
+    private boolean isReadyToAttack = true;
 
     static {
         allMonsterCards = new ArrayList<>();
@@ -149,6 +149,10 @@ public class MonsterCard extends Card {
 
     public void setReadyToAttack(boolean isReadyToAttack){
         this.isReadyToAttack = isReadyToAttack;
+    }
+
+    public void setNumber(int number){
+        this.number = number;
     }
 
     public int getNumber(){

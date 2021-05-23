@@ -5,6 +5,7 @@ import View.GamePhases;
 import View.GamePlay;
 import View.Menu;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -106,6 +107,50 @@ public class DuelController {
         }
     }
 
+    public void flipSummon(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard, GamePhases currentPhase){
+        boolean isProperCard = true;
+        boolean isSelectedCard = false;
+        MonsterCard monsterCard = null;
+
+        if (secondPlayersBoard.getHandSelectedCard() != null
+                || secondPlayersBoard.getFieldZoneSelectedCard() != null
+                || secondPlayersBoard.getGraveyardSelectedCard() != null
+                || secondPlayersBoard.getSpellTrapSelectedCard() != null
+                || secondPlayersBoard.getMonsterSelectedCard() != null
+                || firstPlayersBoard.getHandSelectedCard() != null
+                || firstPlayersBoard.getFieldZoneSelectedCard() != null
+                || firstPlayersBoard.getGraveyardSelectedCard() != null
+                || firstPlayersBoard.getSpellTrapSelectedCard() != null){
+            isSelectedCard = true;
+            isProperCard = false;
+        }
+        if (firstPlayersBoard.getMonsterSelectedCard() != null){
+            monsterCard = firstPlayersBoard.getMonsterSelectedCard();
+            isSelectedCard = true;
+            isProperCard = true;
+        }
+        if (!isSelectedCard)
+            System.out.println("you dont select any card yet");
+        else {
+            if (!isProperCard)
+                System.out.println("you can’t change this cards position");
+            else {
+                if (!currentPhase.name().equals("first-main") && !currentPhase.name().equals("second-main"))
+                    System.out.println("you can’t do this action in this phase");
+                else {
+                    if (!monsterCard.isSet() || !monsterCard.isReadyToAttack())
+                        System.out.println("you can’t flip summon this card");
+                    else {
+                        monsterCard.setSet(false);
+                        monsterCard.setSummoned(true);
+                        monsterCard.setReadyToAttack(true);
+                        System.out.println("flip summoned successfully");
+                    }
+                }
+            }
+        }
+    }
+
     public boolean canAttackToCard(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard, GamePhases currentPhase, int number){
         boolean isProperCard = true;
         boolean isSelectedCard = false;
@@ -172,7 +217,7 @@ public class DuelController {
     }
 
     public void attackToCard(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard, int number){
-
+        firstPlayersBoard.getMonsterSelectedCard().setReadyToAttack(false);
         if (secondPlayersBoard.getMonstersPlace().get(number).isSummoned()){
             int firstPlayerAP = firstPlayersBoard.getMonsterSelectedCard().getAttackPoint();
             int secondPlayerAP = secondPlayersBoard.getMonstersPlace().get(number).getAttackPoint();
@@ -271,6 +316,14 @@ public class DuelController {
                 }
             }
         }
+    }
+
+    public User getWinner(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard){
+        if (firstPlayersBoard.getPlayer().getLP() <= 0)
+            return firstPlayersBoard.getPlayer();
+        if (secondPlayersBoard.getPlayer().getLP() <= 0)
+            return firstPlayersBoard.getPlayer();
+        return null;
     }
 
     public void resetMonsters(GameBoard firstPlayersBoard){
