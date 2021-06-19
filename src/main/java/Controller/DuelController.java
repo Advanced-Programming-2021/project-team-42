@@ -458,7 +458,6 @@ public class DuelController {
             return "opponent’s monster card was " + opponentsCardName + " and destroyed";
         } else if (firstPlayerAP < secondPlayerDP) {
             firstPlayersBoard.getPlayer().decreaseLP(damage);
-            firstPlayersBoard.setMaxLP(firstPlayersBoard.getPlayer().getLP());
             firstPlayersBoard.deselectAll();
             secondPlayersBoard.deselectAll();
             return "opponent’s monster card was " + opponentsCardName + " and no card is destroyed and you received " + damage + " battle damage";
@@ -485,7 +484,6 @@ public class DuelController {
             return "the defense position monster is destroyed";
         } else if (firstPlayerAP < secondPlayerAP) {
             firstPlayersBoard.getPlayer().decreaseLP(damage);
-            firstPlayersBoard.setMaxLP(firstPlayersBoard.getPlayer().getLP());
             firstPlayersBoard.deselectAll();
             secondPlayersBoard.deselectAll();
             return "no card is destroyed and you received" + damage + " battle damage";
@@ -499,7 +497,6 @@ public class DuelController {
         int damage = Math.abs(firstPlayerAP - secondPlayerAP);
         if (firstPlayerAP > secondPlayerAP) {
             secondPlayersBoard.getPlayer().decreaseLP(damage);
-            secondPlayersBoard.setMaxLP(secondPlayersBoard.getPlayer().getLP());
             secondPlayersBoard.addCardToGraveyard(secondPlayersBoard.getMonsterCardByPlace(number));
             secondPlayersBoard.setMonstersPlace(null, number);
             firstPlayersBoard.deselectAll();
