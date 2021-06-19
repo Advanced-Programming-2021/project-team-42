@@ -161,27 +161,54 @@ public class DuelController {
         }
     }
 
-    public void activeTrapEffect(SpellTrapCard spellTrapCard, GameBoard firstPlayersBoard, GameBoard secondPlayersBoard) {
+    public void activeTrapEffect(SpellTrapCard spellTrapCard,
+                                 GameBoard firstPlayersBoard, GameBoard secondPlayersBoard,
+                                 GamePlay gamePlay) {
         String cardName = spellTrapCard.getName();
 
-        if (cardName.equals("Call of the Haunted")) {
-            ArrayList<Card> graveYard = firstPlayersBoard.getGraveYard();
-            Collections.shuffle(graveYard);
+        switch (cardName) {
+            case "Call of the Haunted":
+                ArrayList<Card> graveYard = firstPlayersBoard.getGraveYard();
+                Collections.shuffle(graveYard);
 
-            if (firstPlayersBoard.monsterPlacesSize() < 5) {
-                for (Card cardInGraveYard : graveYard) {
-                    if (MonsterCard.isMonsterCard(cardInGraveYard.getName())) {
-                        MonsterCard monsterCardInGraveYard = (MonsterCard) cardInGraveYard;
-                        monsterCardInGraveYard.setDefensive(false);
-                        monsterCardInGraveYard.setSummoned(true);
-                        monsterCardInGraveYard.setSet(false);
-                        firstPlayersBoard.setMonstersPlace(monsterCardInGraveYard, firstPlayersBoard.monsterPlacesSize() + 1);
-                        firstPlayersBoard.getGraveYard().remove(cardInGraveYard);
-                        break;
+                if (firstPlayersBoard.monsterPlacesSize() < 5) {
+                    for (Card cardInGraveYard : graveYard) {
+                        if (MonsterCard.isMonsterCard(cardInGraveYard.getName())) {
+                            MonsterCard monsterCardInGraveYard = (MonsterCard) cardInGraveYard;
+                            monsterCardInGraveYard.setDefensive(false);
+                            monsterCardInGraveYard.setSummoned(true);
+                            monsterCardInGraveYard.setSet(false);
+                            firstPlayersBoard.setMonstersPlace(monsterCardInGraveYard, firstPlayersBoard.monsterPlacesSize() + 1);
+                            firstPlayersBoard.getGraveYard().remove(cardInGraveYard);
+                            break;
+                        }
                     }
                 }
-            }
-        } else if (cardName.equals("another card!")) {
+                break;
+            case "Torrential Tribute":
+                for (Map.Entry<Integer, MonsterCard> entry : secondPlayersBoard.getMonstersPlace().entrySet()) {
+                    secondPlayersBoard.addCardToGraveyard(entry.getValue());
+                    secondPlayersBoard.setMonstersPlace(null, entry.getKey());
+                }
+                for (Map.Entry<Integer, MonsterCard> entry : firstPlayersBoard.getMonstersPlace().entrySet()) {
+                    firstPlayersBoard.addCardToGraveyard(entry.getValue());
+                    firstPlayersBoard.setMonstersPlace(null, entry.getKey());
+                }
+                break;
+            case "Time Seal":
+                GamePlay.setTrapEffect(true);
+                break;
+            case "Negate Attack":
+                gamePlay.changePhase();
+                break;
+            case "Mirror Force":
+                for (Map.Entry<Integer, MonsterCard> entry : secondPlayersBoard.getMonstersPlace().entrySet()) {
+                    if (entry.getValue() != null && !entry.getValue().isDefensive()) {
+                        secondPlayersBoard.addCardToGraveyard(entry.getValue());
+                        secondPlayersBoard.setMonstersPlace(null, entry.getKey());
+                    }
+                }
+                break;
         }
     }
 

@@ -22,6 +22,7 @@ public class GamePlay extends Menu {
     private int rounds;
     private static boolean isFirstTime = true;
     private static boolean isSummonedOrSetInThisPhase = false;
+    private static boolean trapEffect = false;
     private boolean isCardAddedToHandInThisPhase = false;
 
     static {
@@ -407,7 +408,7 @@ public class GamePlay extends Menu {
     public void phaseChangeToDo() {
         if (currentPhase.equals(GamePhases.DRAW)) {
             System.out.println("Current Phase: Draw Phase");
-            if (!isFirstTime && !isCardAddedToHandInThisPhase && fistPlayersBoard.getCardsInHand().size() < 6) {
+            if (!isFirstTime && !isCardAddedToHandInThisPhase && fistPlayersBoard.getCardsInHand().size() < 6 && !trapEffect) {
                 System.out.println("new card added to hand: " +
                         DuelController.getInstance().addOneCardToHand(fistPlayersBoard));
                 isCardAddedToHandInThisPhase = true;
@@ -427,6 +428,7 @@ public class GamePlay extends Menu {
             swapPlayers(fistPlayersBoard, secondPlayersBoard);
             isFirstTime = false;
             isCardAddedToHandInThisPhase = false;
+            trapEffect = false;
             setPhase(GamePhases.DRAW);
             execute();
         }
@@ -543,6 +545,14 @@ public class GamePlay extends Menu {
 
     public static void setFirstTime(boolean firstTime) {
         isFirstTime = firstTime;
+    }
+
+    public static boolean isTrapEffect() {
+        return trapEffect;
+    }
+
+    public static void setTrapEffect(boolean trapEffect) {
+        GamePlay.trapEffect = trapEffect;
     }
 
     public static void setPhase(GamePhases currentPhase) {
