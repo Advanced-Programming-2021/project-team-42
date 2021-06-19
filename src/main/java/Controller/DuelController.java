@@ -107,8 +107,58 @@ public class DuelController {
     }
 
     public void activationCheck(GameBoard firstPlayerBoard, GameBoard secondPlayerBoard,
-                                GamePhases currentPhase) {
+                                GamePhases currentPhase) throws Exception {
+        if (!firstPlayerBoard.checkSelections() && !secondPlayerBoard.checkSelections())
+            throw new Exception("no card is selected yet");
+        else {
+            if (firstPlayerBoard.getHandSelectedCard() == null && firstPlayerBoard.getSpellTrapSelectedCard() == null)
+                throw new Exception("you can not do this action with this cards");
+            else {
+                Card handCard = firstPlayerBoard.getHandSelectedCard();
+                SpellTrapCard spellTrapCard = firstPlayerBoard.getSpellTrapSelectedCard();
+                boolean phaseCheck = !currentPhase.equals(GamePhases.FIRST_MAIN) && !currentPhase.equals(GamePhases.SECOND_MAIN);
+                if (handCard != null) {
+                    if (SpellTrapCard.getSpellTrapCardByName(handCard.getName()) != null && !((SpellTrapCard) handCard).getCardType().equals("Spell Card"))
+                        throw new Exception("activate effect is only for spell cards");
+                    else {
+                        if (phaseCheck)
+                            throw new Exception("you can’t activate an effect on this turn");
+                        else {
+                            SpellTrapCard choseSpellCard = (SpellTrapCard) handCard;
+                            if (firstPlayerBoard.spellTrapPlacesSize() > 5)
+                                throw new Exception("spell card zone is full");
+                            else{
+                                choseSpellCard.setEffectActive(true);
+                                choseSpellCard.setSet(false);
+                                firstPlayerBoard.setSpellTrapsPlace(choseSpellCard, firstPlayerBoard.spellTrapPlacesSize() + 1);
+                                firstPlayerBoard.removeCardFromHand(firstPlayerBoard.getSelectedHandPlace());
+                                firstPlayerBoard.deselectAll();
+                                secondPlayerBoard.deselectAll();
+                            }
+                        }
+                    }
 
+                } else if (spellTrapCard != null) {
+                    if (phaseCheck)
+                        throw new Exception("you can’t activate an effect on this turn");
+                    else{
+                        if(spellTrapCard.isEffectActive())
+                            throw new Exception("you have already activated this card");
+                        else{
+                            if (firstPlayerBoard.spellTrapPlacesSize() > 5)
+                                throw new Exception("spell card zone is full");
+                            else{
+                                spellTrapCard.setEffectActive(true);
+                                spellTrapCard.setSet(false);
+                                firstPlayerBoard.deselectAll();
+                                secondPlayerBoard.deselectAll();
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
     }
 
     public void activeTrapEffect(SpellTrapCard spellTrapCard, GameBoard playersBoard) {
@@ -118,15 +168,17 @@ public class DuelController {
             ArrayList<Card> graveYard = playersBoard.getGraveYard();
             Collections.shuffle(graveYard);
 
-            for (Card cardInGraveYard : graveYard) {
-                if (MonsterCard.isMonsterCard(cardInGraveYard.getName())) {
-                    MonsterCard monsterCardInGraveYard = (MonsterCard) cardInGraveYard;
-                    monsterCardInGraveYard.setDefensive(false);
-                    monsterCardInGraveYard.setSummoned(true);
-                    monsterCardInGraveYard.setSet(false);
-                    playersBoard.setMonstersPlace(monsterCardInGraveYard, playersBoard.monsterPlacesSize() + 1);
-                    playersBoard.getGraveYard().remove(cardInGraveYard);
-
+            if(playersBoard.monsterPlacesSize() < 5) {
+                for (Card cardInGraveYard : graveYard) {
+                    if (MonsterCard.isMonsterCard(cardInGraveYard.getName())) {
+                        MonsterCard monsterCardInGraveYard = (MonsterCard) cardInGraveYard;
+                        monsterCardInGraveYard.setDefensive(false);
+                        monsterCardInGraveYard.setSummoned(true);
+                        monsterCardInGraveYard.setSet(false);
+                        playersBoard.setMonstersPlace(monsterCardInGraveYard, playersBoard.monsterPlacesSize() + 1);
+                        playersBoard.getGraveYard().remove(cardInGraveYard);
+                        break;
+                    }
                 }
             }
         } else if (cardName.equals("another card!")) {
@@ -676,7 +728,7 @@ public class DuelController {
         }
     }
 
-    public void exchangeCard(User player, String cardsName) throws Exception{
+    public void exchangeCard(User player, String cardsName) throws Exception {
         Deck activeDeck = Deck.getDeckByName(player.getActiveDeck());
         String[] cardsNameSplit = cardsName.split(",");
         String mainDecksCard = cardsNameSplit[0];

@@ -219,6 +219,14 @@ public class GamePlay extends Menu {
             @Override
             public void executeCommand(String command) {
 
+                try{
+                    DuelController.getInstance().activationCheck(fistPlayersBoard, secondPlayersBoard, currentPhase);
+                    System.out.println("spell activated");
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+
+                parentMenu.execute();
             }
         };
     }
