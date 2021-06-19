@@ -31,29 +31,6 @@ public class GamePlay extends Menu {
         CHEAT_SHEET.put("Set Game Winner", Pattern.compile("^duel set-winner (\\w+)$"));
     }
 
-    public void show() {
-        System.out.println("\033[1;92m" + "\t\tUse these Patterns to Play:" + "\033[0m\n");
-        System.out.println("\033[0;97m" + "Select Monster Card:\033[0m select --monster <number>\n" +
-                "\033[0;97m" + "Select Opponents Monster Card:\033[0m select --monster --opponent <number>\n" +
-                "\033[0;97m" + "Select SpellTrap Card:\033[0m select --spell <number>\n" +
-                "\033[0;97m" + "Select Opponents SpellTrap Card:\033[0m select --spell --opponent <number>\n" +
-                "\033[0;97m" + "Select FieldZone Card:\033[0m select --field\n" +
-                "\033[0;97m" + "Select Opponent FieldZone Card:\033[0m select --field --opponent\n" +
-                "\033[0;97m" + "Select Hand Card:\033[0m select --hand <number>\n" +
-                "\033[0;97m" + "Select Opponent Hand Card:\033[0m select --hand --opponent <number>\n" +
-                "\033[0;97m" + "Set Card:\033[0m set\n" +
-                "\033[0;97m" + "Summon Monster Card:\033[0m summon\n" +
-                "\033[0;97m" + "Change Card Position:\033[0m set --position <attack/defense>\n" +
-                "\033[0;97m" + "Flip-Summon Monster Card:\033[0m flip-summon\n" +
-                "\033[0;97m" + "Active SpellTrap Card Effect:\033[0m active effect\n" +
-                "\033[0;97m" + "Attack to Card:\033[0m attack <number>\n" +
-                "\033[0;97m" + "Direct Attack to Opponent:\033[0m direct attack\n" +
-                "\033[0;97m" + "Show GraveYard:\033[0m show graveyard\n" +
-                "\033[0;97m" + "Show Selected Card:\033[0m card show --selected\n" +
-                "\033[0;97m" + "Goto Next Phase:\033[0m next phase\n" +
-                "\033[0;97m" + "Surrender:\033[0m surrender\n");
-    }
-
 
     public GamePlay(Menu parentMenu, GameBoard fistPlayersBoard, GameBoard secondPlayersBoard, int rounds) {
         super("Game Play", parentMenu);
@@ -359,6 +336,29 @@ public class GamePlay extends Menu {
     public void run() {
         show();
         execute();
+    }
+
+    public void show() {
+        System.out.println("\033[1;92m" + "\t\tUse these Patterns to Play:" + "\033[0m\n");
+        System.out.println("\033[0;97m" + "Select Monster Card:\033[0m select --monster <number>\n" +
+                "\033[0;97m" + "Select Opponents Monster Card:\033[0m select --monster --opponent <number>\n" +
+                "\033[0;97m" + "Select SpellTrap Card:\033[0m select --spell <number>\n" +
+                "\033[0;97m" + "Select Opponents SpellTrap Card:\033[0m select --spell --opponent <number>\n" +
+                "\033[0;97m" + "Select FieldZone Card:\033[0m select --field\n" +
+                "\033[0;97m" + "Select Opponent FieldZone Card:\033[0m select --field --opponent\n" +
+                "\033[0;97m" + "Select Hand Card:\033[0m select --hand <number>\n" +
+                "\033[0;97m" + "Select Opponent Hand Card:\033[0m select --hand --opponent <number>\n" +
+                "\033[0;97m" + "Set Card:\033[0m set\n" +
+                "\033[0;97m" + "Summon Monster Card:\033[0m summon\n" +
+                "\033[0;97m" + "Change Card Position:\033[0m set --position <attack/defense>\n" +
+                "\033[0;97m" + "Flip-Summon Monster Card:\033[0m flip-summon\n" +
+                "\033[0;97m" + "Active SpellTrap Card Effect:\033[0m active effect\n" +
+                "\033[0;97m" + "Attack to Card:\033[0m attack <number>\n" +
+                "\033[0;97m" + "Direct Attack to Opponent:\033[0m direct attack\n" +
+                "\033[0;97m" + "Show GraveYard:\033[0m show graveyard\n" +
+                "\033[0;97m" + "Show Selected Card:\033[0m card show --selected\n" +
+                "\033[0;97m" + "Goto Next Phase:\033[0m next phase\n" +
+                "\033[0;97m" + "Surrender:\033[0m surrender\n");
     }
 
     public void execute() {

@@ -643,7 +643,7 @@ public class DuelController {
         User winner = firstPlayerBoard.getPlayer();
         User loser = secondPlayerBoard.getPlayer();
         if (rounds == 1) {
-            winner.setScore(winner.getScore() + 10000);
+            winner.setScore(winner.getScore() + 1000);
             winner.setWins(winner.getWins() + 1);
             loser.setLoses(loser.getLoses() + 1);
             System.out.println(firstPlayerBoard.getPlayer().getNickname() + " wins the game");
