@@ -645,7 +645,7 @@ public class DuelController {
             loser.setLoses(loser.getLoses() + 1);
             System.out.println(firstPlayerBoard.getPlayer().getNickname() + " wins the game");
             winner.setBalance(winner.getLP() + 1000 + winner.getBalance());
-            loser.setBalance(loser.getBalance() + 100 + loser.getBalance());
+            loser.setBalance(loser.getBalance() + 100);
             System.out.println("Winner earn " + (winner.getLP() + 1000));
             mainMenu.run();
         } else {
