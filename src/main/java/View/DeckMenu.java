@@ -39,7 +39,14 @@ public class DeckMenu extends Menu {
                 Matcher matcher = pattern.matcher(command);
                 if (matcher.find())
                     deckName = matcher.group(1).trim();
-                DeckController.getInstance().createDeck(this.parentMenu.parentMenu.usersName, deckName);
+
+                try {
+                    DeckController.getInstance().createDeck(this.parentMenu.parentMenu.usersName, deckName);
+                    System.out.println("deck created successfully!");
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+
                 parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };
@@ -54,7 +61,14 @@ public class DeckMenu extends Menu {
                 Matcher matcher = pattern.matcher(command);
                 if (matcher.find())
                     deckName = matcher.group(1).trim();
-                DeckController.getInstance().deleteDeck(this.parentMenu.parentMenu.usersName, deckName);
+
+                try {
+                    DeckController.getInstance().deleteDeck(this.parentMenu.parentMenu.usersName, deckName);
+                    System.out.println("deck deleted successfully");
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+
                 parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };
@@ -69,7 +83,14 @@ public class DeckMenu extends Menu {
                 Matcher matcher = pattern.matcher(command);
                 if (matcher.find())
                     deckName = matcher.group(1).trim();
-                DeckController.getInstance().setActiveDeck(this.parentMenu.parentMenu.usersName, deckName);
+
+                try {
+                    DeckController.getInstance().setActiveDeck(this.parentMenu.parentMenu.usersName, deckName);
+                    System.out.println("deck activated successfully");
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+
                 parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };
@@ -97,6 +118,7 @@ public class DeckMenu extends Menu {
     private void processingCard(String command, int flag) {
         String cardName = null, deckName = null;
         boolean isSideDeck = false;
+
         Pattern pattern = Pattern.compile("--card ([A-Za-z ]+)");
         Matcher matcher = pattern.matcher(command);
         if (matcher.find())
@@ -109,11 +131,23 @@ public class DeckMenu extends Menu {
         matcher = pattern.matcher(command);
         if (matcher.find())
             isSideDeck = true;
+
         if(cardName != null && deckName != null) {
-            if (flag == 0)
-                DeckController.getInstance().removeCardFromDeck(this.parentMenu.usersName, deckName, cardName, isSideDeck);
-            else
-                DeckController.getInstance().addCardToDeck(this.parentMenu.usersName, deckName, cardName, isSideDeck);
+            if (flag == 0) {
+                try {
+                    DeckController.getInstance().removeCardFromDeck(this.parentMenu.usersName, deckName, cardName, isSideDeck);
+                    System.out.println("card removed form deck successfully");
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            } else {
+                try {
+                    DeckController.getInstance().addCardToDeck(this.parentMenu.usersName, deckName, cardName, isSideDeck);
+                    System.out.println("card added to deck successfully");
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+            }
         }
         else
             System.out.println("invalid command!");
@@ -145,7 +179,7 @@ public class DeckMenu extends Menu {
                 matcher = pattern.matcher(command);
                 if (matcher.find())
                     isSideDeck = true;
-                DeckController.getInstance().showDeck(this.parentMenu.parentMenu.usersName,deckName, isSideDeck);
+                DeckController.getInstance().showDeck(deckName, isSideDeck);
                 parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };

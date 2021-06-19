@@ -17,64 +17,56 @@ public class RegisterController {
     private static FileWriter FILE_WRITER;
     private static FileReader FILE_READER;
 
+    static {
+        RegisterController.parseUsers();
+        CardController.parseCards();
+        DeckController.parseDecks();
+    }
+
     private RegisterController() {
     }
 
-    public void createNewUser(String username, String nickname, String password) {
-        if (UserController.getInstance().isUserWithThisFieldExists(username, 0))
-            System.out.println("User with username " + username + " already exists");
+    public static void rewriteData() {
+        Gson gson = new GsonBuilder().create();
+        for (User user : User.getAllUsers()) {
+            try {
+                FILE_WRITER = new FileWriter(FILE_PATH + "\\" + user.getUsername() + ".json");
+                gson.toJson(user, FILE_WRITER);
+                FILE_WRITER.close();
+            } catch (IOException e) {
+                System.out.println("An error occurred while writing user data!");
+            }
+        }
+    }
+
+    public void createNewUser(String username, String nickname, String password) throws Exception {
+        if (User.getUserByUsername(username) != null)
+            throw new Exception("User with username " + username + " already exists");
         else {
-            if (UserController.getInstance().isUserWithThisFieldExists(nickname, 1))
-                System.out.println("User with nickname " + nickname + " already exists");
+            if (User.getUserByNickname(nickname) != null)
+                throw new Exception("User with nickname " + nickname + " already exists");
             else {
-                try {
-                    User user = new User(username, password, nickname);
-                    Gson gson = new GsonBuilder().create();
-                    FILE_WRITER = new FileWriter(FILE_PATH + "\\" + user.getUsername() + ".json");
-                    gson.toJson(user, FILE_WRITER);
-                    FILE_WRITER.close();
-                    System.out.println("User created successfully");
-
-                } catch (IOException e) {
-                    System.out.println("Could not create user\n" +
-                            "Please try again");
-                }
+                User user = new User(username, password, nickname);
             }
         }
     }
 
-    public void loginUser(String username, String password, Menu parentMenu) {
-        try {
-            Gson gson = new Gson();
-            if (!UserController.getInstance().isUserWithThisFieldExists(username, 0))
-                System.out.println("Username and Password did not match!");
+    public void loginUser(String username, String password, Menu parentMenu) throws Exception {
+        if (User.getUserByUsername(username) == null)
+            throw new Exception("Username and Password did not match!");
+        else {
+            User user = User.getUserByUsername(username);
+            if (!user.getPassword().equals(password))
+                throw new Exception("Username and Password did not match!");
             else {
-                FILE_READER = new FileReader(FILE_PATH + "\\" + username + ".json");
-                User user = gson.fromJson(FILE_READER, User.class);
-                if (!user.getPassword().equals(password))
-                    System.out.println("Username and Password did not match!");
-                else {
-                    if(parseUsers()){
-                        CardController.parseCards();
-                        DeckController.parseDecks();
-                        System.out.println("You logged in successfully!");
-                        MainMenu mainMenu = MainMenu.getInstance(parentMenu);
-                        mainMenu.setUsersName(username);
-                        mainMenu.run();
-                    }
-                    else{
-                        System.out.println("An error occurred while Logging you in!\n" +
-                                "Please try again later!");
-                    }
-                }
+                MainMenu mainMenu = MainMenu.getInstance(parentMenu);
+                mainMenu.setUsersName(username);
+                mainMenu.run();
             }
-        } catch (Exception e) {
-            System.out.println("Could not do login process!\n" +
-                    "Please try again");
         }
     }
 
-    public boolean parseUsers(){
+    public static void parseUsers() {
         try {
             User user;
             Gson gson = new Gson();
@@ -84,14 +76,12 @@ public class RegisterController {
                 for (File file : usersArray) {
                     FILE_READER = new FileReader(FILE_PATH + "\\" + file.getName());
                     user = gson.fromJson(FILE_READER, User.class);
+                    FILE_READER.close();
                     User.addUserToList(user);
                 }
             }
-            return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Can not load Users from file!");
-            e.printStackTrace();
-            return false;
         }
     }
 

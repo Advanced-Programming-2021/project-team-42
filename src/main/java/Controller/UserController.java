@@ -1,115 +1,44 @@
 package Controller;
 
 import Model.User;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class UserController {
     private static UserController instance = null;
-    private static FileWriter FILE_WRITER;
-    private static FileReader FILE_READER;
-    private static final String FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Users";
 
     private UserController() {
     }
 
-    public boolean isUserWithThisFieldExists(String field, int flag) {
-        try {
-            Gson gson = new Gson();
-            File allUsers = new File(FILE_PATH);
-            File[] allUsersArray = allUsers.listFiles();
-            if (allUsersArray != null) {
-                for (File file : allUsersArray) {
-                    FILE_READER = new FileReader(FILE_PATH + "\\" + file.getName());
-                    User user = gson.fromJson(FILE_READER, User.class);
-                    if(flag == 1) {
-                        if (user.getNickname().equals(field))
-                            return true;
-                    }
-                    else{
-                        if (user.getUsername().equals(field))
-                            return true;
-                    }
-                }
-                return false;
-            }
-        }catch(IOException e){
-            System.out.println("Could not read information from file");
-        }
-        return false;
+    public void changeNickname(String username, String nickname) throws Exception{
+        if (User.getUserByNickname(nickname) != null)
+            throw new Exception("user with nickname " + nickname + " already exists");
+        else
+            User.getUserByUsername(username).setNickname(nickname);
     }
 
-    public void changeNickname(String username, String nickname){
-        try {
-            if(checkNicknameExistence(nickname))
-                System.out.println("user with nickname " + nickname + " already exists");
-            else {
-                User user = User.getUserByUsername(username);
-                user.setNickname(nickname);
-                updateUsersFile(username, user);
-                System.out.println("Nickname successfully changed!");
-            }
-        }catch (Exception e){
-            System.out.println("Can not Change your Nickname!\n" +
-                    "Try again");
-            e.printStackTrace();
-        }
-    }
-
-    private void updateUsersFile(String username, User user) throws IOException {
-        Gson gson = new GsonBuilder().create();
-        FILE_WRITER = new FileWriter(FILE_PATH + "\\" + username + ".json");
-        gson.toJson(user, FILE_WRITER);
-        FILE_WRITER.close();
-    }
-
-    public void changePassword(String username, String currentPassword, String newPassword){
-        try {
+    public void changePassword(String username, String currentPassword, String newPassword) throws Exception{
             if (!isPasswordCorrect(username, currentPassword))
-                System.out.println("Current password is invalid");
+                throw new Exception("Current password is invalid");
             else {
                 if (currentPassword.equals(newPassword))
-                    System.out.println("Please enter a new password");
-                else {
-                    User user = User.getUserByUsername(username);
-                    user.setPassword(newPassword);
-                    updateUsersFile(username, user);
-                    System.out.println("Password successfully changed!");
-                }
+                    throw new Exception("Please enter a new password");
+                else
+                    User.getUserByUsername(username).setPassword(newPassword);
             }
-        }catch (Exception e){
-            System.out.println("Can not Change your Password!\n" +
-                    "Try again");
-            e.printStackTrace();
-        }
     }
 
-    public void increaseMoney(User user, int amount){
+    public void increaseMoney(User user, int amount) {
         user.setBalance(user.getBalance() + amount);
     }
 
-    public void increaseLP(User user, int LP){
+    public void increaseLP(User user, int LP) {
         user.setLP(user.getLP() + LP);
     }
 
-    public boolean isPasswordCorrect(String username, String password){
+    public boolean isPasswordCorrect(String username, String password) {
         User user = User.getUserByUsername(username);
         return user.getPassword().equals(password);
     }
 
-
-    public boolean checkNicknameExistence(String nickname){
-        for(User user : User.getAllUsers()){
-            if(user.getNickname().equals(nickname))
-                return true;
-        }
-        return false;
-    }
 
     public static UserController getInstance() {
         if (instance == null)

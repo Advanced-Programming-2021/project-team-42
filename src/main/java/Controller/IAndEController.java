@@ -11,35 +11,33 @@ import java.io.IOException;
 
 public class IAndEController {
     private static IAndEController instance = null;
-    private static final String I_E_CARDS_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\ImportExportedCards";
-    private static FileWriter FILE_WRITER;
-    private static FileReader FILE_READER;
+    private static final String EXPORTED_CARDS_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\ExportedCards";
+    private static final String IMPORTED_CARDS_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\ExportedCards";
 
-    private IAndEController(){}
-
-    public void importCard(String cardName){
-        try {
-            Gson gson = new Gson();
-            FILE_READER = new FileReader(I_E_CARDS_PATH + "\\" + cardName + ".json");
-            if (MonsterCard.isMonsterCard(cardName)) {
-                MonsterCard monsterCard = gson.fromJson(FILE_READER, MonsterCard.class);
-                Card.addCardToList(monsterCard);
-                MonsterCard.addMonsterCardToList(monsterCard);
-            } else {
-                SpellTrapCard spellTrapCard = gson.fromJson(FILE_READER, SpellTrapCard.class);
-                Card.addCardToList(spellTrapCard);
-                SpellTrapCard.addSpellTrapCardToList(spellTrapCard);
-            }
-            System.out.println("card imported successfully");
-        } catch (IOException e){
-            System.out.println("Can not import card!");
-        }
+    private IAndEController() {
     }
 
-    public void exportCard(String cardName){
-        try {
+    public void importCard(String cardName) throws IOException {
+        Gson gson = new Gson();
+        FileReader FILE_READER = new FileReader(IMPORTED_CARDS_PATH + "\\" + cardName + ".json");
+        if (MonsterCard.isMonsterCard(cardName)) {
+            MonsterCard monsterCard = gson.fromJson(FILE_READER, MonsterCard.class);
+            Card.addCardToList(monsterCard);
+            MonsterCard.addMonsterCardToList(monsterCard);
+        } else {
+            SpellTrapCard spellTrapCard = gson.fromJson(FILE_READER, SpellTrapCard.class);
+            Card.addCardToList(spellTrapCard);
+            SpellTrapCard.addSpellTrapCardToList(spellTrapCard);
+        }
+        FILE_READER.close();
+    }
+
+    public void exportCard(String cardName) throws Exception {
+        if (Card.getCardByName(cardName) == null)
+            throw new Exception("there is no card with given name!");
+        else {
             Gson gson = new Gson();
-            FILE_WRITER = new FileWriter(I_E_CARDS_PATH + "\\" + cardName + ".json");
+            FileWriter FILE_WRITER = new FileWriter(EXPORTED_CARDS_PATH + "\\" + cardName + ".json");
             if (MonsterCard.isMonsterCard(cardName)) {
                 MonsterCard monsterCard = MonsterCard.getMonsterCardByName(cardName);
                 gson.toJson(monsterCard, FILE_WRITER);
@@ -47,14 +45,15 @@ public class IAndEController {
                 SpellTrapCard spellTrapCard = SpellTrapCard.getSpellTrapCardByName(cardName);
                 gson.toJson(spellTrapCard, FILE_WRITER);
             }
-            System.out.println("card exported successfully");
-        } catch (IOException e){
-            System.out.println("Can not export card!");
+            FILE_WRITER.close();
+
         }
+        System.out.println("Can not export card!");
+
     }
 
-    public static IAndEController getInstance(){
-        if(instance == null)
+    public static IAndEController getInstance() {
+        if (instance == null)
             instance = new IAndEController();
         return instance;
     }

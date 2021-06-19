@@ -2,7 +2,6 @@ package Controller;
 
 import Model.*;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.io.FileReader;
@@ -13,10 +12,6 @@ import java.util.*;
 public class DeckController {
     private static DeckController instance = null;
     private final static String DECKS_FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Decks";
-    private final static String MONSTER_CARDS_FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Cards\\Monsters";
-    private final static String SPELL_TRAP_CARDS_FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Cards\\SpellTraps";
-    private final static String USERS_FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Users";
-    private static FileWriter FILE_WRITER;
 
     private DeckController() {
     }
@@ -39,183 +34,135 @@ public class DeckController {
         }
     }
 
-    public void createDeck(String username, String deckName) {
-        if (deckNameCheck(deckName))
-            System.out.println("deck with name " + deckName + " already exists");
-        else {
+    public static void rewriteData() {
+        Gson gson = new Gson();
+        for (Deck deck : Deck.getAllDecks()) {
             try {
-                Deck deck = new Deck(deckName, username);
-                Gson gson = new GsonBuilder().create();
-                FILE_WRITER = new FileWriter(DECKS_FILE_PATH + "\\" + deckName + ".json");
+                FileWriter FILE_WRITER = new FileWriter(DECKS_FILE_PATH + "\\" + deck.getName() + ".json");
                 gson.toJson(deck, FILE_WRITER);
                 FILE_WRITER.close();
-                User user = User.getUserByUsername(username);
-                user.addDeckToList(deckName);
-                FILE_WRITER = new FileWriter(USERS_FILE_PATH + "\\" + username + ".json");
-                gson.toJson(user, FILE_WRITER);
-                FILE_WRITER.close();
-                System.out.println("deck created successfully!");
             } catch (IOException e) {
-                System.out.println("Can not create new Deck\n" +
-                        "Please try again!");
+                System.out.println("An error occurred while writing deck data");
             }
         }
     }
 
-    public boolean deckNameCheck(String deckName) {
-        File directory = new File(DECKS_FILE_PATH);
-        File[] allDecks = directory.listFiles();
-        if (allDecks != null) {
-            for (File deck : allDecks) {
-                if (deck.getName().equals(deckName + ".json"))
-                    return true;
-            }
-            return false;
+    public void createDeck(String username, String deckName) throws Exception {
+        if (Deck.getDeckByName(deckName) != null)
+            throw new Exception("deck with name " + deckName + " already exists");
+        else {
+            Deck deck = new Deck(deckName, username);
+            User user = User.getUserByUsername(username);
+            user.addDeckToList(deck.getName());
         }
-        return false;
     }
 
-    public void deleteDeck(String username, String deckName) {
-        if (!deckNameCheck(deckName))
-            System.out.println("deck with name " + deckName + " does not exists");
+    public void deleteDeck(String username, String deckName) throws Exception {
+        if (Deck.getDeckByName(deckName) == null)
+            throw new Exception("deck with name " + deckName + " does not exists");
         else {
             File directory = new File(DECKS_FILE_PATH);
             File[] allDecks = directory.listFiles();
             if (allDecks != null) {
-                for (int i = 0; i < allDecks.length; i++) {
-                    if (allDecks[i].getName().equals(deckName + ".json")) {
-                        if (allDecks[i].delete()) {
-                            try {
-                                User user = User.getUserByUsername(username);
-                                user.removeDeckFromList(deckName);
-                                FILE_WRITER = new FileWriter(USERS_FILE_PATH + "\\" + username + ".json");
-                                new Gson().toJson(user, FILE_WRITER);
-                                FILE_WRITER.close();
-                                System.out.println("deck deleted successfully");
-                                break;
-                            } catch (Exception e) {
-                                System.out.println("Can not delete deck!");
-                            }
+                for (File deck : allDecks) {
+                    if (deck.getName().equals(deckName + ".json")) {
+                        if (deck.delete()) {
+                            User user = User.getUserByUsername(username);
+                            user.removeDeckFromList(deckName);
+                            break;
                         } else
-                            System.out.println("Field to delete deck!");
+                            throw new Exception("Failed to delete deck!");
                     }
                 }
             }
         }
     }
 
-    public void setActiveDeck(String username, String deckName) {
-        if (!deckNameCheck(deckName)) {
-            System.out.println("deck with name " + deckName + " does not exist");
+    public void setActiveDeck(String username, String deckName) throws Exception {
+        if (Deck.getDeckByName(deckName) == null) {
+            throw new Exception("deck with name " + deckName + " does not exist");
         } else {
-            try {
-                User user = User.getUserByUsername(username);
-                user.setActiveDeck(deckName);
-                FILE_WRITER = new FileWriter(USERS_FILE_PATH + "\\" + username + ".json");
-                new Gson().toJson(user, FILE_WRITER);
-                FILE_WRITER.close();
-                System.out.println("deck activated successfully");
-            } catch (Exception e) {
-                System.out.println("Can not do activation process!");
-            }
+            User user = User.getUserByUsername(username);
+            user.setActiveDeck(deckName);
         }
-
     }
 
 
-    public void addCardToDeck(String username, String deckName, String cardName, boolean isSide) {
+    public void addCardToDeck(String username, String deckName, String cardName, boolean isSide) throws Exception{
         User user = User.getUserByUsername(username);
-        if (!user.doesUserHasThisCard(cardName)) {
-            System.out.println("card with name " + cardName + " does not exist");
-        } else {
-            if (!deckNameCheck(deckName)) {
-                System.out.println("deck with name " + deckName + " does not exist");
-            } else {
-                try {
-                    FileReader fileReader = new FileReader(DECKS_FILE_PATH + "\\" + deckName + ".json");
-                    Deck deck = new GsonBuilder().create().fromJson(fileReader, Deck.class);
-                    int mainDeckAmount = deck.mainDeckSize();
-                    int sideDeckAmount = deck.sideDeckSize();
-                    if (isSide) {
-                        if (sideDeckAmount == 15)
-                            System.out.println("side deck is full");
-                        else {
-                            int cardCount = deck.mainDecksCardCount(cardName) + deck.sideDecksCardCount(cardName);
-                            if (cardCount == 3)
-                                System.out.println("there are already three cards with name " + cardName + " in deck " + deckName);
-                            else {
-                                user.decreaseCard(cardName);
-                                deck.addCardToSideDeck(cardName);
-                                rewriteData(username, deckName, user, deck);
-                                System.out.println("card added to deck successfully");
-                            }
-                        }
-                    } else {
-                        if (mainDeckAmount == 60)
-                            System.out.println("main deck is full");
-                        else {
-                            int cardCount = deck.mainDecksCardCount(cardName) + deck.sideDecksCardCount(cardName);
-                            if (cardCount == 3)
-                                System.out.println("there are already three cards with name " + cardName + " in deck " + deckName);
-                            else {
-                                user.decreaseCard(cardName);
-                                deck.addCardToMainDeck(cardName);
-                                rewriteData(username, deckName, user, deck);
-                                System.out.println("card added to deck successfully");
-                            }
-                        }
-                    }
-                } catch (IOException e) {
-                    System.out.println("An error occurred while adding Card to Deck!");
-                }
+        if (!user.doesUserHasThisCard(cardName))
+            throw new Exception("card with name " + cardName + " does not exist");
+        else {
+            if (Deck.getDeckByName(deckName) == null)
+                throw new Exception("deck with name " + cardName + " does not exist");
+            else {
+                Deck deck = Deck.getDeckByName(deckName);
+                int mainDeckAmount = deck.mainDeckSize();
+                int sideDeckAmount = deck.sideDeckSize();
+                if (isSide)
+                    addCardToSideDeck(deckName, cardName, user, deck, sideDeckAmount);
+                else
+                    addCardToMainDeck(deckName, cardName, user, deck, mainDeckAmount);
             }
         }
     }
 
-    private void rewriteData(String username, String deckName, User user, Deck deck) {
-        try {
-            FILE_WRITER = new FileWriter(USERS_FILE_PATH + "\\" + username + ".json");
-            new Gson().toJson(user, FILE_WRITER);
-            FILE_WRITER.close();
-            FILE_WRITER = new FileWriter(DECKS_FILE_PATH + "\\" + deckName + ".json");
-            new Gson().toJson(deck, FILE_WRITER);
-            FILE_WRITER.close();
-        } catch (IOException e) {
-            System.out.println("Can not rewrite data on files!");
+    private void addCardToMainDeck(String deckName, String cardName, User user, Deck deck, int mainDeckAmount) throws Exception {
+        if (mainDeckAmount == 60)
+            throw new Exception("main deck is full");
+        else {
+            int cardCount = deck.mainDecksCardCount(cardName) + deck.sideDecksCardCount(cardName);
+            if (cardCount == 3)
+                throw new Exception("there are already three cards with name " + cardName + " in deck " + deckName);
+            else {
+                user.decreaseCard(cardName);
+                deck.addCardToMainDeck(cardName);
+            }
         }
     }
 
-    public void removeCardFromDeck(String username, String deckName, String cardName, boolean isSide) {
+    private void addCardToSideDeck(String deckName, String cardName, User user, Deck deck, int sideDeckAmount) throws Exception {
+        if (sideDeckAmount == 15)
+            throw new Exception("side deck is full");
+        else {
+            int cardCount = deck.mainDecksCardCount(cardName) + deck.sideDecksCardCount(cardName);
+            if (cardCount == 3)
+                throw new Exception("there are already three cards with name " + cardName + " in deck " + deckName);
+            else {
+                user.decreaseCard(cardName);
+                deck.addCardToSideDeck(cardName);
+            }
+        }
+    }
+
+    public void removeCardFromDeck(String username, String deckName, String cardName, boolean isSide) throws Exception {
         User user = User.getUserByUsername(username);
-        if (!deckNameCheck(deckName)) {
-            System.out.println("deck with name " + deckName + " does not exist");
+        if (Deck.getDeckByName(deckName) == null) {
+            throw new Exception("deck with name " + deckName + " does not exist");
         } else {
-            try {
-                Gson gson = new GsonBuilder().create();
-                FileReader fileReader = new FileReader(DECKS_FILE_PATH + "\\" + deckName + ".json");
-                Deck deck = gson.fromJson(fileReader, Deck.class);
-                if (!isSide) {
-                    if (!deck.doesMainDeckHasThisCard(cardName))
-                        System.out.println("card with name " + cardName + " does not exist in main deck");
-                    else {
-                        user.increaseCard(cardName);
-                        deck.removeCardFromMainDeck(cardName);
-                        rewriteData(username, deckName, user, deck);
-                        System.out.println("card removed form deck successfully");
-                    }
-                } else {
-                    if (!deck.doesSideDeckHasThisCard(cardName))
-                        System.out.println("card with name " + cardName + " does not exist in side deck");
-                    else {
-                        user.increaseCard(cardName);
-                        deck.removeCardFromSideDeck(cardName);
-                        rewriteData(username, deckName, user, deck);
-                        System.out.println("card removed form deck successfully");
-                    }
-                }
-            } catch (IOException e) {
-                System.out.println("An error occurred while deleting Card from Deck!");
-            }
+            Deck deck = Deck.getDeckByName(deckName);
+            if (!isSide)
+                deleteCardFromMainDeck(cardName, user, deck);
+            else
+                deleteCardFromSideDeck(cardName, user, deck);
+        }
+    }
+
+    private void deleteCardFromSideDeck(String cardName, User user, Deck deck) throws Exception{
+        if (!deck.doesSideDeckHasThisCard(cardName))
+            throw new Exception("card with name " + cardName + " does not exist in side deck");
+        else {
+            user.increaseCard(cardName);
+            deck.removeCardFromSideDeck(cardName);
+        }
+    }
+
+    private void deleteCardFromMainDeck(String cardName, User user, Deck deck) throws Exception {
+        if (!deck.doesMainDeckHasThisCard(cardName))
+            throw new Exception("card with name " + cardName + " does not exist in main deck");
+        else {
+            user.increaseCard(cardName);
+            deck.removeCardFromMainDeck(cardName);
         }
     }
 
@@ -234,38 +181,27 @@ public class DeckController {
     }
 
     public void printDeck(String deckName, int flag) {
-        try {
-            FileReader fileReader = new FileReader(DECKS_FILE_PATH + "\\" + deckName + ".json");
-            Gson gson = new GsonBuilder().create();
-            Deck deck = gson.fromJson(fileReader, Deck.class);
-            boolean isValid = deck.isValid();
-            if (!deckName.equals(User.getUserByUsername(Deck.getUsernameByDeckName(deckName)).getActiveDeck()) || flag == 1)
-                System.out.println(deck.getName() + ": main deck " + deck.mainDeckSize() +
-                        ",side deck " + deck.sideDeckSize() + (isValid ? ", valid" : ", invalid"));
-        } catch (IOException e) {
-            System.out.println("An error occurred while printing Deck!\n" +
-                    "Deck did not found");
-        }
+        Deck deck = Deck.getDeckByName(deckName);
+        boolean isValid = deck.isValid();
+        if (!deckName.equals(User.getUserByUsername(Deck.getUsernameByDeckName(deckName)).getActiveDeck()) || flag == 1)
+            System.out.println(deck.getName() + ": main deck " + deck.mainDeckSize() +
+                    ",side deck " + deck.sideDeckSize() + (isValid ? ", valid" : ", invalid"));
+
+
     }
 
-    public void showDeck(String username, String deckName, boolean isSide) {
-        if (!deckNameCheck(deckName))
+    public void showDeck(String deckName, boolean isSide) {
+        if (Deck.getDeckByName(deckName) == null)
             System.out.println("deck with name " + deckName + " does not exists");
         else {
-            try {
-                FileReader fileReader = new FileReader(DECKS_FILE_PATH + "\\" + deckName + ".json");
-                Gson gson = new GsonBuilder().create();
-                Deck deck = gson.fromJson(fileReader, Deck.class);
-                System.out.println("Deck name: " + deckName);
-                if (isSide) {
-                    System.out.println("Side Deck:");
-                    printDeckCards(deck.getSideDeckCards());
-                } else {
-                    System.out.println("Main Deck:");
-                    printDeckCards(deck.getMainDeckCards());
-                }
-            } catch (IOException e) {
-                System.out.println("An error occurred while showing Deck!");
+            Deck deck = Deck.getDeckByName(deckName);
+            System.out.println("Deck name: " + deckName);
+            if (isSide) {
+                System.out.println("Side Deck:");
+                printDeckCards(deck.getSideDeckCards());
+            } else {
+                System.out.println("Main Deck:");
+                printDeckCards(deck.getMainDeckCards());
             }
         }
     }

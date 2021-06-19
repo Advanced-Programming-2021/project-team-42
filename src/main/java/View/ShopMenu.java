@@ -11,6 +11,7 @@ public class ShopMenu extends Menu {
 
     static {
         PATTERNS_COLLECTION = new HashMap<>();
+        PATTERNS_COLLECTION.put("Increase Money", Pattern.compile("^increase --money (\\d+)$"));
         PATTERNS_COLLECTION.put("Invalid Navigations Pattern", Pattern.compile("^menu enter (register|duel|deck|shop|import/export|scoreboard|profile)$"));
         PATTERNS_COLLECTION.put("Valid Navigations Pattern", Pattern.compile("^menu enter main$"));
         PATTERNS_COLLECTION.put("Current Menu Pattern", Pattern.compile("^menu show-current$"));
@@ -33,7 +34,13 @@ public class ShopMenu extends Menu {
                 if(matcher.find())
                     cardName = matcher.group(1);
 
-                ShopController.getInstance().buyCard(this.parentMenu.parentMenu.usersName, cardName);
+                try {
+                    ShopController.getInstance().buyCard(this.parentMenu.parentMenu.usersName, cardName);
+                    System.out.println("card " + cardName + " added to your cards successfully");
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+
                 parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };
@@ -43,7 +50,8 @@ public class ShopMenu extends Menu {
         return new Menu("Show Shop All Cards", this) {
             @Override
             public void executeCommand(String command) {
-                ShopController.getInstance().showAllCards();
+                System.out.println(ShopController.getInstance().showAllCards());
+
                 parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };

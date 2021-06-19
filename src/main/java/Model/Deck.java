@@ -24,6 +24,10 @@ public class Deck {
             allDecks.add(this);
     }
 
+    public static ArrayList<Deck> getAllDecks(){
+        return allDecks;
+    }
+
     public static void addDeckToList(Deck deck) {
         allDecks.add(deck);
     }

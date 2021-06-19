@@ -2,6 +2,7 @@ package View;
 
 import Controller.IAndEController;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,7 +36,13 @@ public class IECardMenu extends Menu{
                 if(matcher.find())
                     cardName = matcher.group(1);
 
-                IAndEController.getInstance().importCard(cardName);
+                try {
+                    IAndEController.getInstance().importCard(cardName);
+                    System.out.println("card imported successfully");
+                } catch (IOException e){
+                    System.out.println("Can not import card!");
+                }
+
                 parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };
@@ -54,7 +61,13 @@ public class IECardMenu extends Menu{
                 if(matcher.find())
                     cardName = matcher.group(1);
 
-                IAndEController.getInstance().exportCard(cardName);
+                try {
+                    IAndEController.getInstance().exportCard(cardName);
+                    System.out.println("card exported successfully");
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+
                 parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };

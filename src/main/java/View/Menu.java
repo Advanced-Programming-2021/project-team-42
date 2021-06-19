@@ -1,5 +1,8 @@
 package View;
 
+import Controller.UserController;
+import Model.User;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -48,6 +51,9 @@ public abstract class Menu {
     public void run() {
     }
 
+    public void execute() {
+    }
+
     public void executeCommand(String command) {
         for (Map.Entry<Pattern, Menu> entry : MainMenu.getInstance(null).subMenus.entrySet()) {
             if (entry.getKey().matcher(command).matches())
@@ -82,23 +88,30 @@ public abstract class Menu {
 
     public void menuCheck(String command, Menu currentMenu, HashMap<String, Pattern> patternCollection) {
         Matcher matcher;
-        matcher = patternCollection.get("Valid Navigations Pattern").matcher(command);
-        if (matcher.matches())
-            currentMenu.parentMenu.run();
-        else {
-            matcher = patternCollection.get("Exit Menu Pattern").matcher(command);
+        if (patternCollection.containsKey("Increase Money")) {
+            matcher = patternCollection.get("Increase Money").matcher(command);
+            if (matcher.matches())
+                UserController.getInstance().increaseMoney(User.getUserByUsername(usersName),
+                        Integer.parseInt(matcher.group(1)));
+        } else {
+            matcher = patternCollection.get("Valid Navigations Pattern").matcher(command);
             if (matcher.matches())
                 currentMenu.parentMenu.run();
             else {
-                matcher = patternCollection.get("Invalid Navigations Pattern").matcher(command);
+                matcher = patternCollection.get("Exit Menu Pattern").matcher(command);
                 if (matcher.matches())
-                    System.out.println("Menu navigation is not possible!");
+                    currentMenu.parentMenu.run();
                 else {
-                    matcher = patternCollection.get("Current Menu Pattern").matcher(command);
+                    matcher = patternCollection.get("Invalid Navigations Pattern").matcher(command);
                     if (matcher.matches())
-                        System.out.println(currentMenu.name);
+                        System.out.println("Menu navigation is not possible!");
+                    else {
+                        matcher = patternCollection.get("Current Menu Pattern").matcher(command);
+                        if (matcher.matches())
+                            System.out.println(currentMenu.name);
+                    }
+                    currentMenu.execute(currentMenu, patternCollection);
                 }
-                currentMenu.execute(currentMenu, patternCollection);
             }
         }
     }

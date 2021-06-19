@@ -12,11 +12,9 @@ public class MonsterCard extends Card {
     private MonsterType monsterType;
     private CardType cardType;
     private final String cardTypeStr = "Monster Card";
-    private int number;
     private int level;
     private int attackPoint;
     private int defencePoint;
-    private boolean isSet;
     private boolean isSummoned;
     private boolean isDefensive;
     private boolean isReadyToAttack = true;
@@ -83,14 +81,6 @@ public class MonsterCard extends Card {
         this.attribute = attribute;
     }
 
-    public boolean isSet() {
-        return isSet;
-    }
-
-    public void setSet(boolean set) {
-        isSet = set;
-    }
-
     public boolean isSummoned() {
         return isSummoned;
     }
@@ -149,14 +139,6 @@ public class MonsterCard extends Card {
 
     public void setReadyToAttack(boolean isReadyToAttack){
         this.isReadyToAttack = isReadyToAttack;
-    }
-
-    public void setNumber(int number){
-        this.number = number;
-    }
-
-    public int getNumber(){
-        return this.number;
     }
 }
 

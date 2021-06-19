@@ -33,7 +33,13 @@ public class ProfileMenu extends Menu {
                 if (matcher.find())
                     newNickname = matcher.group(1);
 
-                UserController.getInstance().changeNickname(this.parentMenu.parentMenu.usersName, newNickname);
+                try {
+                    UserController.getInstance().changeNickname(this.parentMenu.parentMenu.usersName, newNickname);
+                    System.out.println("Nickname successfully changed!");
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+
                 parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };
@@ -53,10 +59,18 @@ public class ProfileMenu extends Menu {
                 if (matcher.find())
                     currentPassword = matcher.group(1);
 
-                if (newPassword != null && currentPassword != null)
-                    UserController.getInstance().changePassword(this.parentMenu.parentMenu.usersName, currentPassword, newPassword);
+                if (newPassword != null && currentPassword != null) {
+                    try {
+                        UserController.getInstance().changePassword(this.parentMenu.parentMenu.usersName,
+                                currentPassword, newPassword);
+                        System.out.println("Password successfully changed!");
+                    } catch (Exception e){
+                        System.out.println(e.getMessage());
+                    }
+                }
                 else
                     System.out.println("invalid command!");
+
                 parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };

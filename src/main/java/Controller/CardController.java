@@ -15,7 +15,6 @@ import java.io.FileWriter;
 public class CardController {
     private static CardController instance = null;
     private static final String FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\CardsData";
-    private static FileWriter FILE_WRITER;
 
     private CardController(){}
 
@@ -23,6 +22,7 @@ public class CardController {
         try {
             FileReader fileReaderMonster = new FileReader(FILE_PATH + "\\Monster (2).csv");
             Iterable<CSVRecord> recordsMonster = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(fileReaderMonster);
+            FileWriter FILE_WRITER;
             for (CSVRecord record : recordsMonster) {
                 String name = record.get("Name");
                 int level = Integer.parseInt(record.get("Level"));

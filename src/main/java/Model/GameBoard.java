@@ -2,6 +2,7 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class GameBoard {
     private User player;
@@ -12,22 +13,25 @@ public class GameBoard {
     private ArrayList<Card> cardsInHand;
     private ArrayList<Card> sideDeckCards;
     private MonsterCard monsterSelectedCard = null;
+    private int selectedMonsterPlace;
     private SpellTrapCard spellTrapSelectedCard = null;
+    private int selectedSpellTrapPlace;
     private Card graveyardSelectedCard = null;
     private Card handSelectedCard = null;
+    private int selectedHandPlace;
     private Card fieldZoneSelectedCard = null;
     private Card fieldZone = null;
-    private int maxLP = 0;
+    private int maxLP = 8000;
     private int WinsCount = 0;
 
-    public GameBoard(User player, ArrayList<Card> mainDeckCards, ArrayList<Card> sideDeckCards) {
+    public GameBoard(User player, ArrayList<Card> mainDeckCards, ArrayList<Card> sideDeckCards, ArrayList<Card> cardsInHand) {
         this.player = player;
         monstersPlace = new HashMap<>();
         spellTrapsPlace = new HashMap<>();
         fillMonsterPlaces(monstersPlace);
         fillSpellTrapPlaces(spellTrapsPlace);
         graveYard = new ArrayList<>();
-        this.cardsInHand = new ArrayList<>();
+        this.cardsInHand = cardsInHand;
         this.sideDeckCards = sideDeckCards;
         this.mainDeckCards = mainDeckCards;
     }
@@ -54,20 +58,96 @@ public class GameBoard {
         return player;
     }
 
-    public void setPlayer(User player) {
-        this.player = player;
+    public void deselectAll(){
+        this.monsterSelectedCard = null;
+        this.spellTrapSelectedCard = null;
+        this.graveyardSelectedCard = null;
+        this.handSelectedCard = null;
+        this.fieldZoneSelectedCard = null;
+        this.selectedMonsterPlace = 0;
+        this.selectedSpellTrapPlace = 0;
+        this.selectedHandPlace = 0;
     }
 
-    public int getWinsCount() {
-        return WinsCount;
+    public boolean checkSelections(){
+        return this.monsterSelectedCard == null &&
+                this.spellTrapSelectedCard == null &&
+                this.graveyardSelectedCard == null &&
+                this.handSelectedCard == null &&
+                this.fieldZoneSelectedCard == null;
     }
 
-    public void setWinsCount(int winsCount) {
-        WinsCount = winsCount;
+    public Card getSelectedCard(){
+        if(this.monsterSelectedCard != null)
+            return this.monsterSelectedCard;
+        else if(this.spellTrapSelectedCard != null)
+            return this.spellTrapSelectedCard;
+        else if(this.graveyardSelectedCard != null)
+            return this.graveyardSelectedCard;
+        else if(this.handSelectedCard != null)
+            return this.handSelectedCard;
+        else if(this.fieldZoneSelectedCard != null)
+            return this.fieldZoneSelectedCard;
+        else
+            return null;
+    }
+
+    public int monsterPlacesSize(){
+        int size = 0;
+        for(Map.Entry<Integer, MonsterCard> entry : monstersPlace.entrySet()){
+            if(entry.getValue() != null)
+                size++;
+        }
+        return size;
+    }
+
+    public int spellTrapPlacesSize(){
+        int size = 0;
+        for(Map.Entry<Integer, SpellTrapCard> entry : spellTrapsPlace.entrySet()){
+            if(entry.getValue() != null)
+                size++;
+        }
+        return size;
     }
 
     public MonsterCard getMonsterSelectedCard() {
         return monsterSelectedCard;
+    }
+
+    public Card getFieldZone() {
+        return fieldZone;
+    }
+
+    public void setFieldZone(Card fieldZone) {
+        this.fieldZone = fieldZone;
+    }
+
+    public HashMap<Integer, MonsterCard> getMonstersPlace() {
+        return monstersPlace;
+    }
+
+    public HashMap<Integer, SpellTrapCard> getSpellTrapsPlace() {
+        return spellTrapsPlace;
+    }
+
+    public ArrayList<Card> getGraveYard() {
+        return graveYard;
+    }
+
+    public ArrayList<Card> getMainDeckCards() {
+        return mainDeckCards;
+    }
+
+    public ArrayList<Card> getCardsInHand() {
+        return cardsInHand;
+    }
+
+    public Card getHandCardByPlace(int place){
+        return cardsInHand.get(place - 1);
+    }
+
+    public ArrayList<Card> getSideDeckCards() {
+        return sideDeckCards;
     }
 
     public void setMonsterSelectedCard(MonsterCard monsterSelectedCard) {
@@ -106,8 +186,44 @@ public class GameBoard {
         this.fieldZoneSelectedCard = fieldZoneSelectedCard;
     }
 
-    public ArrayList<Card> getCardsInHand() {
-        return cardsInHand;
+    public int getSelectedMonsterPlace() {
+        return selectedMonsterPlace;
+    }
+
+    public void setSelectedMonsterPlace(int selectedMonsterPlace) {
+        this.selectedMonsterPlace = selectedMonsterPlace;
+    }
+
+    public int getSelectedSpellTrapPlace() {
+        return selectedSpellTrapPlace;
+    }
+
+    public int getSelectedHandPlace() {
+        return selectedHandPlace;
+    }
+
+    public void removeCardFromHand(int place){
+        cardsInHand.remove(place);
+    }
+
+    public void setSelectedHandPlace(int selectedHandPlace) {
+        this.selectedHandPlace = selectedHandPlace;
+    }
+
+    public void setSelectedSpellTrapPlace(int selectedSpellTrapPlace) {
+        this.selectedSpellTrapPlace = selectedSpellTrapPlace;
+    }
+
+    public void setPlayer(User player) {
+        this.player = player;
+    }
+
+    public int getWinsCount() {
+        return WinsCount;
+    }
+
+    public void setWinsCount(int winsCount) {
+        WinsCount = winsCount;
     }
 
     public int getMaxLP() {
@@ -122,23 +238,7 @@ public class GameBoard {
         monstersPlace.put(place, monstersCard);
     }
 
-    public HashMap<Integer,MonsterCard> getMonstersPlace(){
-        return this.monstersPlace;
-    }
-
-    public void removeFromMonsterPlace(int number){
-        this.monstersPlace.remove(number);
-    }
-
-    public ArrayList<Card> getGraveYard() {
-        return graveYard;
-    }
-
-    public void addToGraveyard(Card card){
-        this.graveYard.add(card);
-    }
-
-    public Card getMonsterCardByPlace(int place) {
+    public MonsterCard getMonsterCardByPlace(int place) {
         return monstersPlace.get(place);
     }
 
@@ -146,30 +246,76 @@ public class GameBoard {
         spellTrapsPlace.put(place, spellTrapCard);
     }
 
-    public Card getSpellTrapCardByPlace(int place) {
+    public SpellTrapCard getSpellTrapCardByPlace(int place) {
         return spellTrapsPlace.get(place);
     }
 
     public void drawBoardAsOpponent() {
         System.out.println(this.player.getUsername() + ": " + this.player.getLP());
-        for (Card card : cardsInHand)
+        for (int i = 0; i < cardsInHand.size(); i++)
             System.out.print("c\t");
         System.out.print("\n");
         System.out.println(mainDeckCards.size());
-        //TODO: spellTrap cards
-        //TODO: monster cards
+        printSpellTrapFlag(getSpellTrapCardByPlace(4));
+        printSpellTrapFlag(getSpellTrapCardByPlace(2));
+        printSpellTrapFlag(getSpellTrapCardByPlace(1));
+        printSpellTrapFlag(getSpellTrapCardByPlace(3));
+        printSpellTrapFlag(getSpellTrapCardByPlace(5));
+        System.out.print("\n");
+        printMonsterFlag(getMonsterCardByPlace(4));
+        printMonsterFlag(getMonsterCardByPlace(2));
+        printMonsterFlag(getMonsterCardByPlace(1));
+        printMonsterFlag(getMonsterCardByPlace(3));
+        printMonsterFlag(getMonsterCardByPlace(5));
+        System.out.print("\n");
         System.out.println(graveYard.size() + "\t\t\t\t\t\t" + (fieldZone == null ? "E" : "O"));
 
     }
 
     public void drawBoardAsYourself() {
         System.out.println((fieldZone == null ? "E" : "O") + "\t\t\t\t\t\t" + graveYard.size());
-        //TODO: monster cards
-        //TODO: spellTrap cards
+        printMonsterFlag(getMonsterCardByPlace(5));
+        printMonsterFlag(getMonsterCardByPlace(3));
+        printMonsterFlag(getMonsterCardByPlace(1));
+        printMonsterFlag(getMonsterCardByPlace(2));
+        printMonsterFlag(getMonsterCardByPlace(4));
+        System.out.print("\n");
+        printSpellTrapFlag(getSpellTrapCardByPlace(5));
+        printSpellTrapFlag(getSpellTrapCardByPlace(3));
+        printSpellTrapFlag(getSpellTrapCardByPlace(1));
+        printSpellTrapFlag(getSpellTrapCardByPlace(2));
+        printSpellTrapFlag(getSpellTrapCardByPlace(4));
+        System.out.print("\n");
         System.out.println("\t\t\t\t\t\t" + mainDeckCards.size());
-        for (Card card : cardsInHand)
+        for (int i = 0; i < cardsInHand.size(); i++)
             System.out.print("c\t");
         System.out.print("\n");
         System.out.println(this.player.getUsername() + ": " + this.player.getLP());
+    }
+
+    public void printMonsterFlag(MonsterCard monsterCard){
+        if(monsterCard == null)
+            System.out.print("E\t");
+        else{
+            if(monsterCard.isSet() && !monsterCard.isSummoned())
+                System.out.print("DH\t");
+            else{
+                if(monsterCard.isSummoned() && monsterCard.isDefensive())
+                    System.out.print("DO\t");
+                else if(monsterCard.isSummoned() && !monsterCard.isDefensive())
+                    System.out.print("OO\t");
+            }
+        }
+    }
+
+    public void printSpellTrapFlag(SpellTrapCard spellTrapCard){
+        if(spellTrapCard == null)
+            System.out.print("E\t");
+        else{
+            if(spellTrapCard.isSet() && spellTrapCard.isEffectActive())
+                System.out.print("O\t");
+            else if(spellTrapCard.isSet() && !spellTrapCard.isEffectActive())
+                System.out.print("H\t");
+        }
     }
 }

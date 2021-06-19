@@ -25,7 +25,8 @@ public class ScoreBoardMenu extends Menu {
         return new Menu("Scoreboard Show", this) {
             @Override
             public void executeCommand(String command) {
-                ScoreBoardController.getInstance().showScoreboard();
+                System.out.println(ScoreBoardController.getInstance().showScoreboard());
+
                 parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };

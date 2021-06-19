@@ -10,8 +10,8 @@ public class SpellTrapCard extends Card{
     private String cardType;
     private Icon icon;
     private Status status;
-    private boolean isSet;
     private boolean isEffectActive;
+    private boolean isEffectActivatedInThisPhase = false;
 
     static {
         allSpellTrapCards = new ArrayList<>();
@@ -56,14 +56,6 @@ public class SpellTrapCard extends Card{
         this.icon = icon;
     }
 
-    public boolean isSet() {
-        return isSet;
-    }
-
-    public void setSet(boolean set) {
-        isSet = set;
-    }
-
     public boolean isEffectActive() {
         return isEffectActive;
     }
@@ -82,5 +74,13 @@ public class SpellTrapCard extends Card{
 
     public void setCardType(String cardType) {
         this.cardType = cardType;
+    }
+
+    public boolean isEffectActivatedInThisPhase() {
+        return isEffectActivatedInThisPhase;
+    }
+
+    public void setEffectActivatedInThisPhase(boolean effectActivatedInThisPhase) {
+        isEffectActivatedInThisPhase = effectActivatedInThisPhase;
     }
 }

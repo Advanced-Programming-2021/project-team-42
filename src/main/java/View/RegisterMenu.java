@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import Controller.DeckController;
 import Controller.RegisterController;
 
 
@@ -35,8 +36,13 @@ public class RegisterMenu extends Menu {
                 if (matcher.find())
                     password = matcher.group(1);
 
-                if (username != null && password != null)
-                    RegisterController.getInstance().loginUser(username, password, this.parentMenu);
+                if (username != null && password != null) {
+                    try {
+                        RegisterController.getInstance().loginUser(username, password, this.parentMenu);
+                    } catch (Exception e){
+                        System.out.println(e.getMessage());
+                    }
+                }
                 else
                     System.out.println("invalid command!");
 
@@ -62,10 +68,16 @@ public class RegisterMenu extends Menu {
                 if (matcher.find())
                     password = matcher.group(1);
 
-                if (username != null && nickname != null && password != null)
-                    RegisterController.getInstance().createNewUser(username, nickname, password);
-                else
+                if (username != null && nickname != null && password != null) {
+                    try {
+                        RegisterController.getInstance().createNewUser(username, nickname, password);
+                        System.out.println("User created successfully");
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                } else
                     System.out.println("invalid command!");
+
                 parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
 
@@ -92,9 +104,11 @@ public class RegisterMenu extends Menu {
     @Override
     public void menuCheck(String command, Menu currentMenu, HashMap<String, Pattern> patternCollection) {
         Matcher matcher = PATTERNS_COLLECTION.get("Exit Pattern").matcher(command);
-        if (matcher.find())
+        if (matcher.find()) {
+            RegisterController.rewriteData();
+            DeckController.rewriteData();
             System.exit(0);
-        else {
+        } else {
             matcher = PATTERNS_COLLECTION.get("Enter Menu Pattern").matcher(command);
             if (matcher.find()) {
                 if (MainMenu.getInstance(this).usersName == null)

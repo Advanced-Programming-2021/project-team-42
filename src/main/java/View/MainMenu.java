@@ -30,7 +30,7 @@ public class MainMenu extends Menu {
         System.out.println("\033[1;92m" + "\t\tUse this Commands to Enter your desired Menu:" + "\033[0m");
         for (Map.Entry<Pattern, Menu> entry : subMenus.entrySet())
             System.out.println("\033[0;97m" + entry.getValue().name + ":\033[0m " + entry.getKey().toString().replaceAll("\\^|\\$", ""));
-        System.out.println("\033[0;97m" + "Logout: user logout" + "\033[0m");
+        System.out.println("\033[0;97m" + "Logout:\033[0m user logout");
         System.out.println("\033[1;94m" + "\t\tAdditional options:\n" + "\033[0m" +
                 "\033[0;97m" + "Exit this menu:\033[0m menu exit\n" +
                 "\033[0;97m" + "Show current menu:\033[0m menu show-current\n");
@@ -56,7 +56,7 @@ public class MainMenu extends Menu {
         else {
             matcher = PATTERN_COLLECTION.get("Logout Pattern").matcher(command);
             if (matcher.matches()) {
-                this.parentMenu.setUsersName(null);
+                this.setUsersName(null);
                 this.parentMenu.run();
             } else {
                 matcher = PATTERN_COLLECTION.get("Show Current Menu Pattern").matcher(command);

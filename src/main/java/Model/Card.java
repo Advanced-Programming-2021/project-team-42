@@ -7,8 +7,8 @@ public abstract class Card {
     private static ArrayList<Card> allCards;
     protected String name;
     protected int price;
+    protected boolean isSet;
     protected String description;
-    private boolean isSet;
 
     static {
         allCards = new ArrayList<>();
@@ -60,11 +60,16 @@ public abstract class Card {
         this.price = price;
     }
 
-    public String toString(){
-        return "\033[0;97m" + this.name + "\033[0m: " + this.description;
+    public boolean isSet() {
+        return isSet;
     }
 
-    public boolean isSet(){
-        return this.isSet;
+    public void setSet(boolean set) {
+        isSet = set;
+    }
+
+    @Override
+    public String toString(){
+        return "\033[0;97m" + this.name + "\033[0m: " + this.description;
     }
 }

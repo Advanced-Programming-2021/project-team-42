@@ -13,6 +13,9 @@ public class User {
     private String password;
     private String nickname;
     private String activeDeck;
+    private int wins;
+    private int loses;
+    private int draws;
     private int balance;
     private int score;
     private int LP;
@@ -28,7 +31,7 @@ public class User {
         this.activeDeck = null;
         this.balance = 100000;
         this.score = 0;
-        this.LP = 0;
+        this.LP = 8000;
         usersAllCards = new HashMap<>();
         userDecks = new ArrayList<>();
         allUsers.add(this);
@@ -37,6 +40,14 @@ public class User {
     public static User getUserByUsername(String username) {
         for (User user : allUsers) {
             if (user.getUsername().equals(username))
+                return user;
+        }
+        return null;
+    }
+
+    public static User getUserByNickname(String nickname) {
+        for (User user : allUsers) {
+            if (user.getNickname().equals(nickname))
                 return user;
         }
         return null;
@@ -145,5 +156,29 @@ public class User {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public int getWins() {
+        return wins;
+    }
+
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+
+    public int getLoses() {
+        return loses;
+    }
+
+    public void setLoses(int loses) {
+        this.loses = loses;
+    }
+
+    public int getDraws() {
+        return draws;
+    }
+
+    public void setDraws(int draws) {
+        this.draws = draws;
     }
 }
