@@ -127,7 +127,7 @@ public class DuelController {
                             SpellTrapCard choseSpellCard = (SpellTrapCard) handCard;
                             if (firstPlayerBoard.spellTrapPlacesSize() > 5)
                                 throw new Exception("spell card zone is full");
-                            else{
+                            else {
                                 choseSpellCard.setEffectActive(true);
                                 choseSpellCard.setSet(false);
                                 firstPlayerBoard.setSpellTrapsPlace(choseSpellCard, firstPlayerBoard.spellTrapPlacesSize() + 1);
@@ -141,13 +141,13 @@ public class DuelController {
                 } else if (spellTrapCard != null) {
                     if (phaseCheck)
                         throw new Exception("you can’t activate an effect on this turn");
-                    else{
-                        if(spellTrapCard.isEffectActive())
+                    else {
+                        if (spellTrapCard.isEffectActive())
                             throw new Exception("you have already activated this card");
-                        else{
+                        else {
                             if (firstPlayerBoard.spellTrapPlacesSize() > 5)
                                 throw new Exception("spell card zone is full");
-                            else{
+                            else {
                                 spellTrapCard.setEffectActive(true);
                                 spellTrapCard.setSet(false);
                                 firstPlayerBoard.deselectAll();
@@ -161,22 +161,22 @@ public class DuelController {
         }
     }
 
-    public void activeTrapEffect(SpellTrapCard spellTrapCard, GameBoard playersBoard) {
+    public void activeTrapEffect(SpellTrapCard spellTrapCard, GameBoard firstPlayersBoard, GameBoard secondPlayersBoard) {
         String cardName = spellTrapCard.getName();
 
         if (cardName.equals("Call of the Haunted")) {
-            ArrayList<Card> graveYard = playersBoard.getGraveYard();
+            ArrayList<Card> graveYard = firstPlayersBoard.getGraveYard();
             Collections.shuffle(graveYard);
 
-            if(playersBoard.monsterPlacesSize() < 5) {
+            if (firstPlayersBoard.monsterPlacesSize() < 5) {
                 for (Card cardInGraveYard : graveYard) {
                     if (MonsterCard.isMonsterCard(cardInGraveYard.getName())) {
                         MonsterCard monsterCardInGraveYard = (MonsterCard) cardInGraveYard;
                         monsterCardInGraveYard.setDefensive(false);
                         monsterCardInGraveYard.setSummoned(true);
                         monsterCardInGraveYard.setSet(false);
-                        playersBoard.setMonstersPlace(monsterCardInGraveYard, playersBoard.monsterPlacesSize() + 1);
-                        playersBoard.getGraveYard().remove(cardInGraveYard);
+                        firstPlayersBoard.setMonstersPlace(monsterCardInGraveYard, firstPlayersBoard.monsterPlacesSize() + 1);
+                        firstPlayersBoard.getGraveYard().remove(cardInGraveYard);
                         break;
                     }
                 }
@@ -573,7 +573,7 @@ public class DuelController {
     }
 
     public int directAttack(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard,
-                            GamePhases currentPhase) throws Exception {
+                            GamePhases currentPhase, boolean isFirstTime) throws Exception {
         if (!firstPlayersBoard.checkSelections() && !secondPlayersBoard.checkSelections())
             throw new Exception("you dont select any card yet");
         else {
@@ -584,23 +584,19 @@ public class DuelController {
                 if (!currentPhase.equals(GamePhases.BATTLE))
                     throw new Exception("you can’t do this action in this phase");
                 else {
-                    if (monsterCard.isDefensive())
-                        throw new Exception("this card is in defensive position");
+                    if (!monsterCard.isReadyToAttack())
+                        throw new Exception("this card already attacked");
                     else {
-                        if (monsterCard.isSet())
-                            throw new Exception("you cant attack with set card");
+                        if (isFirstTime || firstPlayersBoard.monsterPlacesSize() > 0)
+                            throw new Exception("you can’t attack the opponent directly");
                         else {
-                            if (!monsterCard.isReadyToAttack())
-                                throw new Exception("this card already attacked");
-                            else {
-                                int lp = secondPlayersBoard.getPlayer().getLP();
-                                int attackPoint = monsterCard.getAttackPoint();
-                                secondPlayersBoard.getPlayer().setLP(lp - attackPoint);
-                                monsterCard.setReadyToAttack(false);
-                                firstPlayersBoard.deselectAll();
-                                secondPlayersBoard.deselectAll();
-                                return attackPoint;
-                            }
+                            int lp = secondPlayersBoard.getPlayer().getLP();
+                            int attackPoint = monsterCard.getAttackPoint();
+                            secondPlayersBoard.getPlayer().setLP(lp - attackPoint);
+                            monsterCard.setReadyToAttack(false);
+                            firstPlayersBoard.deselectAll();
+                            secondPlayersBoard.deselectAll();
+                            return attackPoint;
                         }
                     }
                 }

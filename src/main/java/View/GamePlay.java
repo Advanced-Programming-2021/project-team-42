@@ -275,7 +275,7 @@ public class GamePlay extends Menu {
             @Override
             public void executeCommand(String command) {
                 try {
-                    int attackPoint = DuelController.getInstance().directAttack(fistPlayersBoard, secondPlayersBoard, currentPhase);
+                    int attackPoint = DuelController.getInstance().directAttack(fistPlayersBoard, secondPlayersBoard, currentPhase, isFirstTime);
                     System.out.println("you opponent receives " + attackPoint + " battle damage");
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -412,7 +412,6 @@ public class GamePlay extends Menu {
                         DuelController.getInstance().addOneCardToHand(fistPlayersBoard));
                 isCardAddedToHandInThisPhase = true;
             }
-            setFirstTime(false);
             setSummonOrSet(false);
         } else if (currentPhase.equals(GamePhases.STANDBY))
             System.out.println("Current Phase: StandBy Phase");
@@ -426,6 +425,7 @@ public class GamePlay extends Menu {
             System.out.println("Current Phase: End Phase");
             System.out.println("now its " + secondPlayersBoard.getPlayer().getNickname() + " turn");
             swapPlayers(fistPlayersBoard, secondPlayersBoard);
+            isFirstTime = false;
             isCardAddedToHandInThisPhase = false;
             setPhase(GamePhases.DRAW);
             execute();
