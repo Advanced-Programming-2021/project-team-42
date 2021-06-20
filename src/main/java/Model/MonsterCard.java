@@ -140,5 +140,10 @@ public class MonsterCard extends Card {
     public void setReadyToAttack(boolean isReadyToAttack){
         this.isReadyToAttack = isReadyToAttack;
     }
+
+    public String exclusiveToString(){
+        return "Name: " + this.getName() + "\nLevel: " + this.getLevel() + "\nType: " + this.getMonsterType() +
+                "\nATK: " + this.getAttackPoint() + "\nDEF: " + this.getDefencePoint() + "\nDescription: " + this.getDescription();
+    }
 }
 

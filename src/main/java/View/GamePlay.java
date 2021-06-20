@@ -16,13 +16,12 @@ import java.util.regex.Pattern;
 public class GamePlay extends Menu {
     private static final HashMap<String, Pattern> CHEAT_SHEET;
 
-    private GameBoard fistPlayersBoard;
+    private GameBoard firstPlayersBoard;
     private GameBoard secondPlayersBoard;
     private static GamePhases currentPhase = GamePhases.DRAW;
     private int rounds;
     private static boolean isFirstTime = true;
     private static boolean isSummonedOrSetInThisPhase = false;
-    private static boolean trapEffect = false;
     private boolean isCardAddedToHandInThisPhase = false;
 
     static {
@@ -35,7 +34,7 @@ public class GamePlay extends Menu {
 
     public GamePlay(Menu parentMenu, GameBoard fistPlayersBoard, GameBoard secondPlayersBoard, int rounds) {
         super("Game Play", parentMenu);
-        this.fistPlayersBoard = fistPlayersBoard;
+        this.firstPlayersBoard = fistPlayersBoard;
         this.secondPlayersBoard = secondPlayersBoard;
         this.rounds = rounds;
         subMenus.put(Pattern.compile("^select --(monster|spell|field|hand)( --opponent)?( \\d+)?$"), selectCard());
@@ -74,7 +73,7 @@ public class GamePlay extends Menu {
                 else {
 
                     try {
-                        DuelController.getInstance().selectCard((isOpponentSelected ? secondPlayersBoard : fistPlayersBoard), field, place);
+                        DuelController.getInstance().selectCard((isOpponentSelected ? secondPlayersBoard : firstPlayersBoard), field, place);
 
                         System.out.println("card selected");
                     } catch (Exception e) {
@@ -92,7 +91,7 @@ public class GamePlay extends Menu {
             @Override
             public void executeCommand(String command) {
                 try {
-                    DuelController.getInstance().deselectCard(fistPlayersBoard, secondPlayersBoard);
+                    DuelController.getInstance().deselectCard(firstPlayersBoard, secondPlayersBoard);
                     System.out.println("card deselected");
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -108,7 +107,7 @@ public class GamePlay extends Menu {
             @Override
             public void executeCommand(String command) {
                 try {
-                    DuelController.getInstance().generalCardSet(fistPlayersBoard, secondPlayersBoard,
+                    DuelController.getInstance().generalCardSet(firstPlayersBoard, secondPlayersBoard,
                             currentPhase, isSummonedOrSetInThisPhase);
                     System.out.println("set successfully");
                 } catch (Exception e) {
@@ -125,20 +124,50 @@ public class GamePlay extends Menu {
             @Override
             public void executeCommand(String command) {
                 try {
-                    int response = DuelController.getInstance().summonMonsterCard(fistPlayersBoard, secondPlayersBoard,
-                            currentPhase, isSummonedOrSetInThisPhase);
+                    int response = DuelController.getInstance().summonMonsterCard(firstPlayersBoard, secondPlayersBoard,
+                            currentPhase, (GamePlay) this.parentMenu, isSummonedOrSetInThisPhase);
                     if (response == 1)
                         System.out.println("summoned successfully");
                     else if (response == 2)
                         lowLevelSummon();
-                    else
+                    else if(response == 3)
                         highLevelSummon();
+                    else
+                        gateGuardianSummon();
 
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
 
                 parentMenu.execute();
+            }
+
+            public void gateGuardianSummon(){
+                System.out.println("Please Enter three number to tribute cards in that places");
+                String firstChosenPlace = getValidCardNumber();
+                if (firstChosenPlace.equals("exit"))
+                    parentMenu.execute();
+                else{
+                    String secondChosenPlace = getValidCardNumber();
+                    if (secondChosenPlace.equals("exit"))
+                        parentMenu.execute();
+                    else{
+                        String thirdChosenPlace = getValidCardNumber();
+                        if (thirdChosenPlace.equals("exit"))
+                            parentMenu.execute();
+                        else{
+                            try {
+                                DuelController.getInstance().gateGuardianSummon(firstPlayersBoard, secondPlayersBoard,
+                                        (GamePlay) this.parentMenu,
+                                        Integer.parseInt(firstChosenPlace), Integer.parseInt(secondChosenPlace),
+                                        Integer.parseInt(thirdChosenPlace));
+                                System.out.println("summoned successfully");
+                            } catch (Exception e) {
+                                System.out.println(e.getMessage());
+                            }
+                        }
+                    }
+                }
             }
 
             public void highLevelSummon() {
@@ -152,7 +181,8 @@ public class GamePlay extends Menu {
                         parentMenu.execute();
                     else {
                         try {
-                            DuelController.getInstance().highLevelSummon(fistPlayersBoard,
+                            DuelController.getInstance().highLevelSummon(firstPlayersBoard, secondPlayersBoard,
+                                    (GamePlay) this.parentMenu,
                                     Integer.parseInt(firstChosenPlace), Integer.parseInt(secondChosenPlace));
                             System.out.println("summoned successfully");
                         } catch (Exception e) {
@@ -169,7 +199,9 @@ public class GamePlay extends Menu {
                     parentMenu.execute();
                 else {
                     try {
-                        DuelController.getInstance().lowLevelSummon(fistPlayersBoard, Integer.parseInt(chosenPlace));
+                        DuelController.getInstance().lowLevelSummon(firstPlayersBoard, secondPlayersBoard,
+                                (GamePlay) this.parentMenu,
+                                Integer.parseInt(chosenPlace));
                         System.out.println("summoned successfully");
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
@@ -203,7 +235,7 @@ public class GamePlay extends Menu {
                     selectedPosition = matcher.group(1);
 
                 try {
-                    DuelController.getInstance().changePosition(fistPlayersBoard, secondPlayersBoard,
+                    DuelController.getInstance().changePosition(firstPlayersBoard, secondPlayersBoard,
                             selectedPosition, currentPhase);
                     System.out.println("card position changed successfully");
                 } catch (Exception e) {
@@ -220,10 +252,10 @@ public class GamePlay extends Menu {
             @Override
             public void executeCommand(String command) {
 
-                try{
-                    DuelController.getInstance().activationCheck(fistPlayersBoard, secondPlayersBoard, currentPhase);
+                try {
+                    DuelController.getInstance().activationCheck(firstPlayersBoard, secondPlayersBoard, currentPhase);
                     System.out.println("spell activated");
-                } catch (Exception e){
+                } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
 
@@ -238,7 +270,8 @@ public class GamePlay extends Menu {
             public void executeCommand(String command) {
 
                 try {
-                    DuelController.getInstance().flipSummon(fistPlayersBoard, secondPlayersBoard, currentPhase);
+                    DuelController.getInstance().flipSummon(firstPlayersBoard, secondPlayersBoard,
+                            currentPhase, (GamePlay) this.parentMenu);
                     System.out.println("flip summoned successfully");
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -260,8 +293,9 @@ public class GamePlay extends Menu {
                     place = Integer.parseInt(matcher.group(1));
 
                 try {
-                    if (DuelController.getInstance().canAttackToCard(fistPlayersBoard, secondPlayersBoard, currentPhase, place))
-                        System.out.println(DuelController.getInstance().attackToCard(fistPlayersBoard, secondPlayersBoard, place));
+                    if (DuelController.getInstance().canAttackToCard(firstPlayersBoard, secondPlayersBoard, currentPhase, place))
+                        System.out.println(DuelController.getInstance().attackToCard(firstPlayersBoard, secondPlayersBoard,
+                                (GamePlay) this.parentMenu, place));
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
@@ -276,7 +310,8 @@ public class GamePlay extends Menu {
             @Override
             public void executeCommand(String command) {
                 try {
-                    int attackPoint = DuelController.getInstance().directAttack(fistPlayersBoard, secondPlayersBoard, currentPhase, isFirstTime);
+                    int attackPoint = DuelController.getInstance().directAttack(firstPlayersBoard, secondPlayersBoard,
+                            currentPhase, (GamePlay) this.parentMenu, isFirstTime);
                     System.out.println("you opponent receives " + attackPoint + " battle damage");
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -290,7 +325,7 @@ public class GamePlay extends Menu {
         return new Menu("Show Graveyard", this) {
             @Override
             public void executeCommand(String command) {
-                String result = DuelController.getInstance().showGraveyard(fistPlayersBoard);
+                String result = DuelController.getInstance().showGraveyard(firstPlayersBoard);
                 System.out.println(result);
                 System.out.println("Please enter \"Back\" to back");
                 String response;
@@ -310,7 +345,7 @@ public class GamePlay extends Menu {
             @Override
             public void executeCommand(String command) {
                 try {
-                    String cardInfo = DuelController.getInstance().showSelectedCard(fistPlayersBoard, secondPlayersBoard);
+                    String cardInfo = DuelController.getInstance().showSelectedCard(firstPlayersBoard, secondPlayersBoard);
                     System.out.println(cardInfo);
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -325,7 +360,8 @@ public class GamePlay extends Menu {
             @Override
             public void executeCommand(String command) {
 
-                DuelController.getInstance().changePhase(fistPlayersBoard, currentPhase);
+                DuelController.getInstance().changePhase(firstPlayersBoard, secondPlayersBoard,
+                        currentPhase, (GamePlay) this.parentMenu);
 
                 parentMenu.execute();
             }
@@ -336,7 +372,7 @@ public class GamePlay extends Menu {
         return new Menu("Surrender", this) {
             @Override
             public void executeCommand(String command) {
-
+                //TODO: surrender completion
             }
         };
     }
@@ -375,7 +411,7 @@ public class GamePlay extends Menu {
         phaseChangeToDo();
         secondPlayersBoard.drawBoardAsOpponent();
         System.out.println("\n--------------------------");
-        fistPlayersBoard.drawBoardAsYourself();
+        firstPlayersBoard.drawBoardAsYourself();
         System.out.println("Enter your command:");
         String command = scanner.nextLine();
         for (Map.Entry<Pattern, Menu> entry : subMenus.entrySet()) {
@@ -408,9 +444,9 @@ public class GamePlay extends Menu {
     public void phaseChangeToDo() {
         if (currentPhase.equals(GamePhases.DRAW)) {
             System.out.println("Current Phase: Draw Phase");
-            if (!isFirstTime && !isCardAddedToHandInThisPhase && fistPlayersBoard.getCardsInHand().size() < 6 && !trapEffect) {
+            if (!isFirstTime && !isCardAddedToHandInThisPhase && firstPlayersBoard.getCardsInHand().size() < 6 && !firstPlayersBoard.isTrapEffect()) {
                 System.out.println("new card added to hand: " +
-                        DuelController.getInstance().addOneCardToHand(fistPlayersBoard));
+                        DuelController.getInstance().addOneCardToHand(firstPlayersBoard));
                 isCardAddedToHandInThisPhase = true;
             }
             setSummonOrSet(false);
@@ -425,24 +461,24 @@ public class GamePlay extends Menu {
         else if (currentPhase.equals(GamePhases.END)) {
             System.out.println("Current Phase: End Phase");
             System.out.println("now its " + secondPlayersBoard.getPlayer().getNickname() + " turn");
-            swapPlayers(fistPlayersBoard, secondPlayersBoard);
+            swapPlayers(firstPlayersBoard, secondPlayersBoard);
             isFirstTime = false;
             isCardAddedToHandInThisPhase = false;
-            trapEffect = false;
+            secondPlayersBoard.setTrapEffect(false);
             setPhase(GamePhases.DRAW);
             execute();
         }
     }
 
     public void gameEndCheck() {
-        if (fistPlayersBoard.getPlayer().getLP() <= 0 ||
+        if (firstPlayersBoard.getPlayer().getLP() <= 0 ||
                 secondPlayersBoard.getMainDeckCards().size() == 0)
-            DuelController.getInstance().setWinner(fistPlayersBoard, secondPlayersBoard,
+            DuelController.getInstance().setWinner(firstPlayersBoard, secondPlayersBoard,
                     rounds, this.parentMenu.parentMenu, this,
                     this.parentMenu);
         else if (secondPlayersBoard.getPlayer().getLP() <= 0 ||
-                fistPlayersBoard.getMainDeckCards().size() == 0)
-            DuelController.getInstance().setWinner(secondPlayersBoard, fistPlayersBoard,
+                firstPlayersBoard.getMainDeckCards().size() == 0)
+            DuelController.getInstance().setWinner(secondPlayersBoard, firstPlayersBoard,
                     rounds, this.parentMenu.parentMenu, this,
                     this.parentMenu);
     }
@@ -459,6 +495,47 @@ public class GamePlay extends Menu {
             else
                 System.out.println("Please enter valid command\n" +
                         "Yes or No!!!");
+        }
+    }
+
+    public boolean wantToActiveEffect() {
+        System.out.println("now it will be " + secondPlayersBoard.getPlayer().getUsername() + " turn");
+        firstPlayersBoard.drawBoardAsOpponent();
+        System.out.println("\n--------------------------");
+        secondPlayersBoard.drawBoardAsYourself();
+        System.out.println("do you want to activate your trap and spell?");
+        while (true) {
+            String response = scanner.nextLine();
+            if (response.equalsIgnoreCase("yes"))
+                return true;
+            else if (response.equalsIgnoreCase("no")) {
+                System.out.println("now it will be " + firstPlayersBoard.getPlayer().getUsername() + " turn");
+                secondPlayersBoard.drawBoardAsOpponent();
+                System.out.println("\n--------------------------");
+                firstPlayersBoard.drawBoardAsYourself();
+                return false;
+            } else
+                System.out.println("Please enter valid command");
+        }
+    }
+
+    public String activeEffect(String possibleCardsName) {
+        System.out.println("you can active this card(s) effect: " + possibleCardsName);
+        System.out.println("use this command to active cards effect: active <card name> effect");
+        String response = scanner.nextLine();
+        Pattern pattern = Pattern.compile("active ([A-Za-z0-9 ]+) effect");
+        Matcher matcher = pattern.matcher(response);
+        if (matcher.find()) {
+            System.out.println("spell/trap activated");
+            return matcher.group(1);
+        }
+        else {
+            if (response.equalsIgnoreCase("back"))
+                return "exit";
+            else {
+                System.out.println("it’s not your turn to play this kind of moves");
+                return activeEffect(possibleCardsName);
+            }
         }
     }
 
@@ -488,15 +565,6 @@ public class GamePlay extends Menu {
 
     }
 
-    public void increaseMoney(String command) {
-        int amount = 0;
-        Matcher matcher = CHEAT_SHEET.get("Increase Money").matcher(command);
-        if (matcher.matches())
-            amount = Integer.parseInt(matcher.group(1));
-        UserController.getInstance().increaseMoney(fistPlayersBoard.getPlayer(), amount);
-        execute();
-    }
-
     public void selectAdditionalCard(String command) {
         String cardName = null;
         Matcher matcher = CHEAT_SHEET.get("Select Additional Card").matcher(command);
@@ -504,7 +572,7 @@ public class GamePlay extends Menu {
             cardName = matcher.group(1);
 
         try {
-            DuelController.getInstance().addCardToHand(fistPlayersBoard, cardName);
+            DuelController.getInstance().addCardToHand(firstPlayersBoard, cardName);
             System.out.println("Card added to your Hand successfully!");
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -517,7 +585,7 @@ public class GamePlay extends Menu {
         Matcher matcher = CHEAT_SHEET.get("Set Game Winner").matcher(command);
         if (matcher.matches())
             LP = Integer.parseInt(matcher.group(1));
-        UserController.getInstance().increaseLP(fistPlayersBoard.getPlayer(), LP);
+        UserController.getInstance().increaseLP(firstPlayersBoard.getPlayer(), LP);
         execute();
     }
 
@@ -529,7 +597,7 @@ public class GamePlay extends Menu {
 
         try {
             DuelController.getInstance().setDuelWinner(playerNickName,
-                    fistPlayersBoard, secondPlayersBoard, rounds);
+                    firstPlayersBoard, secondPlayersBoard, rounds);
             System.out.println("Player with Nickname " + playerNickName + " Wins the game!");
             execute();
         } catch (Exception e) {
@@ -545,14 +613,6 @@ public class GamePlay extends Menu {
 
     public static void setFirstTime(boolean firstTime) {
         isFirstTime = firstTime;
-    }
-
-    public static boolean isTrapEffect() {
-        return trapEffect;
-    }
-
-    public static void setTrapEffect(boolean trapEffect) {
-        GamePlay.trapEffect = trapEffect;
     }
 
     public static void setPhase(GamePhases currentPhase) {
@@ -573,7 +633,7 @@ public class GamePlay extends Menu {
 
     public void swapPlayers(GameBoard fistPlayersBoard, GameBoard secondPlayersBoard) {
         GameBoard temp = fistPlayersBoard;
-        this.fistPlayersBoard = secondPlayersBoard;
+        this.firstPlayersBoard = secondPlayersBoard;
         this.secondPlayersBoard = temp;
     }
 

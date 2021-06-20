@@ -1,5 +1,6 @@
 package View;
 
+import Controller.CardController;
 import Controller.ShopController;
 
 import java.util.HashMap;
@@ -22,6 +23,7 @@ public class ShopMenu extends Menu {
         super("Shop Menu", parentMenu);
         subMenus.put(Pattern.compile("^shop buy ([a-zA-Z ]+)$"), buyItem());
         subMenus.put(Pattern.compile("^shop show --all$"), showCards());
+        subMenus.put(Pattern.compile("^card show ([A-Za-z0-9 ]+)$"), showSpecificCard());
     }
 
     public Menu buyItem() {
@@ -57,6 +59,16 @@ public class ShopMenu extends Menu {
         };
     }
 
+    public Menu showSpecificCard(){
+        return new Menu("Show Specific Card", this) {
+            @Override
+            public void executeCommand(String command) {
+                showCard(command);
+                this.parentMenu.execute();
+            }
+        };
+    }
+
     public void run() {
         show();
         execute(this, PATTERNS_COLLECTION);
@@ -65,7 +77,8 @@ public class ShopMenu extends Menu {
     public void show() {
         System.out.println("\033[1;92m" + "\t\tUse this Patterns to Enter your desired Menu:" + "\033[0m\n");
         System.out.println("\033[0;97m" + "Buy Card:\033[0m shop buy <card name>\n" +
-                "\033[0;97m" + "Show all Cards:\033[0m shop show --all");
+                "\033[0;97m" + "Show all Cards:\033[0m shop show --all" +
+                "\033[0;97m" + "Show Specific Cards:\033[0m card show <card name>");
         System.out.println("\033[1;94m" + "\t\tAdditional options:\n" + "\033[0m" +
                 "\033[0;97m" + "Exit the game:\033[0m menu exit\n" +
                 "\033[0;97m" + "Enter a menu:\033[0m menu enter <menu name>\n" +

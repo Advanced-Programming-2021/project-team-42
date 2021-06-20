@@ -1,5 +1,6 @@
 package View;
 
+import Controller.CardController;
 import Controller.UserController;
 import Model.User;
 
@@ -113,6 +114,21 @@ public abstract class Menu {
                     currentMenu.execute(currentMenu, patternCollection);
                 }
             }
+        }
+    }
+
+    public void showCard(String command){
+        String cardName = null;
+        Pattern pattern = Pattern.compile("^card show ([A-Za-z0-9 ]+)$");
+        Matcher matcher = pattern.matcher(command);
+        if(matcher.find())
+            cardName = matcher.group(1);
+
+        try {
+            String result = CardController.getInstance().showCard(cardName);
+            System.out.println(result);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
         }
     }
 }

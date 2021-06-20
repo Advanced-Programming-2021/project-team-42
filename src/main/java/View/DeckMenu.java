@@ -1,5 +1,6 @@
 package View;
 
+import Controller.CardController;
 import Controller.DeckController;
 
 import java.util.HashMap;
@@ -28,6 +29,7 @@ public class DeckMenu extends Menu {
         subMenus.put(Pattern.compile("^deck show --all$"), showDecks());
         subMenus.put(Pattern.compile("^deck show --deck-name (\\w+)( --side)?$"), showDeck());
         subMenus.put(Pattern.compile("^deck show --cards$"), userCards());
+        subMenus.put(Pattern.compile("^card show ([A-Za-z0-9 ]+)$"), showSpecificCard());
     }
 
     public Menu createDeck() {
@@ -70,6 +72,16 @@ public class DeckMenu extends Menu {
                 }
 
                 parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
+            }
+        };
+    }
+
+    public Menu showSpecificCard(){
+        return new Menu("Show Specific Card", this) {
+            @Override
+            public void executeCommand(String command) {
+                showCard(command);
+                this.parentMenu.execute();
             }
         };
     }
@@ -206,6 +218,7 @@ public class DeckMenu extends Menu {
                 "\033[0;97m" + "Remove Card From Deck:\033[0m deck rm-card --card <card name> --deck <deck name> --side(optional)\n" +
                 "\033[0;97m" + "Show User All Decks:\033[0m deck show --all\n" +
                 "\033[0;97m" + "Show User Cards:\033[0m deck show --cards\n" +
+                "\033[0;97m" + "Show Specific Card:\033[0m card show <card name>\n" +
                 "\033[0;97m" + "Show Deck:\033[0m deck show --deck-name <deck name> --side(Opt)\n");
         System.out.println("\033[1;94m" + "\t\tAdditional options:\n" + "\033[0m" +
                 "\033[0;97m" + "Exit the game:\033[0m menu exit\n" +

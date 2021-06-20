@@ -23,6 +23,7 @@ public class GameBoard {
     private Card fieldZone = null;
     private int maxLP = 8000;
     private int WinsCount = 0;
+    private boolean trapEffect;
 
     public GameBoard(User player, ArrayList<Card> mainDeckCards, ArrayList<Card> sideDeckCards, ArrayList<Card> cardsInHand) {
         this.player = player;
@@ -234,6 +235,14 @@ public class GameBoard {
         this.maxLP = maxLP;
     }
 
+    public boolean isTrapEffect() {
+        return trapEffect;
+    }
+
+    public void setTrapEffect(boolean trapEffect) {
+        this.trapEffect = trapEffect;
+    }
+
     public void setMonstersPlace(MonsterCard monstersCard, int place) {
         monstersPlace.put(place, monstersCard);
     }
@@ -317,5 +326,29 @@ public class GameBoard {
             else if(spellTrapCard.isSet() && !spellTrapCard.isEffectActive())
                 System.out.print("H\t");
         }
+    }
+
+    public boolean doesSpellTrapZoneContainsCard(String cardName){
+        for(Map.Entry<Integer, SpellTrapCard> entry : spellTrapsPlace.entrySet()){
+            if(entry.getValue() != null && entry.getValue().getName().equals(cardName))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean doesMonsterZoneContainsCard(String cardName){
+        for(Map.Entry<Integer, MonsterCard> entry : monstersPlace.entrySet()){
+            if(entry.getValue() != null && entry.getValue().getName().equals(cardName))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean doesMonsterZoneContainsSummonedMirageDragon(){
+        for(Map.Entry<Integer, MonsterCard> entry : monstersPlace.entrySet()){
+            if(entry.getValue().getName().equals("Mirage Dragon") && entry.getValue().isSummoned())
+                return true;
+        }
+        return false;
     }
 }

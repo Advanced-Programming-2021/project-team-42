@@ -46,10 +46,6 @@ public class SpellTrapCard extends Card{
                 spellTrapCard.getCardType(), spellTrapCard.getIcon(), spellTrapCard.getStatus(), spellTrapCard.getPrice());
     }
 
-    public String getType() {
-        return this.cardType;
-    }
-
     public Icon getIcon() { return icon; }
 
     public void setIcon(Icon icon) {
@@ -82,5 +78,10 @@ public class SpellTrapCard extends Card{
 
     public void setEffectActivatedInThisPhase(boolean effectActivatedInThisPhase) {
         isEffectActivatedInThisPhase = effectActivatedInThisPhase;
+    }
+
+    public String exclusiveToString(){
+        return "Name: " + this.getName() + "\n" + this.getCardType() + "\nType: " + this.getStatus() +
+                "\nDescription: " + this.getDescription();
     }
 }

@@ -161,57 +161,6 @@ public class DuelController {
         }
     }
 
-    public void activeTrapEffect(SpellTrapCard spellTrapCard,
-                                 GameBoard firstPlayersBoard, GameBoard secondPlayersBoard,
-                                 GamePlay gamePlay) {
-        String cardName = spellTrapCard.getName();
-
-        switch (cardName) {
-            case "Call of the Haunted":
-                ArrayList<Card> graveYard = firstPlayersBoard.getGraveYard();
-                Collections.shuffle(graveYard);
-
-                if (firstPlayersBoard.monsterPlacesSize() < 5) {
-                    for (Card cardInGraveYard : graveYard) {
-                        if (MonsterCard.isMonsterCard(cardInGraveYard.getName())) {
-                            MonsterCard monsterCardInGraveYard = (MonsterCard) cardInGraveYard;
-                            monsterCardInGraveYard.setDefensive(false);
-                            monsterCardInGraveYard.setSummoned(true);
-                            monsterCardInGraveYard.setSet(false);
-                            firstPlayersBoard.setMonstersPlace(monsterCardInGraveYard, firstPlayersBoard.monsterPlacesSize() + 1);
-                            firstPlayersBoard.getGraveYard().remove(cardInGraveYard);
-                            break;
-                        }
-                    }
-                }
-                break;
-            case "Torrential Tribute":
-                for (Map.Entry<Integer, MonsterCard> entry : secondPlayersBoard.getMonstersPlace().entrySet()) {
-                    secondPlayersBoard.addCardToGraveyard(entry.getValue());
-                    secondPlayersBoard.setMonstersPlace(null, entry.getKey());
-                }
-                for (Map.Entry<Integer, MonsterCard> entry : firstPlayersBoard.getMonstersPlace().entrySet()) {
-                    firstPlayersBoard.addCardToGraveyard(entry.getValue());
-                    firstPlayersBoard.setMonstersPlace(null, entry.getKey());
-                }
-                break;
-            case "Time Seal":
-                GamePlay.setTrapEffect(true);
-                break;
-            case "Negate Attack":
-                gamePlay.changePhase();
-                break;
-            case "Mirror Force":
-                for (Map.Entry<Integer, MonsterCard> entry : secondPlayersBoard.getMonstersPlace().entrySet()) {
-                    if (entry.getValue() != null && !entry.getValue().isDefensive()) {
-                        secondPlayersBoard.addCardToGraveyard(entry.getValue());
-                        secondPlayersBoard.setMonstersPlace(null, entry.getKey());
-                    }
-                }
-                break;
-        }
-    }
-
     public void selectCard(GameBoard gameBoard, String field, int place) throws Exception {
         switch (field) {
             case "monster":
@@ -291,7 +240,7 @@ public class DuelController {
 
     public int summonMonsterCard(GameBoard firstPlayerBoard,
                                  GameBoard secondPlayerBoard, GamePhases currentPhase,
-                                 boolean isSummonedOrSetInThisPhase) throws Exception {
+                                 GamePlay currentMenu, boolean isSummonedOrSetInThisPhase) throws Exception {
         if (!firstPlayerBoard.checkSelections() && !secondPlayerBoard.checkSelections())
             throw new Exception("no card is selected yet");
         else {
@@ -299,7 +248,6 @@ public class DuelController {
             if (firstPlayerBoard.getHandSelectedCard() == null ||
                     !MonsterCard.isMonsterCard(selectedCard.getName()) ||
                     MonsterCard.getMonsterCardByName(selectedCard.getName()).getName().equals("Skull Guardian") ||
-                    MonsterCard.getMonsterCardByName(selectedCard.getName()).getName().equals("Gate Guardian") ||
                     MonsterCard.getMonsterCardByName(selectedCard.getName()).getName().equals("Crab Turtle") ||
                     MonsterCard.getMonsterCardByName(selectedCard.getName()).getName().equals("Beast King Barbaros"))
                 throw new Exception("you can’t summon this card");
@@ -316,38 +264,45 @@ public class DuelController {
                         else {
                             MonsterCard selectedMonsterCard = MonsterCard.getMonsterCardByName(selectedCard.getName());
                             if (selectedMonsterCard.getLevel() <= 4) {
-                                simpleSummon(firstPlayerBoard, selectedMonsterCard);
+                                simpleSummon(firstPlayerBoard, secondPlayerBoard, currentMenu, selectedMonsterCard);
                                 return 1;
                             } else if (selectedMonsterCard.getLevel() >= 5 && selectedMonsterCard.getLevel() <= 6) {
                                 if (firstPlayerBoard.monsterPlacesSize() == 0)
                                     throw new Exception("there are not enough cards for tribute");
                                 else
                                     return 2;
-                            } else if (selectedMonsterCard.getLevel() >= 7) {
+                            } else if (selectedMonsterCard.getLevel() >= 7 && selectedMonsterCard.getLevel() <= 8) {
                                 if (firstPlayerBoard.monsterPlacesSize() < 2)
                                     throw new Exception("there are not enough cards for tribute");
                                 else
                                     return 3;
+                            } else {
+                                if (firstPlayerBoard.monsterPlacesSize() < 3)
+                                    throw new Exception("there are not enough cards for tribute");
+                                else
+                                    return 4;
                             }
                         }
                     }
                 }
             }
         }
-        return 0;
     }
 
-    public void simpleSummon(GameBoard playersBoard, MonsterCard selectedCard) {
+    public void simpleSummon(GameBoard playersBoard, GameBoard opponentBoard,
+                             GamePlay currentMenu, MonsterCard selectedCard) {
         selectedCard.setSummoned(true);
         selectedCard.setSet(false);
         selectedCard.setDefensive(false);
         playersBoard.setMonstersPlace(selectedCard, playersBoard.monsterPlacesSize() + 1);
         playersBoard.removeCardFromHand(playersBoard.getSelectedHandPlace());
+        whileSummonTrapsActivation(playersBoard, opponentBoard, currentMenu, selectedCard);
         playersBoard.deselectAll();
         GamePlay.setSummonOrSet(true);
     }
 
-    public void lowLevelSummon(GameBoard playersBoard, int choice) throws Exception {
+    public void lowLevelSummon(GameBoard playersBoard, GameBoard opponentBoard,
+                               GamePlay currentMenu, int choice) throws Exception {
         MonsterCard selectedCard = playersBoard.getMonsterSelectedCard();
         if (playersBoard.getMonsterCardByPlace(choice) == null) {
             throw new Exception("there no monsters one this address");
@@ -360,13 +315,14 @@ public class DuelController {
             playersBoard.setMonstersPlace(null, choice);
             playersBoard.setMonstersPlace(selectedCard, playersBoard.monsterPlacesSize() + 1);
             playersBoard.removeCardFromHand(playersBoard.getSelectedHandPlace());
+            whileSummonTrapsActivation(playersBoard, opponentBoard, currentMenu, selectedCard);
             playersBoard.deselectAll();
             GamePlay.setSummonOrSet(true);
         }
     }
 
-    public void highLevelSummon(GameBoard playersBoard,
-                                int firstChoice, int secondChoice) throws Exception {
+    public void highLevelSummon(GameBoard playersBoard, GameBoard opponentBoard,
+                                GamePlay currentMenu, int firstChoice, int secondChoice) throws Exception {
         MonsterCard selectedCard = playersBoard.getMonsterSelectedCard();
         if (playersBoard.getMonsterCardByPlace(firstChoice) == null ||
                 playersBoard.getMonsterCardByPlace(secondChoice) == null)
@@ -383,9 +339,39 @@ public class DuelController {
             playersBoard.setMonstersPlace(null, secondChoice);
             playersBoard.setMonstersPlace(selectedCard, playersBoard.monsterPlacesSize() + 1);
             playersBoard.removeCardFromHand(playersBoard.getSelectedHandPlace());
+            whileSummonTrapsActivation(playersBoard, opponentBoard, currentMenu, selectedCard);
             playersBoard.deselectAll();
             GamePlay.setSummonOrSet(true);
         }
+    }
+
+    public void gateGuardianSummon(GameBoard playersBoard, GameBoard opponentBoard,
+                                   GamePlay currentMenu, int firstChoice, int secondChoice, int thirdChoice) throws Exception {
+        MonsterCard selectedCard = playersBoard.getMonsterSelectedCard();
+        if (playersBoard.getMonsterCardByPlace(firstChoice) == null ||
+                playersBoard.getMonsterCardByPlace(secondChoice) == null ||
+                playersBoard.getMonsterCardByPlace(thirdChoice) == null)
+            throw new Exception("there is no monster on one of these addresses");
+        else {
+            selectedCard.setSummoned(true);
+            selectedCard.setSet(false);
+            selectedCard.setDefensive(false);
+            MonsterCard firstTribute = playersBoard.getMonsterCardByPlace(firstChoice);
+            MonsterCard secondTribute = playersBoard.getMonsterCardByPlace(secondChoice);
+            MonsterCard thirdTribute = playersBoard.getMonsterCardByPlace(thirdChoice);
+            playersBoard.addCardToGraveyard(firstTribute);
+            playersBoard.addCardToGraveyard(secondTribute);
+            playersBoard.addCardToGraveyard(thirdTribute);
+            playersBoard.setMonstersPlace(null, firstChoice);
+            playersBoard.setMonstersPlace(null, secondChoice);
+            playersBoard.setMonstersPlace(null, thirdChoice);
+            playersBoard.setMonstersPlace(selectedCard, playersBoard.monsterPlacesSize() + 1);
+            playersBoard.removeCardFromHand(playersBoard.getSelectedHandPlace());
+            whileSummonTrapsActivation(playersBoard, opponentBoard, currentMenu, selectedCard);
+            playersBoard.deselectAll();
+            GamePlay.setSummonOrSet(true);
+        }
+
     }
 
     public void generalCardSet(GameBoard firstPlayerBoard, GameBoard secondPlayerBoard,
@@ -446,7 +432,7 @@ public class DuelController {
     }
 
     public void flipSummon(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard,
-                           GamePhases currentPhase) throws Exception {
+                           GamePhases currentPhase, GamePlay currentMenu) throws Exception {
         if (!firstPlayersBoard.checkSelections() && !secondPlayersBoard.checkSelections())
             throw new Exception("you dont select any card yet");
         else {
@@ -464,6 +450,10 @@ public class DuelController {
                         monsterCard.setSet(false);
                         monsterCard.setSummoned(true);
                         monsterCard.setReadyToAttack(true);
+                        whileSummonTrapsActivation(firstPlayersBoard, secondPlayersBoard,
+                                currentMenu, monsterCard);
+                        firstPlayersBoard.deselectAll();
+                        secondPlayersBoard.deselectAll();
                     }
                 }
             }
@@ -505,7 +495,9 @@ public class DuelController {
     }
 
     public String attackToCard(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard,
-                               int number) {
+                               GamePlay currentMenu, int number) {
+
+        whileAttackTrapsActivation(firstPlayersBoard, secondPlayersBoard, currentMenu);
 
         if (firstPlayersBoard.getMonsterSelectedCard().getName().equals("The Calculator")) {
             for (Map.Entry<Integer, MonsterCard> entry : firstPlayersBoard.getMonstersPlace().entrySet()) {
@@ -522,6 +514,50 @@ public class DuelController {
             return summonedState(firstPlayersBoard, secondPlayersBoard, number);
         else
             return setState(firstPlayersBoard, secondPlayersBoard, number);
+    }
+
+    public void whileAttackTrapsActivation(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard, GamePlay currentMenu) {
+        if ((secondPlayersBoard.doesSpellTrapZoneContainsCard("Mirror Force") ||
+                secondPlayersBoard.doesSpellTrapZoneContainsCard("Negate Attack")) &&
+                !firstPlayersBoard.doesMonsterZoneContainsSummonedMirageDragon()) {
+            if (currentMenu.wantToActiveEffect()) {
+
+                String possibleCard = "";
+                if (secondPlayersBoard.doesSpellTrapZoneContainsCard("Mirror Force"))
+                    possibleCard += "Mirror Force";
+                if (secondPlayersBoard.doesSpellTrapZoneContainsCard("Negate Attack"))
+                    possibleCard += ", Negate Attack";
+
+                String activatedCardName = currentMenu.activeEffect(possibleCard);
+                if (activatedCardName.equals("Negate Attack"))
+                    CardController.getInstance().negateAttackEffect(currentMenu, firstPlayersBoard, secondPlayersBoard);
+                else if (activatedCardName.equals("Mirror Force"))
+                    CardController.getInstance().mirrorForceEffect(firstPlayersBoard);
+            }
+        }
+    }
+
+    public void whileSummonTrapsActivation(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard,
+                                           GamePlay currentMenu, MonsterCard summonedMonster) {
+        if ((secondPlayersBoard.doesSpellTrapZoneContainsCard("Trap Hole") ||
+                secondPlayersBoard.doesSpellTrapZoneContainsCard("Torrential Tribute")) &&
+                !firstPlayersBoard.doesMonsterZoneContainsSummonedMirageDragon()) {
+            if (currentMenu.wantToActiveEffect()) {
+
+                String possibleCard = "";
+                if (secondPlayersBoard.doesSpellTrapZoneContainsCard("Trap Hole"))
+                    possibleCard += "Trap Hole";
+                if (secondPlayersBoard.doesSpellTrapZoneContainsCard("Torrential Tribute"))
+                    possibleCard += ", Torrential Tribute";
+
+                String activatedCardName = currentMenu.activeEffect(possibleCard);
+                if (activatedCardName.equals("Trap Hole"))
+                    CardController.getInstance().trapHoleEffect(firstPlayersBoard, summonedMonster);
+                else if (activatedCardName.equals("Torrential Tribute"))
+                    CardController.getInstance().torrentialTributeEffect(firstPlayersBoard, secondPlayersBoard);
+            }
+        }
+
     }
 
     public String setState(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard, int number) {
@@ -600,7 +636,8 @@ public class DuelController {
     }
 
     public int directAttack(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard,
-                            GamePhases currentPhase, boolean isFirstTime) throws Exception {
+                            GamePhases currentPhase, GamePlay currentMenu,
+                            boolean isFirstTime) throws Exception {
         if (!firstPlayersBoard.checkSelections() && !secondPlayersBoard.checkSelections())
             throw new Exception("you dont select any card yet");
         else {
@@ -617,6 +654,7 @@ public class DuelController {
                         if (isFirstTime || firstPlayersBoard.monsterPlacesSize() > 0)
                             throw new Exception("you can’t attack the opponent directly");
                         else {
+                            whileAttackTrapsActivation(firstPlayersBoard, secondPlayersBoard, currentMenu);
                             int lp = secondPlayersBoard.getPlayer().getLP();
                             int attackPoint = monsterCard.getAttackPoint();
                             secondPlayersBoard.getPlayer().setLP(lp - attackPoint);
@@ -654,13 +692,20 @@ public class DuelController {
         else {
             Card yourCard = firstPlayersBoard.getSelectedCard();
             Card opponentCard = secondPlayersBoard.getSelectedCard();
-            if (yourCard != null)
-                return yourCard.toString();
-            else {
+            if (yourCard != null) {
+                if (MonsterCard.isMonsterCard(yourCard.getName()))
+                    return ((MonsterCard) yourCard).exclusiveToString();
+                else
+                    return ((SpellTrapCard) yourCard).exclusiveToString();
+            } else {
                 if (opponentCard.isSet())
                     return "card is not visible";
-                else
-                    return opponentCard.toString();
+                else {
+                    if (MonsterCard.isMonsterCard(opponentCard.getName()))
+                        return ((MonsterCard) opponentCard).exclusiveToString();
+                    else
+                        return ((SpellTrapCard) opponentCard).exclusiveToString();
+                }
             }
         }
     }
@@ -692,11 +737,20 @@ public class DuelController {
         }
     }
 
-    public void changePhase(GameBoard firstPlayersBoard, GamePhases currentPhase) {
+    public void changePhase(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard,
+                            GamePhases currentPhase, GamePlay currentMenu) {
         if (currentPhase.equals(GamePhases.DRAW)) GamePlay.setPhase(GamePhases.STANDBY);
         else if (currentPhase.equals(GamePhases.STANDBY)) GamePlay.setPhase(GamePhases.FIRST_MAIN);
-        else if (currentPhase.equals(GamePhases.FIRST_MAIN)) GamePlay.setPhase(GamePhases.BATTLE);
-        else if (currentPhase.equals(GamePhases.BATTLE)) {
+        else if (currentPhase.equals(GamePhases.FIRST_MAIN)) {
+            if (secondPlayersBoard.doesSpellTrapZoneContainsCard("Time Seal")) {
+                if (currentMenu.wantToActiveEffect()) {
+                    String activatedCardName = currentMenu.activeEffect("Time Seal");
+                    if (activatedCardName.equalsIgnoreCase("Time Seal"))
+                        CardController.getInstance().timeSealEffect(firstPlayersBoard);
+                }
+            }
+            GamePlay.setPhase(GamePhases.BATTLE);
+        } else if (currentPhase.equals(GamePhases.BATTLE)) {
             resetMonsters(firstPlayersBoard);
             GamePlay.setPhase(GamePhases.SECOND_MAIN);
         } else if (currentPhase.equals(GamePhases.SECOND_MAIN)) GamePlay.setPhase(GamePhases.END);
