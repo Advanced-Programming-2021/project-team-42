@@ -372,7 +372,8 @@ public class GamePlay extends Menu {
         return new Menu("Surrender", this) {
             @Override
             public void executeCommand(String command) {
-                //TODO: surrender completion
+                DuelController.getInstance().setWinner(secondPlayersBoard, firstPlayersBoard, rounds,
+                        this.parentMenu.parentMenu, (GamePlay) this.parentMenu);
             }
         };
     }
@@ -474,13 +475,11 @@ public class GamePlay extends Menu {
         if (firstPlayersBoard.getPlayer().getLP() <= 0 ||
                 secondPlayersBoard.getMainDeckCards().size() == 0)
             DuelController.getInstance().setWinner(firstPlayersBoard, secondPlayersBoard,
-                    rounds, this.parentMenu.parentMenu, this,
-                    this.parentMenu);
-        else if (secondPlayersBoard.getPlayer().getLP() <= 0 ||
+                    rounds, this.parentMenu, this);
+        if (secondPlayersBoard.getPlayer().getLP() <= 0 ||
                 firstPlayersBoard.getMainDeckCards().size() == 0)
             DuelController.getInstance().setWinner(secondPlayersBoard, firstPlayersBoard,
-                    rounds, this.parentMenu.parentMenu, this,
-                    this.parentMenu);
+                    rounds, this.parentMenu, this);
     }
 
     public boolean exchangeCardsCheck(String nickName) {
@@ -510,9 +509,9 @@ public class GamePlay extends Menu {
                 return true;
             else if (response.equalsIgnoreCase("no")) {
                 System.out.println("now it will be " + firstPlayersBoard.getPlayer().getUsername() + " turn");
-                secondPlayersBoard.drawBoardAsOpponent();
-                System.out.println("\n--------------------------");
-                firstPlayersBoard.drawBoardAsYourself();
+//                secondPlayersBoard.drawBoardAsOpponent();
+//                System.out.println("\n--------------------------");
+//                firstPlayersBoard.drawBoardAsYourself();
                 return false;
             } else
                 System.out.println("Please enter valid command");

@@ -67,7 +67,6 @@ public class DuelController {
 
     public ArrayList<Card> createCardsFromDeck(HashMap<String, Integer> deckCards) {
         ArrayList<Card> cards = new ArrayList<>();
-        ArrayList<MonsterCard> allMC = MonsterCard.getAllMonsterCards();
         for (Map.Entry<String, Integer> entry : deckCards.entrySet()) {
             for (int i = 0; i < entry.getValue(); i++) {
                 if (MonsterCard.isMonsterCard(entry.getKey()))
@@ -568,6 +567,7 @@ public class DuelController {
         if (firstPlayerAP > secondPlayerDP) {
             secondPlayersBoard.addCardToGraveyard(secondPlayersBoard.getMonsterCardByPlace(number));
             secondPlayersBoard.setMonstersPlace(null, number);
+            yomiShipAndExploderDragonCheck(firstPlayersBoard, secondPlayersBoard, number);
             firstPlayersBoard.deselectAll();
             secondPlayersBoard.deselectAll();
             return "opponent’s monster card was " + opponentsCardName + " and destroyed";
@@ -594,6 +594,7 @@ public class DuelController {
         if (firstPlayerAP > secondPlayerAP) {
             secondPlayersBoard.addCardToGraveyard(secondPlayersBoard.getMonsterCardByPlace(number));
             secondPlayersBoard.setMonstersPlace(null, number);
+            yomiShipAndExploderDragonCheck(firstPlayersBoard, secondPlayersBoard, number);
             firstPlayersBoard.deselectAll();
             secondPlayersBoard.deselectAll();
             return "the defense position monster is destroyed";
@@ -611,9 +612,11 @@ public class DuelController {
         int secondPlayerAP = secondPlayersBoard.getMonstersPlace().get(number).getAttackPoint();
         int damage = Math.abs(firstPlayerAP - secondPlayerAP);
         if (firstPlayerAP > secondPlayerAP) {
-            secondPlayersBoard.getPlayer().decreaseLP(damage);
+            if (!secondPlayersBoard.getMonsterCardByPlace(number).getName().equals("Exploder Dragon"))
+                secondPlayersBoard.getPlayer().decreaseLP(damage);
             secondPlayersBoard.addCardToGraveyard(secondPlayersBoard.getMonsterCardByPlace(number));
             secondPlayersBoard.setMonstersPlace(null, number);
+            yomiShipAndExploderDragonCheck(firstPlayersBoard, secondPlayersBoard, number);
             firstPlayersBoard.deselectAll();
             secondPlayersBoard.deselectAll();
             return "your opponent’s monster is destroyed and your opponent receives" + damage + " battle damage";
@@ -632,6 +635,14 @@ public class DuelController {
             firstPlayersBoard.deselectAll();
             secondPlayersBoard.deselectAll();
             return "both you and your opponent monster cards are destroyed and no one receives damage";
+        }
+    }
+
+    private void yomiShipAndExploderDragonCheck(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard, int number) {
+        if (secondPlayersBoard.getMonsterCardByPlace(number).getName().equals("Yomi Ship") ||
+                secondPlayersBoard.getMonsterCardByPlace(number).getName().equals("Exploder Dragon")) {
+            firstPlayersBoard.addCardToGraveyard(firstPlayersBoard.getMonsterSelectedCard());
+            firstPlayersBoard.setMonstersPlace(null, firstPlayersBoard.getSelectedMonsterPlace());
         }
     }
 
@@ -764,8 +775,7 @@ public class DuelController {
     }
 
     public void setWinner(GameBoard firstPlayerBoard, GameBoard secondPlayerBoard,
-                          int rounds, Menu mainMenu, GamePlay currentMenu,
-                          Menu parentMenu) {
+                          int rounds, Menu mainMenu, GamePlay currentMenu) {
         User winner = firstPlayerBoard.getPlayer();
         User loser = secondPlayerBoard.getPlayer();
         if (rounds == 1) {
@@ -791,15 +801,15 @@ public class DuelController {
                         currentMenu.getCardsName(loser);
                 }
 
-                gamePreparation(parentMenu, loser, winner, rounds);
+                gamePreparation(mainMenu, loser, winner, rounds);
             } else {
-                winner.setScore(winner.getScore() + 1000);
+                winner.setScore(winner.getScore() + 3000);
                 winner.setWins(winner.getWins() + 1);
                 loser.setLoses(loser.getLoses() + 1);
                 System.out.println(firstPlayerBoard.getPlayer().getNickname() + " wins the game");
-                winner.setBalance(winner.getLP() + 1000 + firstPlayerBoard.getMaxLP());
-                loser.setBalance(loser.getBalance() + 100 + loser.getBalance());
-                System.out.println("Winner earn " + (firstPlayerBoard.getMaxLP() + 1000));
+                winner.setBalance(winner.getBalance() + 3000 + 3 * firstPlayerBoard.getMaxLP());
+                loser.setBalance(loser.getBalance() + 300);
+                System.out.println("Winner earn " + (3 * firstPlayerBoard.getMaxLP() + 3000));
                 mainMenu.run();
             }
         }
