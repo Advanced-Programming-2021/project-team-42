@@ -88,7 +88,7 @@ public class DeckController {
     }
 
 
-    public void addCardToDeck(String username, String deckName, String cardName, boolean isSide) throws Exception{
+    public void addCardToDeck(String username, String deckName, String cardName, boolean isSide) throws Exception {
         User user = User.getUserByUsername(username);
         if (!user.doesUserHasThisCard(cardName))
             throw new Exception("card with name " + cardName + " does not exist");
@@ -148,7 +148,7 @@ public class DeckController {
         }
     }
 
-    private void deleteCardFromSideDeck(String cardName, User user, Deck deck) throws Exception{
+    private void deleteCardFromSideDeck(String cardName, User user, Deck deck) throws Exception {
         if (!deck.doesSideDeckHasThisCard(cardName))
             throw new Exception("card with name " + cardName + " does not exist in side deck");
         else {
@@ -166,68 +166,74 @@ public class DeckController {
         }
     }
 
-    public void showAllDecks(String username) {
+    public String showAllDecks(String username) {
+        StringBuilder result = new StringBuilder();
         User user = User.getUserByUsername(username);
         ArrayList<String> usersAllDecks = user.getUserDecks();
         String activeDeck = user.getActiveDeck();
         usersAllDecks.sort(Comparator.naturalOrder());
-        System.out.println("Decks:");
-        System.out.println("Active Deck:");
-        if (activeDeck != null)
-            printDeck(activeDeck, 1);
-        System.out.println("Other Decks:");
+        result.append("Decks:\nActive Deck:\n");
+        if (activeDeck != null) {
+            result.append(printDeck(activeDeck));
+            usersAllDecks.remove(activeDeck);
+        }
+        result.append("Other Decks:\n");
         for (String deckName : usersAllDecks)
-            printDeck(deckName, 0);
+            result.append(printDeck(deckName));
+        return result.toString();
     }
 
-    public void printDeck(String deckName, int flag) {
+    public String printDeck(String deckName) {
         Deck deck = Deck.getDeckByName(deckName);
         boolean isValid = deck.isValid();
-        if (!deckName.equals(User.getUserByUsername(Deck.getUsernameByDeckName(deckName)).getActiveDeck()) || flag == 1)
-            System.out.println(deck.getName() + ": main deck " + deck.mainDeckSize() +
-                    ",side deck " + deck.sideDeckSize() + (isValid ? ", valid" : ", invalid"));
-
-
+        return deck.getName() + ": main deck " + deck.mainDeckSize() +
+                ",side deck " + deck.sideDeckSize() + (isValid ? ", valid" : ", invalid") + "\n";
     }
 
-    public void showDeck(String deckName, boolean isSide) {
+    public String showDeck(String deckName, boolean isSide) throws Exception{
         if (Deck.getDeckByName(deckName) == null)
-            System.out.println("deck with name " + deckName + " does not exists");
+            throw new Exception("deck with name " + deckName + " does not exists");
         else {
+            String result = "";
             Deck deck = Deck.getDeckByName(deckName);
-            System.out.println("Deck name: " + deckName);
+            result += ("Deck name: " + deckName + "\n");
             if (isSide) {
-                System.out.println("Side Deck:");
-                printDeckCards(deck.getSideDeckCards());
+                result += "Side Deck:\n";
+                result += printDeckCards(deck.getSideDeckCards());
             } else {
-                System.out.println("Main Deck:");
-                printDeckCards(deck.getMainDeckCards());
+                result += "Main Deck:\n";
+                result += printDeckCards(deck.getMainDeckCards());
             }
+            return result;
         }
     }
 
-    public void printDeckCards(HashMap<String, Integer> deck) {
+    public String printDeckCards(HashMap<String, Integer> deck) {
+        StringBuilder result = new StringBuilder();
         TreeMap<String, Integer> sortedDeck = new TreeMap<>(deck);
-        System.out.println("Monsters:");
+        result.append("Monsters:\n");
         for (Map.Entry<String, Integer> entry : sortedDeck.entrySet()) {
             if (MonsterCard.isMonsterCard(entry.getKey())) {
                 MonsterCard monsterCard = MonsterCard.getMonsterCardByName(entry.getKey());
-                System.out.println(monsterCard);
+                result.append(monsterCard).append("\n");
             }
         }
-        System.out.println("Spell and Traps:");
+        result.append("Spell and Traps:\n");
         for (Map.Entry<String, Integer> entry : sortedDeck.entrySet()) {
             if (!MonsterCard.isMonsterCard(entry.getKey())) {
                 SpellTrapCard spellTrapCard = SpellTrapCard.getSpellTrapCardByName(entry.getKey());
-                System.out.println(spellTrapCard);
+                result.append(spellTrapCard).append("\n");
             }
         }
+        return result.toString();
     }
 
-    public void showUserCards(String username) {
+    public String showUserCards(String username) {
+        StringBuilder result = new StringBuilder();
         TreeMap<String, Integer> sortedCards = new TreeMap<>(User.getUserByUsername(username).getUserAllCards());
         for (Map.Entry<String, Integer> entry : sortedCards.entrySet())
-            System.out.println(Card.getCardByName(entry.getKey()));
+            result.append(Card.getCardByName(entry.getKey()).toString()).append("\n");
+        return result.toString();
     }
 
 

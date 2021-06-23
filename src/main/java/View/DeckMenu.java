@@ -81,7 +81,8 @@ public class DeckMenu extends Menu {
             @Override
             public void executeCommand(String command) {
                 showCard(command);
-                this.parentMenu.execute();
+
+                parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };
     }
@@ -171,7 +172,8 @@ public class DeckMenu extends Menu {
         return new Menu("Show User All Decks", this) {
             @Override
             public void executeCommand(String command) {
-                DeckController.getInstance().showAllDecks(this.parentMenu.parentMenu.usersName);
+                System.out.println(DeckController.getInstance().showAllDecks(this.parentMenu.parentMenu.usersName));
+
                 parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };
@@ -191,7 +193,14 @@ public class DeckMenu extends Menu {
                 matcher = pattern.matcher(command);
                 if (matcher.find())
                     isSideDeck = true;
-                DeckController.getInstance().showDeck(deckName, isSideDeck);
+
+                try {
+                    String result = DeckController.getInstance().showDeck(deckName, isSideDeck);
+                    System.out.println(result);
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+
                 parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };
@@ -201,7 +210,8 @@ public class DeckMenu extends Menu {
         return new Menu("Show User All Cards", this) {
             @Override
             public void executeCommand(String command) {
-                DeckController.getInstance().showUserCards(this.parentMenu.parentMenu.usersName);
+                System.out.println(DeckController.getInstance().showUserCards(this.parentMenu.parentMenu.usersName));
+
                 parentMenu.execute(this.parentMenu, PATTERNS_COLLECTION);
             }
         };

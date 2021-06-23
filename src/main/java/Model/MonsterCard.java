@@ -18,6 +18,7 @@ public class MonsterCard extends Card {
     private boolean isSummoned;
     private boolean isDefensive;
     private boolean isReadyToAttack = true;
+    private boolean isPositionChangedInThisTurn;
 
     static {
         allMonsterCards = new ArrayList<>();
@@ -131,6 +132,14 @@ public class MonsterCard extends Card {
 
     public String getCardTypeStr() {
         return cardTypeStr;
+    }
+
+    public boolean isPositionChangedInThisTurn() {
+        return isPositionChangedInThisTurn;
+    }
+
+    public void setPositionChangedInThisTurn(boolean positionChangedInThisTurn) {
+        isPositionChangedInThisTurn = positionChangedInThisTurn;
     }
 
     public boolean isReadyToAttack(){

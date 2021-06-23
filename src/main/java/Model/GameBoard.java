@@ -21,7 +21,7 @@ public class GameBoard {
     private int selectedHandPlace;
     private Card fieldZoneSelectedCard = null;
     private Card fieldZone = null;
-    private int maxLP = 8000;
+    private int maxLP = 0;
     private int WinsCount = 0;
     private boolean trapEffect;
 
@@ -71,11 +71,11 @@ public class GameBoard {
     }
 
     public boolean checkSelections(){
-        return this.monsterSelectedCard == null &&
+        return !(this.monsterSelectedCard == null &&
                 this.spellTrapSelectedCard == null &&
                 this.graveyardSelectedCard == null &&
                 this.handSelectedCard == null &&
-                this.fieldZoneSelectedCard == null;
+                this.fieldZoneSelectedCard == null);
     }
 
     public Card getSelectedCard(){
@@ -260,7 +260,7 @@ public class GameBoard {
     }
 
     public void drawBoardAsOpponent() {
-        System.out.println(this.player.getUsername() + ": " + this.player.getLP());
+        System.out.println(this.player.getNickname() + ": " + this.player.getLP());
         for (int i = 0; i < cardsInHand.size(); i++)
             System.out.print("c\t");
         System.out.print("\n");
@@ -299,7 +299,7 @@ public class GameBoard {
         for (int i = 0; i < cardsInHand.size(); i++)
             System.out.print("c\t");
         System.out.print("\n");
-        System.out.println(this.player.getUsername() + ": " + this.player.getLP());
+        System.out.println(this.player.getNickname() + ": " + this.player.getLP());
     }
 
     public void printMonsterFlag(MonsterCard monsterCard){

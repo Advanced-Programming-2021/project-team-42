@@ -277,7 +277,7 @@ public class GamePlay extends Menu {
                     System.out.println(e.getMessage());
                 }
 
-                parentMenu.run();
+                parentMenu.execute();
             }
         };
     }
@@ -300,7 +300,7 @@ public class GamePlay extends Menu {
                     System.out.println(e.getMessage());
                 }
 
-                parentMenu.run();
+                parentMenu.execute();
             }
         };
     }
@@ -316,7 +316,7 @@ public class GamePlay extends Menu {
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
-                parentMenu.run();
+                parentMenu.execute();
             }
         };
     }
@@ -332,7 +332,7 @@ public class GamePlay extends Menu {
                 while (true) {
                     response = scanner.nextLine();
                     if (response.equalsIgnoreCase("back"))
-                        parentMenu.run();
+                        parentMenu.execute();
                     else
                         System.out.println("Please enter valid command");
                 }
@@ -350,7 +350,7 @@ public class GamePlay extends Menu {
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
-                parentMenu.run();
+                parentMenu.execute();
             }
         };
     }
@@ -462,6 +462,7 @@ public class GamePlay extends Menu {
         else if (currentPhase.equals(GamePhases.END)) {
             System.out.println("Current Phase: End Phase");
             System.out.println("now its " + secondPlayersBoard.getPlayer().getNickname() + " turn");
+            DuelController.getInstance().changePositionReset(firstPlayersBoard);
             swapPlayers(firstPlayersBoard, secondPlayersBoard);
             isFirstTime = false;
             isCardAddedToHandInThisPhase = false;

@@ -89,45 +89,46 @@ public abstract class Menu {
 
     public void menuCheck(String command, Menu currentMenu, HashMap<String, Pattern> patternCollection) {
         Matcher matcher;
-        if (patternCollection.containsKey("Increase Money")) {
-            matcher = patternCollection.get("Increase Money").matcher(command);
-            if (matcher.matches())
-                UserController.getInstance().increaseMoney(User.getUserByUsername(usersName),
-                        Integer.parseInt(matcher.group(1)));
-        } else {
-            matcher = patternCollection.get("Valid Navigations Pattern").matcher(command);
+        matcher = patternCollection.get("Valid Navigations Pattern").matcher(command);
+        if (matcher.matches())
+            currentMenu.parentMenu.run();
+        else {
+            matcher = patternCollection.get("Exit Menu Pattern").matcher(command);
             if (matcher.matches())
                 currentMenu.parentMenu.run();
             else {
-                matcher = patternCollection.get("Exit Menu Pattern").matcher(command);
+                matcher = patternCollection.get("Invalid Navigations Pattern").matcher(command);
                 if (matcher.matches())
-                    currentMenu.parentMenu.run();
+                    System.out.println("Menu navigation is not possible!");
                 else {
-                    matcher = patternCollection.get("Invalid Navigations Pattern").matcher(command);
+                    matcher = patternCollection.get("Current Menu Pattern").matcher(command);
                     if (matcher.matches())
-                        System.out.println("Menu navigation is not possible!");
-                    else {
-                        matcher = patternCollection.get("Current Menu Pattern").matcher(command);
-                        if (matcher.matches())
-                            System.out.println(currentMenu.name);
+                        System.out.println(currentMenu.name);
+                    if (patternCollection.containsKey("Increase Money")) {
+                        matcher = patternCollection.get("Increase Money").matcher(command);
+                        if (matcher.matches()) {
+                            UserController.getInstance().increaseMoney(User.getUserByUsername(usersName),
+                                    Integer.parseInt(matcher.group(1)));
+                            System.out.println("Done! :))");
+                        }
                     }
-                    currentMenu.execute(currentMenu, patternCollection);
                 }
+                currentMenu.execute(currentMenu, patternCollection);
             }
         }
     }
 
-    public void showCard(String command){
+    public void showCard(String command) {
         String cardName = null;
         Pattern pattern = Pattern.compile("^card show ([A-Za-z0-9 ]+)$");
         Matcher matcher = pattern.matcher(command);
-        if(matcher.find())
+        if (matcher.find())
             cardName = matcher.group(1);
 
         try {
             String result = CardController.getInstance().showCard(cardName);
             System.out.println(result);
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }

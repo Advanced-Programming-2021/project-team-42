@@ -34,7 +34,8 @@ public class DuelController {
                             else {
                                 System.out.println("new game between " + player1 + " and " +
                                         player2 + " started");
-                                gamePreparation(parentMenu, User.getUserByUsername(player1), User.getUserByUsername(player2), Integer.parseInt(rounds));
+                                gamePreparation(parentMenu, User.getUserByUsername(player1), User.getUserByUsername(player2), Integer.parseInt(rounds),
+                                        null, null);
                             }
                         }
                     }
@@ -43,7 +44,8 @@ public class DuelController {
         }
     }
 
-    public void gamePreparation(Menu parentMenu, User firstPlayer, User secondPlayer, int rounds) {
+    public void gamePreparation(Menu parentMenu, User firstPlayer, User secondPlayer, int rounds,
+                                GameBoard firstPlayerBoard, GameBoard secondPlayerBoard) {
         ArrayList<Card> firstPlayersMainCards = createCardsFromDeck(Deck.getDeckByName(firstPlayer.getActiveDeck()).getMainDeckCards());
         ArrayList<Card> firstPlayersSideCards = createCardsFromDeck(Deck.getDeckByName(firstPlayer.getActiveDeck()).getSideDeckCards());
         ArrayList<Card> secondPlayersMainCards = createCardsFromDeck(Deck.getDeckByName(secondPlayer.getActiveDeck()).getMainDeckCards());
@@ -58,10 +60,15 @@ public class DuelController {
             firstPlayersMainCards.remove(0);
             secondPlayersMainCards.remove(0);
         }
-        GameBoard firstPlayersBoard = new GameBoard(firstPlayer, firstPlayersMainCards, firstPlayersSideCards, firstPlayersHand);
-        GameBoard secondPlayersBoard = new GameBoard(secondPlayer, secondPlayersMainCards, secondPlayersSideCards, secondPlayersHand);
-        GamePlay gamePlay = new GamePlay(parentMenu, firstPlayersBoard, secondPlayersBoard, rounds);
-        gamePlay.run();
+        if (firstPlayerBoard == null && secondPlayerBoard == null) {
+            GameBoard firstPlayersBoard = new GameBoard(firstPlayer, firstPlayersMainCards, firstPlayersSideCards, firstPlayersHand);
+            GameBoard secondPlayersBoard = new GameBoard(secondPlayer, secondPlayersMainCards, secondPlayersSideCards, secondPlayersHand);
+            GamePlay gamePlay = new GamePlay(parentMenu, firstPlayersBoard, secondPlayersBoard, rounds);
+            gamePlay.run();
+        } else {
+            GamePlay gamePlay = new GamePlay(parentMenu, firstPlayerBoard, secondPlayerBoard, rounds);
+            gamePlay.run();
+        }
     }
 
 
@@ -229,7 +236,7 @@ public class DuelController {
     }
 
     public void deselectCard(GameBoard firstPlayerBoard, GameBoard secondPlayerBoard) throws Exception {
-        if (firstPlayerBoard.checkSelections() && secondPlayerBoard.checkSelections())
+        if (!firstPlayerBoard.checkSelections() && !secondPlayerBoard.checkSelections())
             throw new Exception("no card is selected yet");
         else {
             firstPlayerBoard.deselectAll();
@@ -662,7 +669,7 @@ public class DuelController {
                     if (!monsterCard.isReadyToAttack())
                         throw new Exception("this card already attacked");
                     else {
-                        if (isFirstTime || firstPlayersBoard.monsterPlacesSize() > 0)
+                        if (isFirstTime || secondPlayersBoard.monsterPlacesSize() > 0)
                             throw new Exception("you can’t attack the opponent directly");
                         else {
                             whileAttackTrapsActivation(firstPlayersBoard, secondPlayersBoard, currentMenu);
@@ -682,7 +689,15 @@ public class DuelController {
 
     public void resetMonsters(GameBoard firstPlayersBoard) {
         for (Map.Entry<Integer, MonsterCard> entry : firstPlayersBoard.getMonstersPlace().entrySet()) {
-            entry.getValue().setReadyToAttack(true);
+            if (entry.getValue() != null)
+                entry.getValue().setReadyToAttack(true);
+        }
+    }
+
+    public void changePositionReset(GameBoard playerBoard){
+        for (Map.Entry<Integer, MonsterCard> entry : playerBoard.getMonstersPlace().entrySet()){
+            if(entry.getValue() != null)
+                entry.getValue().setPositionChangedInThisTurn(false);
         }
     }
 
@@ -735,13 +750,18 @@ public class DuelController {
                         !currentPhase.equals(GamePhases.SECOND_MAIN))
                     throw new Exception("you can’t do this action in this phase");
                 else {
-                    if ((selectedPosition.equals("attack") && !selectedMonsterCard.isDefensive()) ||
+                    if ((selectedPosition.equals("attack") && selectedMonsterCard.isSummoned() && !selectedMonsterCard.isDefensive()) ||
                             (selectedPosition.equals("defense") && selectedMonsterCard.isDefensive()))
                         throw new Exception("this card is already in the wanted position");
                     else {
-                        selectedMonsterCard.setDefensive(!selectedPosition.equals("attack"));
-                        firstPlayerBoard.deselectAll();
-                        secondPlayerBoard.deselectAll();
+                        if(selectedMonsterCard.isPositionChangedInThisTurn())
+                            throw new Exception("you already changed this card position in this turn");
+                        else {
+                            selectedMonsterCard.setDefensive(!selectedPosition.equals("attack"));
+                            selectedMonsterCard.setPositionChangedInThisTurn(true);
+                            firstPlayerBoard.deselectAll();
+                            secondPlayerBoard.deselectAll();
+                        }
                     }
                 }
             }
@@ -761,10 +781,12 @@ public class DuelController {
                 }
             }
             GamePlay.setPhase(GamePhases.BATTLE);
-        } else if (currentPhase.equals(GamePhases.BATTLE)) {
-            resetMonsters(firstPlayersBoard);
+        } else if (currentPhase.equals(GamePhases.BATTLE))
             GamePlay.setPhase(GamePhases.SECOND_MAIN);
-        } else if (currentPhase.equals(GamePhases.SECOND_MAIN)) GamePlay.setPhase(GamePhases.END);
+        else if (currentPhase.equals(GamePhases.SECOND_MAIN)) {
+            resetMonsters(firstPlayersBoard);
+            GamePlay.setPhase(GamePhases.END);
+        }
     }
 
     public String addOneCardToHand(GameBoard playersBoard) {
@@ -801,7 +823,7 @@ public class DuelController {
                         currentMenu.getCardsName(loser);
                 }
 
-                gamePreparation(mainMenu, loser, winner, rounds);
+                gamePreparation(mainMenu, loser, winner, rounds, secondPlayerBoard, firstPlayerBoard);
             } else {
                 winner.setScore(winner.getScore() + 3000);
                 winner.setWins(winner.getWins() + 1);
@@ -826,7 +848,6 @@ public class DuelController {
             activeDeck.addCardToMainDeck(mainDecksCard);
         } else
             throw new Exception("your entered card does not exists in Main/Side Deck");
-
     }
 
     public Card extractCard(GameBoard firstPlayerBoard, GameBoard secondPlayerBoard) {
