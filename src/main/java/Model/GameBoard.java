@@ -45,6 +45,7 @@ public class GameBoard {
     public void fillSpellTrapPlaces(HashMap<Integer, SpellTrapCard> spellTrapsPlace){
         for (int i = 1; i <= 5; i++)
             spellTrapsPlace.put(i, null);
+
     }
 
     public void addCardToHand(Card card){
@@ -71,11 +72,11 @@ public class GameBoard {
     }
 
     public boolean checkSelections(){
-        return !(this.monsterSelectedCard == null &&
+        return this.monsterSelectedCard == null &&
                 this.spellTrapSelectedCard == null &&
                 this.graveyardSelectedCard == null &&
                 this.handSelectedCard == null &&
-                this.fieldZoneSelectedCard == null);
+                this.fieldZoneSelectedCard == null;
     }
 
     public Card getSelectedCard(){
@@ -204,7 +205,7 @@ public class GameBoard {
     }
 
     public void removeCardFromHand(int place){
-        cardsInHand.remove(place);
+        cardsInHand.remove(place - 1);
     }
 
     public void setSelectedHandPlace(int selectedHandPlace) {
@@ -245,6 +246,27 @@ public class GameBoard {
 
     public void setMonstersPlace(MonsterCard monstersCard, int place) {
         monstersPlace.put(place, monstersCard);
+    }
+
+    public void setSummonedMonster(MonsterCard monsterCard){
+        if(monstersPlace.get(1) == null)
+            monstersPlace.put(1, monsterCard);
+        else{
+            if(monstersPlace.get(2) == null)
+                monstersPlace.put(2, monsterCard);
+            else {
+                if(monstersPlace.get(3) == null)
+                    monstersPlace.put(3, monsterCard);
+                else {
+                    if(monstersPlace.get(4) == null)
+                        monstersPlace.put(4, monsterCard);
+                    else {
+                        if(monstersPlace.get(5) == null)
+                            monstersPlace.put(5, monsterCard);
+                    }
+                }
+            }
+        }
     }
 
     public MonsterCard getMonsterCardByPlace(int place) {
@@ -321,9 +343,9 @@ public class GameBoard {
         if(spellTrapCard == null)
             System.out.print("E\t");
         else{
-            if(spellTrapCard.isSet() && spellTrapCard.isEffectActive())
+            if(spellTrapCard.isEffectActive())
                 System.out.print("O\t");
-            else if(spellTrapCard.isSet() && !spellTrapCard.isEffectActive())
+            else/* if(spellTrapCard.isSet() && !spellTrapCard.isEffectActive()) */
                 System.out.print("H\t");
         }
     }
@@ -346,7 +368,7 @@ public class GameBoard {
 
     public boolean doesMonsterZoneContainsSummonedMirageDragon(){
         for(Map.Entry<Integer, MonsterCard> entry : monstersPlace.entrySet()){
-            if(entry.getValue().getName().equals("Mirage Dragon") && entry.getValue().isSummoned())
+            if(entry.getValue() != null && entry.getValue().getName().equals("Mirage Dragon") && entry.getValue().isSummoned())
                 return true;
         }
         return false;

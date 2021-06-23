@@ -11,7 +11,6 @@ public class MonsterCard extends Card {
     private Attribute attribute;
     private MonsterType monsterType;
     private CardType cardType;
-    private final String cardTypeStr = "Monster Card";
     private int level;
     private int attackPoint;
     private int defencePoint;
@@ -128,10 +127,6 @@ public class MonsterCard extends Card {
 
     public void setDefencePoint(int defencePoint) {
         this.defencePoint = defencePoint;
-    }
-
-    public String getCardTypeStr() {
-        return cardTypeStr;
     }
 
     public boolean isPositionChangedInThisTurn() {

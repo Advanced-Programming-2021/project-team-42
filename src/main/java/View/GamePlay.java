@@ -373,7 +373,7 @@ public class GamePlay extends Menu {
             @Override
             public void executeCommand(String command) {
                 DuelController.getInstance().setWinner(secondPlayersBoard, firstPlayersBoard, rounds,
-                        this.parentMenu.parentMenu, (GamePlay) this.parentMenu);
+                        this.parentMenu.parentMenu, (GamePlay) this.parentMenu, true);
             }
         };
     }
@@ -476,11 +476,11 @@ public class GamePlay extends Menu {
         if (firstPlayersBoard.getPlayer().getLP() <= 0 ||
                 secondPlayersBoard.getMainDeckCards().size() == 0)
             DuelController.getInstance().setWinner(firstPlayersBoard, secondPlayersBoard,
-                    rounds, this.parentMenu, this);
+                    rounds, this.parentMenu, this, false);
         if (secondPlayersBoard.getPlayer().getLP() <= 0 ||
                 firstPlayersBoard.getMainDeckCards().size() == 0)
             DuelController.getInstance().setWinner(secondPlayersBoard, firstPlayersBoard,
-                    rounds, this.parentMenu, this);
+                    rounds, this.parentMenu, this, false);
     }
 
     public boolean exchangeCardsCheck(String nickName) {
@@ -510,9 +510,6 @@ public class GamePlay extends Menu {
                 return true;
             else if (response.equalsIgnoreCase("no")) {
                 System.out.println("now it will be " + firstPlayersBoard.getPlayer().getUsername() + " turn");
-//                secondPlayersBoard.drawBoardAsOpponent();
-//                System.out.println("\n--------------------------");
-//                firstPlayersBoard.drawBoardAsYourself();
                 return false;
             } else
                 System.out.println("Please enter valid command");
@@ -541,9 +538,9 @@ public class GamePlay extends Menu {
 
     public void getCardsName(User user) {
         System.out.println("Main Deck Cards:");
-        DeckController.getInstance().printDeckCards(Deck.getDeckByName(user.getActiveDeck()).getMainDeckCards());
+        System.out.println(DeckController.getInstance().printDeckCards(Deck.getDeckByName(user.getActiveDeck()).getMainDeckCards()));
         System.out.println("Side Deck Cards:");
-        DeckController.getInstance().printDeckCards(Deck.getDeckByName(user.getActiveDeck()).getSideDeckCards());
+        System.out.println(DeckController.getInstance().printDeckCards(Deck.getDeckByName(user.getActiveDeck()).getSideDeckCards()));
         System.out.println("if you want to end exchange process Enter 1\n" +
                 "else type your card name in MainDeck");
         String cardsName = scanner.nextLine();

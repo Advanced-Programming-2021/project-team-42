@@ -114,7 +114,7 @@ public class DuelController {
 
     public void activationCheck(GameBoard firstPlayerBoard, GameBoard secondPlayerBoard,
                                 GamePhases currentPhase) throws Exception {
-        if (!firstPlayerBoard.checkSelections() && !secondPlayerBoard.checkSelections())
+        if (firstPlayerBoard.checkSelections() && secondPlayerBoard.checkSelections())
             throw new Exception("no card is selected yet");
         else {
             if (firstPlayerBoard.getHandSelectedCard() == null && firstPlayerBoard.getSpellTrapSelectedCard() == null)
@@ -236,7 +236,7 @@ public class DuelController {
     }
 
     public void deselectCard(GameBoard firstPlayerBoard, GameBoard secondPlayerBoard) throws Exception {
-        if (!firstPlayerBoard.checkSelections() && !secondPlayerBoard.checkSelections())
+        if (firstPlayerBoard.checkSelections() && secondPlayerBoard.checkSelections())
             throw new Exception("no card is selected yet");
         else {
             firstPlayerBoard.deselectAll();
@@ -247,7 +247,7 @@ public class DuelController {
     public int summonMonsterCard(GameBoard firstPlayerBoard,
                                  GameBoard secondPlayerBoard, GamePhases currentPhase,
                                  GamePlay currentMenu, boolean isSummonedOrSetInThisPhase) throws Exception {
-        if (!firstPlayerBoard.checkSelections() && !secondPlayerBoard.checkSelections())
+        if (firstPlayerBoard.checkSelections() && secondPlayerBoard.checkSelections())
             throw new Exception("no card is selected yet");
         else {
             Card selectedCard = extractCard(firstPlayerBoard, secondPlayerBoard);
@@ -300,7 +300,7 @@ public class DuelController {
         selectedCard.setSummoned(true);
         selectedCard.setSet(false);
         selectedCard.setDefensive(false);
-        playersBoard.setMonstersPlace(selectedCard, playersBoard.monsterPlacesSize() + 1);
+        playersBoard.setSummonedMonster(selectedCard);
         playersBoard.removeCardFromHand(playersBoard.getSelectedHandPlace());
         whileSummonTrapsActivation(playersBoard, opponentBoard, currentMenu, selectedCard);
         playersBoard.deselectAll();
@@ -319,7 +319,7 @@ public class DuelController {
             MonsterCard chosenMonsterCard = playersBoard.getMonsterCardByPlace(choice);
             playersBoard.addCardToGraveyard(chosenMonsterCard);
             playersBoard.setMonstersPlace(null, choice);
-            playersBoard.setMonstersPlace(selectedCard, playersBoard.monsterPlacesSize() + 1);
+            playersBoard.setSummonedMonster(selectedCard);
             playersBoard.removeCardFromHand(playersBoard.getSelectedHandPlace());
             whileSummonTrapsActivation(playersBoard, opponentBoard, currentMenu, selectedCard);
             playersBoard.deselectAll();
@@ -343,7 +343,7 @@ public class DuelController {
             playersBoard.addCardToGraveyard(secondTribute);
             playersBoard.setMonstersPlace(null, firstChoice);
             playersBoard.setMonstersPlace(null, secondChoice);
-            playersBoard.setMonstersPlace(selectedCard, playersBoard.monsterPlacesSize() + 1);
+            playersBoard.setSummonedMonster(selectedCard);
             playersBoard.removeCardFromHand(playersBoard.getSelectedHandPlace());
             whileSummonTrapsActivation(playersBoard, opponentBoard, currentMenu, selectedCard);
             playersBoard.deselectAll();
@@ -371,7 +371,7 @@ public class DuelController {
             playersBoard.setMonstersPlace(null, firstChoice);
             playersBoard.setMonstersPlace(null, secondChoice);
             playersBoard.setMonstersPlace(null, thirdChoice);
-            playersBoard.setMonstersPlace(selectedCard, playersBoard.monsterPlacesSize() + 1);
+            playersBoard.setSummonedMonster(selectedCard);
             playersBoard.removeCardFromHand(playersBoard.getSelectedHandPlace());
             whileSummonTrapsActivation(playersBoard, opponentBoard, currentMenu, selectedCard);
             playersBoard.deselectAll();
@@ -382,7 +382,7 @@ public class DuelController {
 
     public void generalCardSet(GameBoard firstPlayerBoard, GameBoard secondPlayerBoard,
                                GamePhases currentPhase, boolean isSummonedOrSetInThisPhase) throws Exception {
-        if (!firstPlayerBoard.checkSelections() && !secondPlayerBoard.checkSelections())
+        if (firstPlayerBoard.checkSelections() && secondPlayerBoard.checkSelections())
             throw new Exception("no card is selected yet");
         else {
             if (firstPlayerBoard.getHandSelectedCard() == null)
@@ -416,7 +416,7 @@ public class DuelController {
                 selectedCard.setSummoned(false);
                 selectedCard.setDefensive(true);
                 selectedCard.setReadyToAttack(false);
-                playerBoard.setMonstersPlace(selectedCard, playerBoard.monsterPlacesSize() + 1);
+                playerBoard.setSummonedMonster(selectedCard);
                 playerBoard.removeCardFromHand(playerBoard.getSelectedHandPlace());
                 GamePlay.setSummonOrSet(true);
                 playerBoard.deselectAll();
@@ -439,7 +439,7 @@ public class DuelController {
 
     public void flipSummon(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard,
                            GamePhases currentPhase, GamePlay currentMenu) throws Exception {
-        if (!firstPlayersBoard.checkSelections() && !secondPlayersBoard.checkSelections())
+        if (firstPlayersBoard.checkSelections() && secondPlayersBoard.checkSelections())
             throw new Exception("you dont select any card yet");
         else {
             if (firstPlayersBoard.getMonsterSelectedCard() == null)
@@ -453,6 +453,7 @@ public class DuelController {
                     if (!monsterCard.isSet() || !monsterCard.isReadyToAttack())
                         throw new Exception("you can’t flip summon this card");
                     else {
+                        whileSummonTrapsActivation(firstPlayersBoard, secondPlayersBoard, currentMenu, monsterCard);
                         monsterCard.setSet(false);
                         monsterCard.setSummoned(true);
                         monsterCard.setReadyToAttack(true);
@@ -469,7 +470,7 @@ public class DuelController {
     public boolean canAttackToCard(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard,
                                    GamePhases currentPhase, int number) throws Exception {
 
-        if (!firstPlayersBoard.checkSelections() && !secondPlayersBoard.checkSelections())
+        if (firstPlayersBoard.checkSelections() && secondPlayersBoard.checkSelections())
             throw new Exception("you dont select any card yet");
         else {
             if (firstPlayersBoard.getMonsterSelectedCard() == null)
@@ -573,8 +574,8 @@ public class DuelController {
         int damage = Math.abs(firstPlayerAP - secondPlayerDP);
         if (firstPlayerAP > secondPlayerDP) {
             secondPlayersBoard.addCardToGraveyard(secondPlayersBoard.getMonsterCardByPlace(number));
-            secondPlayersBoard.setMonstersPlace(null, number);
             yomiShipAndExploderDragonCheck(firstPlayersBoard, secondPlayersBoard, number);
+            secondPlayersBoard.setMonstersPlace(null, number);
             firstPlayersBoard.deselectAll();
             secondPlayersBoard.deselectAll();
             return "opponent’s monster card was " + opponentsCardName + " and destroyed";
@@ -600,8 +601,8 @@ public class DuelController {
         int damage = Math.abs(firstPlayerAP - secondPlayerAP);
         if (firstPlayerAP > secondPlayerAP) {
             secondPlayersBoard.addCardToGraveyard(secondPlayersBoard.getMonsterCardByPlace(number));
-            secondPlayersBoard.setMonstersPlace(null, number);
             yomiShipAndExploderDragonCheck(firstPlayersBoard, secondPlayersBoard, number);
+            secondPlayersBoard.setMonstersPlace(null, number);
             firstPlayersBoard.deselectAll();
             secondPlayersBoard.deselectAll();
             return "the defense position monster is destroyed";
@@ -622,8 +623,8 @@ public class DuelController {
             if (!secondPlayersBoard.getMonsterCardByPlace(number).getName().equals("Exploder Dragon"))
                 secondPlayersBoard.getPlayer().decreaseLP(damage);
             secondPlayersBoard.addCardToGraveyard(secondPlayersBoard.getMonsterCardByPlace(number));
-            secondPlayersBoard.setMonstersPlace(null, number);
             yomiShipAndExploderDragonCheck(firstPlayersBoard, secondPlayersBoard, number);
+            secondPlayersBoard.setMonstersPlace(null, number);
             firstPlayersBoard.deselectAll();
             secondPlayersBoard.deselectAll();
             return "your opponent’s monster is destroyed and your opponent receives" + damage + " battle damage";
@@ -656,7 +657,7 @@ public class DuelController {
     public int directAttack(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard,
                             GamePhases currentPhase, GamePlay currentMenu,
                             boolean isFirstTime) throws Exception {
-        if (!firstPlayersBoard.checkSelections() && !secondPlayersBoard.checkSelections())
+        if (firstPlayersBoard.checkSelections() && secondPlayersBoard.checkSelections())
             throw new Exception("you dont select any card yet");
         else {
             if (firstPlayersBoard.getMonsterSelectedCard() == null)
@@ -694,9 +695,9 @@ public class DuelController {
         }
     }
 
-    public void changePositionReset(GameBoard playerBoard){
-        for (Map.Entry<Integer, MonsterCard> entry : playerBoard.getMonstersPlace().entrySet()){
-            if(entry.getValue() != null)
+    public void changePositionReset(GameBoard playerBoard) {
+        for (Map.Entry<Integer, MonsterCard> entry : playerBoard.getMonstersPlace().entrySet()) {
+            if (entry.getValue() != null)
                 entry.getValue().setPositionChangedInThisTurn(false);
         }
     }
@@ -713,7 +714,7 @@ public class DuelController {
     }
 
     public String showSelectedCard(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard) throws Exception {
-        if (!firstPlayersBoard.checkSelections() && !secondPlayersBoard.checkSelections())
+        if (firstPlayersBoard.checkSelections() && secondPlayersBoard.checkSelections())
             throw new Exception("no card is selected yet");
         else {
             Card yourCard = firstPlayersBoard.getSelectedCard();
@@ -739,7 +740,7 @@ public class DuelController {
     public void changePosition(GameBoard firstPlayerBoard,
                                GameBoard secondPlayerBoard, String selectedPosition,
                                GamePhases currentPhase) throws Exception {
-        if (!firstPlayerBoard.checkSelections() && !secondPlayerBoard.checkSelections())
+        if (firstPlayerBoard.checkSelections() && secondPlayerBoard.checkSelections())
             throw new Exception("no card is selected yet");
         else {
             if (firstPlayerBoard.getMonsterSelectedCard() == null)
@@ -754,7 +755,7 @@ public class DuelController {
                             (selectedPosition.equals("defense") && selectedMonsterCard.isDefensive()))
                         throw new Exception("this card is already in the wanted position");
                     else {
-                        if(selectedMonsterCard.isPositionChangedInThisTurn())
+                        if (selectedMonsterCard.isPositionChangedInThisTurn())
                             throw new Exception("you already changed this card position in this turn");
                         else {
                             selectedMonsterCard.setDefensive(!selectedPosition.equals("attack"));
@@ -773,7 +774,8 @@ public class DuelController {
         if (currentPhase.equals(GamePhases.DRAW)) GamePlay.setPhase(GamePhases.STANDBY);
         else if (currentPhase.equals(GamePhases.STANDBY)) GamePlay.setPhase(GamePhases.FIRST_MAIN);
         else if (currentPhase.equals(GamePhases.FIRST_MAIN)) {
-            if (secondPlayersBoard.doesSpellTrapZoneContainsCard("Time Seal")) {
+            if (secondPlayersBoard.doesSpellTrapZoneContainsCard("Time Seal") &&
+                    !firstPlayersBoard.doesMonsterZoneContainsSummonedMirageDragon()) {
                 if (currentMenu.wantToActiveEffect()) {
                     String activatedCardName = currentMenu.activeEffect("Time Seal");
                     if (activatedCardName.equalsIgnoreCase("Time Seal"))
@@ -797,41 +799,43 @@ public class DuelController {
     }
 
     public void setWinner(GameBoard firstPlayerBoard, GameBoard secondPlayerBoard,
-                          int rounds, Menu mainMenu, GamePlay currentMenu) {
+                          int rounds, Menu mainMenu, GamePlay currentMenu, boolean isSurrender) {
         User winner = firstPlayerBoard.getPlayer();
         User loser = secondPlayerBoard.getPlayer();
         if (rounds == 1) {
             winner.setScore(winner.getScore() + 1000);
             winner.setWins(winner.getWins() + 1);
             loser.setLoses(loser.getLoses() + 1);
-            System.out.println(firstPlayerBoard.getPlayer().getNickname() + " wins the game");
             winner.setBalance(winner.getLP() + 1000 + winner.getBalance());
             loser.setBalance(loser.getBalance() + 100);
-            System.out.println("Winner earn " + (winner.getLP() + 1000));
+            System.out.println(winner.getUsername() + " won the whole match with score: " +
+                    winner.getScore() + "-" + loser.getScore());
             mainMenu.run();
         } else {
             if (firstPlayerBoard.getWinsCount() == 0) {
                 firstPlayerBoard.setWinsCount(firstPlayerBoard.getWinsCount() + 1);
-                firstPlayerBoard.setMaxLP(winner.getLP());
+                if (!isSurrender)
+                    firstPlayerBoard.setMaxLP(winner.getLP());
                 winner.setLP(8000);
                 loser.setLP(8000);
+                System.out.println(winner.getUsername() + " won the game and the score is: " +
+                        winner.getScore() + "-" + loser.getScore());
 
-                if (firstPlayerBoard.getWinsCount() + secondPlayerBoard.getWinsCount() > 1) {
-                    if (currentMenu.exchangeCardsCheck(winner.getNickname()))
-                        currentMenu.getCardsName(winner);
-                    if (currentMenu.exchangeCardsCheck(loser.getNickname()))
-                        currentMenu.getCardsName(loser);
-                }
+                if (currentMenu.exchangeCardsCheck(winner.getNickname()))
+                    currentMenu.getCardsName(winner);
+                if (currentMenu.exchangeCardsCheck(loser.getNickname()))
+                    currentMenu.getCardsName(loser);
+
 
                 gamePreparation(mainMenu, loser, winner, rounds, secondPlayerBoard, firstPlayerBoard);
             } else {
                 winner.setScore(winner.getScore() + 3000);
                 winner.setWins(winner.getWins() + 1);
                 loser.setLoses(loser.getLoses() + 1);
-                System.out.println(firstPlayerBoard.getPlayer().getNickname() + " wins the game");
                 winner.setBalance(winner.getBalance() + 3000 + 3 * firstPlayerBoard.getMaxLP());
                 loser.setBalance(loser.getBalance() + 300);
-                System.out.println("Winner earn " + (3 * firstPlayerBoard.getMaxLP() + 3000));
+                System.out.println(winner.getUsername() + " won the whole match with score: " +
+                        winner.getScore() + "-" + loser.getScore());
                 mainMenu.run();
             }
         }
