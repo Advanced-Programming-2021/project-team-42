@@ -42,7 +42,7 @@ public class GamePlay extends Menu {
         subMenus.put(Pattern.compile("^set$"), setCard());
         subMenus.put(Pattern.compile("^summon$"), summonCard());
         subMenus.put(Pattern.compile("^set --position (attack|defense)$"), changeCardPosition());
-        subMenus.put(Pattern.compile("^activate effect$"), activeEffect());
+        subMenus.put(Pattern.compile("^active effect$"), activeEffect());
         subMenus.put(Pattern.compile("^flip-summon$"), flipSummonCard());
         subMenus.put(Pattern.compile("^attack ([1-5])$"), attackToCard());
         subMenus.put(Pattern.compile("^direct attack$"), directAttack());
