@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class CardController {
     private static CardController instance = null;
-    private static final String FILE_PATH = "\\src\\main\\java\\CardsData";
+    private static final String FILE_PATH = "src\\main\\java\\CardsData";
 
     private CardController() {
     }
@@ -41,7 +41,7 @@ public class CardController {
                 MonsterCard monsterCard = new MonsterCard(name, description, attribute, monsterType,
                         cardType, attackPoint, defencePoint, price, level);
                 Gson gson = new GsonBuilder().create();
-                FILE_WRITER = new FileWriter("\\src\\main\\java\\Database\\Cards" + "\\" + monsterCard.getName() + ".json");
+                FILE_WRITER = new FileWriter("src\\main\\java\\Database\\Cards" + "\\" + monsterCard.getName() + ".json");
                 gson.toJson(monsterCard, FILE_WRITER);
                 MonsterCard.addMonsterCardToList(monsterCard);
                 Card.addCardToList(monsterCard);
@@ -60,7 +60,7 @@ public class CardController {
                 SpellTrapCard spellTrapCard = new SpellTrapCard(name, description, type + " Card",
                         icon, status, price);
                 Gson gson = new GsonBuilder().create();
-                FILE_WRITER = new FileWriter("\\src\\main\\java\\Database\\Cards" + "\\" + spellTrapCard.getName() + ".json");
+                FILE_WRITER = new FileWriter("src\\main\\java\\Database\\Cards" + "\\" + spellTrapCard.getName() + ".json");
                 gson.toJson(spellTrapCard, FILE_WRITER);
                 SpellTrapCard.addSpellTrapCardToList(spellTrapCard);
                 Card.addCardToList(spellTrapCard);

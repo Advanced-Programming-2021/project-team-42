@@ -11,8 +11,8 @@ import java.io.IOException;
 
 public class IAndEController {
     private static IAndEController instance = null;
-    private static final String EXPORTED_CARDS_PATH = "\\src\\main\\java\\Database\\ExportedCards";
-    private static final String IMPORTED_CARDS_PATH = "\\src\\main\\java\\Database\\ImportedCards";
+    private static final String EXPORTED_CARDS_PATH = "src\\main\\java\\Database\\ExportedCards";
+    private static final String IMPORTED_CARDS_PATH = "src\\main\\java\\Database\\ImportedCards";
 
     private IAndEController() {
     }
