@@ -11,7 +11,7 @@ import java.util.*;
 
 public class DeckController {
     private static DeckController instance = null;
-    private final static String DECKS_FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Decks";
+    private final static String DECKS_FILE_PATH = "\\src\\main\\java\\Database\\Decks";
 
     private DeckController() {
     }

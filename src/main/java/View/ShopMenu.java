@@ -21,9 +21,9 @@ public class ShopMenu extends Menu {
 
     public ShopMenu(Menu parentMenu) {
         super("Shop Menu", parentMenu);
-        subMenus.put(Pattern.compile("^shop buy ([a-zA-Z ]+)$"), buyItem());
+        subMenus.put(Pattern.compile("^shop buy ([a-zA-Z ']+)$"), buyItem());
         subMenus.put(Pattern.compile("^shop show --all$"), showCards());
-        subMenus.put(Pattern.compile("^card show ([A-Za-z0-9 ]+)$"), showSpecificCard());
+        subMenus.put(Pattern.compile("^card show ([A-Za-z0-9 ']+)$"), showSpecificCard());
     }
 
     public Menu buyItem() {
@@ -31,7 +31,7 @@ public class ShopMenu extends Menu {
             @Override
             public void executeCommand(String command) {
                 String cardName = null;
-                Pattern pattern = Pattern.compile("shop buy ([a-zA-Z ]+)");
+                Pattern pattern = Pattern.compile("shop buy ([a-zA-Z ']+)");
                 Matcher matcher = pattern.matcher(command);
                 if(matcher.find())
                     cardName = matcher.group(1);

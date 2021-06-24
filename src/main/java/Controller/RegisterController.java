@@ -12,7 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class RegisterController {
-    private static final String FILE_PATH = "C:\\Users\\Vision\\IdeaProjects\\Game First Phase\\src\\main\\java\\Database\\Users";
+    private static final String FILE_PATH = "\\src\\main\\java\\Database\\Users";
     private static RegisterController instance = null;
     private static FileWriter FILE_WRITER;
     private static FileReader FILE_READER;
