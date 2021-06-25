@@ -724,9 +724,9 @@ public class DuelController {
 
                 String activatedCardName = currentMenu.activeEffect(possibleCard);
                 if (activatedCardName.equals("Negate Attack"))
-                    CardController.getInstance().negateAttackEffect(currentMenu, firstPlayersBoard, secondPlayersBoard);
+                    negateAttackEffect(currentMenu, firstPlayersBoard, secondPlayersBoard);
                 else if (activatedCardName.equals("Mirror Force"))
-                    CardController.getInstance().mirrorForceEffect(firstPlayersBoard);
+                    mirrorForceEffect(firstPlayersBoard);
             }
         }
     }
@@ -746,9 +746,9 @@ public class DuelController {
 
                 String activatedCardName = currentMenu.activeEffect(possibleCard);
                 if (activatedCardName.equals("Trap Hole"))
-                    CardController.getInstance().trapHoleEffect(firstPlayersBoard, summonedMonster);
+                    trapHoleEffect(firstPlayersBoard, summonedMonster);
                 else if (activatedCardName.equals("Torrential Tribute"))
-                    CardController.getInstance().torrentialTributeEffect(firstPlayersBoard, secondPlayersBoard);
+                    torrentialTributeEffect(firstPlayersBoard, secondPlayersBoard);
             }
         }
 
@@ -838,6 +838,43 @@ public class DuelController {
                 secondPlayersBoard.getMonsterCardByPlace(number).getName().equals("Exploder Dragon")) {
             firstPlayersBoard.addCardToGraveyard(firstPlayersBoard.getMonsterSelectedCard());
             firstPlayersBoard.setMonstersPlace(null, firstPlayersBoard.getSelectedMonsterPlace());
+        }
+    }
+
+    public void timeSealEffect(GameBoard playersBoard) {
+        playersBoard.setTrapEffect(true);
+    }
+
+    public void negateAttackEffect(GamePlay gamePlay, GameBoard firstPlayersBoard, GameBoard secondPlayersBoard) {
+        firstPlayersBoard.deselectAll();
+        secondPlayersBoard.deselectAll();
+        gamePlay.changePhase();
+    }
+
+    public void mirrorForceEffect(GameBoard playersBoard) {
+        for (Map.Entry<Integer, MonsterCard> entry : playersBoard.getMonstersPlace().entrySet()) {
+            if (entry.getValue() != null && !entry.getValue().isDefensive()) {
+                playersBoard.addCardToGraveyard(entry.getValue());
+                playersBoard.setMonstersPlace(null, entry.getKey());
+            }
+        }
+    }
+
+    public void trapHoleEffect(GameBoard playersBoard, MonsterCard summonedMonster) {
+        if (summonedMonster.getAttackPoint() > 1000)
+            playersBoard.setMonstersPlace(null, playersBoard.getSelectedMonsterPlace());
+    }
+
+    public void torrentialTributeEffect(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard) {
+        for (Map.Entry<Integer, MonsterCard> entry : secondPlayersBoard.getMonstersPlace().entrySet()) {
+            if (entry.getValue() != null)
+                secondPlayersBoard.addCardToGraveyard(entry.getValue());
+            secondPlayersBoard.setMonstersPlace(null, entry.getKey());
+        }
+        for (Map.Entry<Integer, MonsterCard> entry : firstPlayersBoard.getMonstersPlace().entrySet()) {
+            if (entry.getValue() != null)
+                firstPlayersBoard.addCardToGraveyard(entry.getValue());
+            firstPlayersBoard.setMonstersPlace(null, entry.getKey());
         }
     }
 
@@ -966,7 +1003,7 @@ public class DuelController {
                 if (currentMenu.wantToActiveEffect()) {
                     String activatedCardName = currentMenu.activeEffect("Time Seal");
                     if (activatedCardName.equalsIgnoreCase("Time Seal"))
-                        CardController.getInstance().timeSealEffect(firstPlayersBoard);
+                        timeSealEffect(firstPlayersBoard);
                 }
             }
             GamePlay.setPhase(GamePhases.BATTLE);
