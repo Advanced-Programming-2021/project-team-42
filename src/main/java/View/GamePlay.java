@@ -632,6 +632,7 @@ public class GamePlay extends Menu {
         GameBoard temp = fistPlayersBoard;
         this.firstPlayersBoard = secondPlayersBoard;
         this.secondPlayersBoard = temp;
+        DuelController.getInstance().checkFieldZone(this.firstPlayersBoard ,this.secondPlayersBoard);
     }
 
 }
