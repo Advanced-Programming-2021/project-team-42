@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="df00fc17-8333-4381-964a-79f02b9cd655" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/main/java/Controller/CardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/Controller/CardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/Controller/IAndEController.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/Controller/IAndEController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/Controller/ScoreBoardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/Controller/ScoreBoardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/Model/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/Model/Card.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/Model/Enums/Attribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/Model/Enums/Attribute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/Model/Enums/Effect.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/Model/Enums/Effect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/Model/Enums/Icon.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/Model/Enums/Icon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/Model/Enums/Type.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/Model/MonsterCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/Model/MonsterCard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/Model/SpellCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/Model/SpellCard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/Model/TrapCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/Model/TrapCard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/View/IECardMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/View/IECardMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/java/View/ScoreBoardMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/main/java/View/ScoreBoardMenu.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1s7sCj6tLg82e7sQt8orIG24vbx" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="df00fc17-8333-4381-964a-79f02b9cd655" name="Default Changelist" comment="" />
+      <created>1620234836744</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1620234836744</updated>
+      <workItem from="1620234838243" duration="571000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
