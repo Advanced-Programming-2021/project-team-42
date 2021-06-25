@@ -24,7 +24,6 @@ public class GameBoard {
     private int maxLP = 0;
     private int WinsCount = 0;
     private boolean trapEffect;
-    private boolean canActiveTrap = true;
 
     public GameBoard(User player, ArrayList<Card> mainDeckCards, ArrayList<Card> sideDeckCards, ArrayList<Card> cardsInHand) {
         this.player = player;
@@ -110,6 +109,15 @@ public class GameBoard {
                 size++;
         }
         return size;
+    }
+
+    public int getMonstersCountInGraveyard(){
+        int counter = 0;
+        for(Card card : graveYard){
+            if(MonsterCard.getMonsterCardByName(card.getName()) != null)
+                counter++;
+        }
+        return counter;
     }
 
     public MonsterCard getMonsterSelectedCard() {
@@ -279,14 +287,6 @@ public class GameBoard {
 
     public SpellTrapCard getSpellTrapCardByPlace(int place) {
         return spellTrapsPlace.get(place);
-    }
-
-    public boolean isCanActiveTrap() {
-        return canActiveTrap;
-    }
-
-    public void setCanActiveTrap(boolean canActiveTrap) {
-        this.canActiveTrap = canActiveTrap;
     }
 
     public void drawBoardAsOpponent() {

@@ -596,7 +596,7 @@ public class GamePlay extends Menu {
             DuelController.getInstance().setDuelWinner(playerNickName,
                     firstPlayersBoard, secondPlayersBoard, rounds);
             System.out.println("Player with Nickname " + playerNickName + " Wins the game!");
-            execute();
+            this.parentMenu.run();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             this.parentMenu.parentMenu.run();

@@ -19,17 +19,17 @@ public class IAndEController {
 
     public void importCard(String cardName) throws IOException {
         Gson gson = new Gson();
-        FileReader FILE_READER = new FileReader(IMPORTED_CARDS_PATH + "\\" + cardName + ".json");
+        FileReader fileReader = new FileReader(IMPORTED_CARDS_PATH + "\\" + cardName + ".json");
         if (MonsterCard.isMonsterCard(cardName)) {
-            MonsterCard monsterCard = gson.fromJson(FILE_READER, MonsterCard.class);
+            MonsterCard monsterCard = gson.fromJson(fileReader, MonsterCard.class);
             Card.addCardToList(monsterCard);
             MonsterCard.addMonsterCardToList(monsterCard);
         } else {
-            SpellTrapCard spellTrapCard = gson.fromJson(FILE_READER, SpellTrapCard.class);
+            SpellTrapCard spellTrapCard = gson.fromJson(fileReader, SpellTrapCard.class);
             Card.addCardToList(spellTrapCard);
             SpellTrapCard.addSpellTrapCardToList(spellTrapCard);
         }
-        FILE_READER.close();
+        fileReader.close();
     }
 
     public void exportCard(String cardName) throws Exception {
@@ -37,19 +37,16 @@ public class IAndEController {
             throw new Exception("there is no card with given name!");
         else {
             Gson gson = new Gson();
-            FileWriter FILE_WRITER = new FileWriter(EXPORTED_CARDS_PATH + "\\" + cardName + ".json");
+            FileWriter fileWriter = new FileWriter(EXPORTED_CARDS_PATH + "\\" + cardName + ".json");
             if (MonsterCard.isMonsterCard(cardName)) {
                 MonsterCard monsterCard = MonsterCard.getMonsterCardByName(cardName);
-                gson.toJson(monsterCard, FILE_WRITER);
+                gson.toJson(monsterCard, fileWriter);
             } else {
                 SpellTrapCard spellTrapCard = SpellTrapCard.getSpellTrapCardByName(cardName);
-                gson.toJson(spellTrapCard, FILE_WRITER);
+                gson.toJson(spellTrapCard, fileWriter);
             }
-            FILE_WRITER.close();
-
+            fileWriter.close();
         }
-        System.out.println("Can not export card!");
-
     }
 
     public static IAndEController getInstance() {

@@ -2,6 +2,7 @@ package Controller;
 
 import Model.*;
 import Model.Enums.Icon;
+import Model.Enums.MonsterType;
 import View.GamePhases;
 import View.GamePlay;
 import View.Menu;
@@ -136,7 +137,7 @@ public class DuelController {
                                 choseSpellCard.setEffectActive(true);
                                 choseSpellCard.setSet(false);
                                 if (firstPlayerBoard.getFieldZone() != null)
-                                    firstPlayerBoard.getGraveYard().add(firstPlayerBoard.getFieldZone());
+                                    firstPlayerBoard.addCardToGraveyard(firstPlayerBoard.getFieldZone());
                                 firstPlayerBoard.setFieldZone(choseSpellCard);
                                 activeFieldZone(choseSpellCard.getName() ,firstPlayerBoard ,secondPlayerBoard);
                                 firstPlayerBoard.removeCardFromHand(firstPlayerBoard.getSelectedHandPlace());
@@ -188,83 +189,79 @@ public class DuelController {
             case "Raigeki":
                 for (Map.Entry<Integer, MonsterCard> entry : secondPlayersBoard.getMonstersPlace().entrySet()) {
                     if (entry.getValue() != null) {
-                        secondPlayersBoard.getGraveYard().add(entry.getValue());
-                        secondPlayersBoard.getMonstersPlace().put(entry.getKey(), null);
+                        secondPlayersBoard.addCardToGraveyard(entry.getValue());
+                        secondPlayersBoard.setMonstersPlace(null, entry.getKey());
                     }
                 }
-                firstPlayersBoard.getGraveYard().add(spellCard);
-                firstPlayersBoard.setSpellTrapsPlace(null ,firstPlayersBoard.spellTrapPlacesSize());
+                firstPlayersBoard.addCardToGraveyard(spellCard);
+                firstPlayersBoard.setSpellTrapsPlace(null ,firstPlayersBoard.getSelectedSpellTrapPlace());
                 break;
             case "Harpie's Feather Duster":
                 for (Map.Entry<Integer, SpellTrapCard> entry : secondPlayersBoard.getSpellTrapsPlace().entrySet()) {
                     if (entry.getValue() != null) {
-                        secondPlayersBoard.getGraveYard().add(entry.getValue());
-                        secondPlayersBoard.getSpellTrapsPlace().put(entry.getKey(), null);
+                        secondPlayersBoard.addCardToGraveyard(entry.getValue());
+                        secondPlayersBoard.setSpellTrapsPlace(null, entry.getKey());
                     }
                 }
                 if (secondPlayersBoard.getFieldZone() != null) {
-                    secondPlayersBoard.getGraveYard().add(secondPlayersBoard.getFieldZone());
+                    secondPlayersBoard.addCardToGraveyard(secondPlayersBoard.getFieldZone());
                     secondPlayersBoard.setFieldZone(null);
                 }
-                firstPlayersBoard.getGraveYard().add(spellCard);
-                firstPlayersBoard.setSpellTrapsPlace(null ,firstPlayersBoard.spellTrapPlacesSize());
+                firstPlayersBoard.addCardToGraveyard(spellCard);
+                firstPlayersBoard.setSpellTrapsPlace(null ,firstPlayersBoard.getSelectedSpellTrapPlace());
                 break;
             case "Dark Hole":
                 for (Map.Entry<Integer, MonsterCard> entry : secondPlayersBoard.getMonstersPlace().entrySet()) {
                     if (entry.getValue() != null) {
-                        secondPlayersBoard.getGraveYard().add(entry.getValue());
-                        secondPlayersBoard.getMonstersPlace().put(entry.getKey(), null);
+                        secondPlayersBoard.addCardToGraveyard(entry.getValue());
+                        secondPlayersBoard.setSpellTrapsPlace(null, entry.getKey());
                     }
                 }
                 for (Map.Entry<Integer, MonsterCard> entry : firstPlayersBoard.getMonstersPlace().entrySet()) {
                     if (entry.getValue() != null) {
-                        firstPlayersBoard.getGraveYard().add(entry.getValue());
-                        firstPlayersBoard.getMonstersPlace().put(entry.getKey(), null);
+                        firstPlayersBoard.addCardToGraveyard(entry.getValue());
+                        firstPlayersBoard.setSpellTrapsPlace(null, entry.getKey());
                     }
                 }
-                firstPlayersBoard.getGraveYard().add(spellCard);
-                firstPlayersBoard.setSpellTrapsPlace(null ,firstPlayersBoard.spellTrapPlacesSize());
+                firstPlayersBoard.addCardToGraveyard(spellCard);
+                firstPlayersBoard.setSpellTrapsPlace(null ,firstPlayersBoard.getSelectedSpellTrapPlace());
                 break;
             case "Pot of Greed":
                     for (int i = 0; i < 2 ; i++) {
                         int deckSize = firstPlayersBoard.getMainDeckCards().size();
-                        if (deckSize > 0)
-                            firstPlayersBoard.getCardsInHand().add(firstPlayersBoard.getMainDeckCards().get(deckSize - 1));
-                            firstPlayersBoard.getMainDeckCards().remove(deckSize - 1);
+                        if (deckSize > 0) {
+                            firstPlayersBoard.addCardToHand(firstPlayersBoard.getMainDeckCards().get(0));
+                            firstPlayersBoard.getMainDeckCards().remove(0);
+                        }
                     }
-                firstPlayersBoard.getGraveYard().add(spellCard);
+                firstPlayersBoard.addCardToGraveyard(spellCard);
                 firstPlayersBoard.setSpellTrapsPlace(null ,firstPlayersBoard.spellTrapPlacesSize());
                 break;
             case "Terraforming":
                 int deckSize = firstPlayersBoard.getMainDeckCards().size();
-                int counter = 0;
                 for (int i = 0 ; i < deckSize ; i++) {
-                    if (counter == 1) break;
-
                     if (SpellTrapCard.getSpellTrapCardByName(firstPlayersBoard.getMainDeckCards().get(i).getName()) != null) {
-                        SpellTrapCard spell = (SpellTrapCard) firstPlayersBoard.getMainDeckCards().get(i);
-                        if (spell.getCardType().equals("Spell Card")) {
-                            if (spell.getIcon().equals(Icon.FIELD)) {
-                                firstPlayersBoard.getCardsInHand().add(firstPlayersBoard.getMainDeckCards().get(i));
+                        SpellTrapCard spell = SpellTrapCard.getSpellTrapCardByName(firstPlayersBoard.getMainDeckCards().get(i).getName());
+                        if (spell.getCardType().equals("Spell Card") && spell.getIcon().equals(Icon.FIELD)) {
+                                firstPlayersBoard.addCardToHand(spell);
                                 firstPlayersBoard.getMainDeckCards().remove(i);
-                                counter = 1;
-                            }
+                                break;
                         }
                     }
                 }
-                firstPlayersBoard.getGraveYard().add(spellCard);
-                firstPlayersBoard.setSpellTrapsPlace(null ,firstPlayersBoard.spellTrapPlacesSize());
+                firstPlayersBoard.addCardToGraveyard(spellCard);
+                firstPlayersBoard.setSpellTrapsPlace(null ,firstPlayersBoard.getSelectedSpellTrapPlace());
                 break;
-            case "Messenger of peace":
+            case "Messenger of peace": //check
                 for (Map.Entry<Integer, MonsterCard> entry : secondPlayersBoard.getMonstersPlace().entrySet()) {
                     if (entry.getValue() != null) {
-                        if (entry.getValue().getAttackPoint() < 1500)
+                        if (entry.getValue().getAttackPoint() >= 1500)
                             entry.getValue().setReadyToAttack(false);
                     }
                 }
                 for (Map.Entry<Integer, MonsterCard> entry : firstPlayersBoard.getMonstersPlace().entrySet()) {
                     if (entry.getValue() != null) {
-                        if (entry.getValue().getAttackPoint() < 1500)
+                        if (entry.getValue().getAttackPoint() >= 1500)
                             entry.getValue().setReadyToAttack(false);
                     }
                 }
@@ -287,77 +284,63 @@ public class DuelController {
     public void activeFieldZone(String cardName, GameBoard firstPlayersBoard, GameBoard secondPlayersBoard) {
         switch (cardName) {
             case "Yami":
-                System.out.println("-------------------------");
-                for (Map.Entry<Integer, MonsterCard> entry : secondPlayersBoard.getMonstersPlace().entrySet()) {
-                    if (entry.getValue() == null) continue;
-                    if (entry.getValue().getMonsterType().toString().equals("FIEND")
-                            || entry.getValue().getMonsterType().toString().equals("SPELL_CASTER")) {
-                        entry.getValue().setAttackPoint(MonsterCard.getMonsterCardByName(entry.getValue().getName()).getAttackPoint() + 200);
-                        entry.getValue().setDefencePoint(MonsterCard.getMonsterCardByName(entry.getValue().getName()).getDefencePoint() + 200);
-                    }
-                    if (entry.getValue().getMonsterType().toString().equals("FAIRY")) {
-                        entry.getValue().setAttackPoint(MonsterCard.getMonsterCardByName(entry.getValue().getName()).getAttackPoint() - 200);
-                        entry.getValue().setDefencePoint(MonsterCard.getMonsterCardByName(entry.getValue().getName()).getDefencePoint() - 200);
-                    }
-                }
-                for (Map.Entry<Integer, MonsterCard> entry : firstPlayersBoard.getMonstersPlace().entrySet()) {
-                    if (entry.getValue() == null) continue;
-                    if (entry.getValue().getMonsterType().toString().equals("FIEND")
-                            || entry.getValue().getMonsterType().toString().equals("SPELL_CASTER")) {
-                        entry.getValue().setAttackPoint(MonsterCard.getMonsterCardByName(entry.getValue().getName()).getAttackPoint() + 200);
-                        entry.getValue().setDefencePoint(MonsterCard.getMonsterCardByName(entry.getValue().getName()).getDefencePoint() + 200);
-                    }
-                    if (entry.getValue().getMonsterType().toString().equals("FAIRY")) {
-                        entry.getValue().setAttackPoint(MonsterCard.getMonsterCardByName(entry.getValue().getName()).getAttackPoint() - 200);
-                        entry.getValue().setDefencePoint(MonsterCard.getMonsterCardByName(entry.getValue().getName()).getDefencePoint() - 200);
-                    }
-                }
+                yamiEffect(secondPlayersBoard);
+                yamiEffect(firstPlayersBoard);
                 break;
             case "Forest":
-                for (Map.Entry<Integer, MonsterCard> entry : secondPlayersBoard.getMonstersPlace().entrySet()) {
-                    if (entry.getValue() == null) continue;
-                    if (entry.getValue().getMonsterType().toString().equals("INSECT")
-                            || entry.getValue().getMonsterType().toString().equals("BEAST")
-                            || entry.getValue().getMonsterType().toString().equals("BEAST_WARRIOR")) {
-                        entry.getValue().setAttackPoint(MonsterCard.getMonsterCardByName(entry.getValue().getName()).getAttackPoint() + 200);
-                        entry.getValue().setDefencePoint(MonsterCard.getMonsterCardByName(entry.getValue().getName()).getDefencePoint() + 200);
-                    }
-                }
-                for (Map.Entry<Integer, MonsterCard> entry : firstPlayersBoard.getMonstersPlace().entrySet()) {
-                    if (entry.getValue() == null) continue;
-                    if (entry.getValue().getMonsterType().toString().equals("INSECT")
-                            || entry.getValue().getMonsterType().toString().equals("BEAST")
-                            || entry.getValue().getMonsterType().toString().equals("BEAST_WARRIOR")) {
-                        entry.getValue().setAttackPoint(MonsterCard.getMonsterCardByName(entry.getValue().getName()).getAttackPoint() + 200);
-                        entry.getValue().setDefencePoint(MonsterCard.getMonsterCardByName(entry.getValue().getName()).getDefencePoint() + 200);
-                    }
-                }
+                forestEffect(secondPlayersBoard);
+                forestEffect(firstPlayersBoard);
                 break;
             case "Closed Forest":
                 for (Map.Entry<Integer, MonsterCard> entry : firstPlayersBoard.getMonstersPlace().entrySet()) {
                     if (entry.getValue() == null) continue;
-                    if (entry.getValue().getMonsterType().toString().equals("BEAST")) {
+                    if (entry.getValue().getMonsterType().equals(MonsterType.BEAST)) {
                         entry.getValue().setAttackPoint(MonsterCard.getMonsterCardByName(entry.getValue().getName()).getAttackPoint()
-                                + (100 * firstPlayersBoard.getGraveYard().size()));
+                                + (100 * firstPlayersBoard.getMonstersCountInGraveyard()));
                     }
                 }
                 break;
             case "Umiiruka":
-                for (Map.Entry<Integer, MonsterCard> entry : secondPlayersBoard.getMonstersPlace().entrySet()) {
-                    if (entry.getValue() == null) continue;
-                    if (entry.getValue().getMonsterType().toString().equals("AQUA")) {
-                        entry.getValue().setAttackPoint(MonsterCard.getMonsterCardByName(entry.getValue().getName()).getAttackPoint() + 500);
-                        entry.getValue().setDefencePoint(MonsterCard.getMonsterCardByName(entry.getValue().getName()).getDefencePoint() - 400);
-                    }
-                }
-                for (Map.Entry<Integer, MonsterCard> entry : firstPlayersBoard.getMonstersPlace().entrySet()) {
-                    if (entry.getValue() == null) continue;
-                    if (entry.getValue().getMonsterType().toString().equals("AQUA")) {
-                        entry.getValue().setAttackPoint(MonsterCard.getMonsterCardByName(entry.getValue().getName()).getAttackPoint() + 500);
-                        entry.getValue().setDefencePoint(MonsterCard.getMonsterCardByName(entry.getValue().getName()).getDefencePoint() - 400);
-                    }
-                }
+                umiirukaEffect(secondPlayersBoard);
+                umiirukaEffect(firstPlayersBoard);
                 break;
+        }
+    }
+
+    private void umiirukaEffect(GameBoard playerBoard) {
+        for (Map.Entry<Integer, MonsterCard> entry : playerBoard.getMonstersPlace().entrySet()) {
+            if (entry.getValue() == null) continue;
+            if (entry.getValue().getMonsterType().equals(MonsterType.AQUA)) {
+                entry.getValue().setAttackPoint(entry.getValue().getAttackPoint() + 500);
+                entry.getValue().setDefencePoint(entry.getValue().getDefencePoint() - 400);
+            }
+        }
+    }
+
+    private void forestEffect(GameBoard playerBoard) {
+        for (Map.Entry<Integer, MonsterCard> entry : playerBoard.getMonstersPlace().entrySet()) {
+            if (entry.getValue() == null) continue;
+            if (entry.getValue().getMonsterType().equals(MonsterType.INSECT)
+                    || entry.getValue().getMonsterType().equals(MonsterType.BEAST)
+                    || entry.getValue().getMonsterType().equals(MonsterType.BEAST_WARRIOR)) {
+                entry.getValue().setAttackPoint(entry.getValue().getAttackPoint() + 200);
+                entry.getValue().setDefencePoint(entry.getValue().getDefencePoint() + 200);
+            }
+        }
+    }
+
+    private void yamiEffect(GameBoard playerBoard) {
+        for (Map.Entry<Integer, MonsterCard> entry : playerBoard.getMonstersPlace().entrySet()) {
+            if (entry.getValue() == null) continue;
+            if (entry.getValue().getMonsterType().equals(MonsterType.FIEND)
+                    || entry.getValue().getMonsterType().equals(MonsterType.SPELL_CASTER)) {
+                entry.getValue().setAttackPoint(entry.getValue().getAttackPoint() + 200);
+                entry.getValue().setDefencePoint(entry.getValue().getDefencePoint() + 200);
+            }
+            if (entry.getValue().getMonsterType().equals(MonsterType.FAIRY)) {
+                entry.getValue().setAttackPoint(entry.getValue().getAttackPoint() - 200);
+                entry.getValue().setDefencePoint(entry.getValue().getDefencePoint() - 200);
+            }
         }
     }
 
