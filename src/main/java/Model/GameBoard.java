@@ -46,7 +46,6 @@ public class GameBoard {
     public void fillSpellTrapPlaces(HashMap<Integer, SpellTrapCard> spellTrapsPlace){
         for (int i = 1; i <= 5; i++)
             spellTrapsPlace.put(i, null);
-
     }
 
     public void addCardToHand(Card card){
