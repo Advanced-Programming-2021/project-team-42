@@ -463,6 +463,7 @@ public class GamePlay extends Menu {
             System.out.println("Current Phase: End Phase");
             System.out.println("now its " + secondPlayersBoard.getPlayer().getNickname() + " turn");
             DuelController.getInstance().changePositionReset(firstPlayersBoard);
+            firstPlayersBoard.setTrapEffect(false);
             swapPlayers(firstPlayersBoard, secondPlayersBoard);
             isFirstTime = false;
             isCardAddedToHandInThisPhase = false;
