@@ -1,6 +1,7 @@
 package SceneController;
 
 import Controller.UserController;
+import View.Main;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -39,5 +40,13 @@ public class ProfileView extends Application {
     public void changePassWord(MouseEvent mouseEvent) {
         String userName = UserController.getInstance().userName;
         changePassWordError.setText(UserController.getInstance().changePassword(userName ,currentPassWord.getText().trim() ,newPassWord.getText().trim()));
+    }
+
+    public void exitClicked(MouseEvent mouseEvent) {
+        try {
+            MainView.getInstance().start(Main.stage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
