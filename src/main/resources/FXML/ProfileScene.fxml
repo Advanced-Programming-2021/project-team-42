@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<Pane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SceneController.ProfileView">
+
+    <children>
+        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="136.0" layoutY="179.0" prefHeight="17.0" prefWidth="157.0" text="change nickname" textAlignment="CENTER">
+            <font>
+                <Font size="18.0" />
+            </font>
+        </Label>
+        <TextField fx:id="changeNickNameError" alignment="CENTER" layoutX="59.0" layoutY="213.0" prefHeight="25.0" prefWidth="305.0" />
+        <Label layoutX="136.0" layoutY="244.0" prefHeight="17.0" prefWidth="157.0" text="new nickname:" />
+        <TextField fx:id="newNickName" layoutX="136.0" layoutY="261.0" prefHeight="25.0" prefWidth="157.0" />
+        <Button layoutX="136.0" layoutY="300.0" mnemonicParsing="false" onMouseClicked="#changeNickName" prefHeight="25.0" prefWidth="157.0" text="change" />
+        <Label alignment="CENTER" layoutX="597.0" layoutY="179.0" prefHeight="17.0" prefWidth="157.0" text="change password" textAlignment="CENTER">
+            <font>
+                <Font size="18.0" />
+            </font>
+        </Label>
+        <Label layoutX="597.0" layoutY="244.0" prefHeight="17.0" prefWidth="157.0" text="current password:" />
+        <TextField fx:id="currentPassWord" layoutX="597.0" layoutY="261.0" prefHeight="25.0" prefWidth="157.0" />
+        <Label layoutX="597.0" layoutY="295.0" prefHeight="17.0" prefWidth="157.0" text="new password:" />
+        <TextField fx:id="newPassWord" layoutX="597.0" layoutY="313.0" prefHeight="25.0" prefWidth="157.0" />
+        <Button onMouseClicked="#changePassWord" layoutX="597.0" layoutY="355.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="157.0" text="Button" />
+      <TextField fx:id="changePassWordError" alignment="CENTER" layoutX="523.0" layoutY="213.0" prefHeight="25.0" prefWidth="305.0" />
+    </children>
+
+</Pane>

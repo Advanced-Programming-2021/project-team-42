@@ -4,26 +4,30 @@ import Model.User;
 
 public class UserController {
     private static UserController instance = null;
+    public String userName;
 
     private UserController() {
     }
 
-    public void changeNickname(String username, String nickname) throws Exception{
+    public String changeNickname(String username, String nickname) {
         if (User.getUserByNickname(nickname) != null)
-            throw new Exception("user with nickname " + nickname + " already exists");
-        else
+            return ("user with nickname " + nickname + " already exists");
+        else {
             User.getUserByUsername(username).setNickname(nickname);
+        }
+        return "nickname changed successfully";
     }
 
-    public void changePassword(String username, String currentPassword, String newPassword) throws Exception{
-            if (!isPasswordCorrect(username, currentPassword))
-                throw new Exception("Current password is invalid");
-            else {
-                if (currentPassword.equals(newPassword))
-                    throw new Exception("Please enter a new password");
-                else
-                    User.getUserByUsername(username).setPassword(newPassword);
-            }
+    public String changePassword(String username, String currentPassword, String newPassword) {
+        if (!isPasswordCorrect(username, currentPassword))
+            return ("Current password is invalid");
+        else {
+            if (currentPassword.equals(newPassword))
+                return ("Please enter a new password");
+            else
+                User.getUserByUsername(username).setPassword(newPassword);
+            return "password changed successfully";
+        }
     }
 
     public void increaseMoney(User user, int amount) {
