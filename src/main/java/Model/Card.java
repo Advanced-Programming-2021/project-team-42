@@ -9,15 +9,17 @@ public abstract class Card {
     protected int price;
     protected boolean isSet;
     protected String description;
+    protected String cardPath;
 
     static {
         allCards = new ArrayList<>();
     }
 
-    public Card(String name, String description, int price){
+    public Card(String name, String description, String cardPath, int price){
         this.name = name;
         this.description = description;
         this.price = price;
+        this.cardPath = cardPath;
     }
 
     public static void addCardToList(Card card){
@@ -42,6 +44,14 @@ public abstract class Card {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCardPath() {
+        return cardPath;
+    }
+
+    public void setCardPath(String cardPath) {
+        this.cardPath = cardPath;
     }
 
     public String getName() {

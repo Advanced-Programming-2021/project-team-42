@@ -1,10 +1,10 @@
 package SceneController;
 
-import javafx.application.Application;
+
 import javafx.stage.Stage;
 
-public class ShopView extends Application {
-    @Override
+public class ShopView {
+
     public void start(Stage stage) throws Exception {
 
     }

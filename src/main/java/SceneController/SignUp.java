@@ -1,41 +1,50 @@
 package SceneController;
 
 import Controller.DeckController;
-import Controller.LoginController;
+import Controller.RegisterController;
 import View.Main;
-import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class SignUp extends Application {
+public class SignUp {
     private static SignUp instance = null;
+    private static Stage stage;
     public TextField userName;
     public TextField nickName;
-    public TextField password;
+    public PasswordField password;
     public Label error;
 
-    @Override
     public void start(Stage stage) throws Exception {
-        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/FXML/SignUp.fxml"))));
+        SignUp.stage = stage;
+        Image image = new Image(getClass().getResource("/Assets/rsz_loginsignup.jpg").toExternalForm());
+        ImageView imageView = new ImageView(image);
+        Pane pane = FXMLLoader.load(getClass().getResource("/FXML/SignUp.fxml"));
+        pane.getChildren().add(0, imageView);
+        Scene scene = new Scene(pane);
+        stage.setScene(scene);
         stage.show();
     }
 
 
-    public void signUpClicked(MouseEvent mouseEvent) throws Exception {
-        if (LoginController.getInstance().canSignUp(userName.getText().trim() ,nickName.getText().trim() ,password.getText().trim())) {
-            Login.getInstance().start(Main.stage);
-        }
-        else
+    public void signUpClicked() {
+        try{
+            RegisterController.getInstance().createNewUser(userName.getText(), nickName.getText(), password.getText());
+            error.setText("User created successfully");
             error.setVisible(true);
+        } catch (Exception e){
+            error.setText(e.getMessage());
+            error.setVisible(true);
+        }
     }
 
-
-
-    public void moveToLogin(MouseEvent mouseEvent) {
+    public void moveToLogin() {
         try {
             Login.getInstance().start(Main.stage);
         } catch (Exception e) {
@@ -43,10 +52,8 @@ public class SignUp extends Application {
         }
     }
 
-
-
-    public void exitGame(MouseEvent mouseEvent) {
-        LoginController.rewriteData();
+    public void exitGame() {
+        RegisterController.rewriteData();
         DeckController.rewriteData();
         System.exit(0);
     }

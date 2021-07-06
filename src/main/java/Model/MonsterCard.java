@@ -24,8 +24,8 @@ public class MonsterCard extends Card {
     }
 
     public MonsterCard (String name, String description, Attribute attribute,
-                        MonsterType monsterType, CardType cardType, int attackPoint, int defencePoint, int price, int level){
-        super(name, description, price);
+                        MonsterType monsterType, CardType cardType, String cardPath, int attackPoint, int defencePoint, int price, int level){
+        super(name, description, cardPath, price);
         this.attribute = attribute;
         this.monsterType = monsterType;
         this.cardType = cardType;
@@ -61,7 +61,8 @@ public class MonsterCard extends Card {
 
     public static MonsterCard getInstance(MonsterCard monsterCard){
         return new MonsterCard(monsterCard.getName(), monsterCard.getDescription(), monsterCard.getAttribute(),
-                monsterCard.getMonsterType(), monsterCard.getCardType(), monsterCard.getAttackPoint(),
+                monsterCard.getMonsterType(), monsterCard.getCardType(),
+                monsterCard.getCardPath(), monsterCard.getAttackPoint(),
                 monsterCard.getDefencePoint(), monsterCard.getPrice(), monsterCard.getLevel());
     }
 

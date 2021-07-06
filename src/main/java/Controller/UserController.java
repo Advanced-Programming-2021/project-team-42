@@ -4,29 +4,26 @@ import Model.User;
 
 public class UserController {
     private static UserController instance = null;
-    public String userName;
+    private User loggedInUser;
 
     private UserController() {
     }
 
-    public String changeNickname(String username, String nickname) {
+    public void changeNickname(String username, String nickname) throws Exception{
         if (User.getUserByNickname(nickname) != null)
-            return ("user with nickname " + nickname + " already exists");
-        else {
+            throw new Exception("user with nickname " + nickname + " already exists");
+        else
             User.getUserByUsername(username).setNickname(nickname);
-        }
-        return "nickname changed successfully";
     }
 
-    public String changePassword(String username, String currentPassword, String newPassword) {
+    public void changePassword(String username, String currentPassword, String newPassword) throws Exception{
         if (!isPasswordCorrect(username, currentPassword))
-            return ("Current password is invalid");
+            throw new Exception("Current password is invalid");
         else {
             if (currentPassword.equals(newPassword))
-                return ("Please enter a new password");
+                throw new Exception("Please enter a new password");
             else
                 User.getUserByUsername(username).setPassword(newPassword);
-            return "password changed successfully";
         }
     }
 
@@ -43,6 +40,13 @@ public class UserController {
         return user.getPassword().equals(password);
     }
 
+    public User getLoggedInUser() {
+        return loggedInUser;
+    }
+
+    public void setLoggedInUser(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
+    }
 
     public static UserController getInstance() {
         if (instance == null)

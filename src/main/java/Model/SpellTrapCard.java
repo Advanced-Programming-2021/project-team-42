@@ -18,8 +18,8 @@ public class SpellTrapCard extends Card{
     }
 
     public SpellTrapCard (String name, String description, String cardType, Icon icon,
-                      Status status, int price){
-        super(name, description, price);
+                      Status status, String cardPath, int price){
+        super(name, description, cardPath,  price);
         this.icon = icon;
         this.status = status;
         this.cardType = cardType;
@@ -43,7 +43,8 @@ public class SpellTrapCard extends Card{
 
     public static SpellTrapCard getInstance(SpellTrapCard spellTrapCard){
         return new SpellTrapCard(spellTrapCard.getName(), spellTrapCard.getDescription(),
-                spellTrapCard.getCardType(), spellTrapCard.getIcon(), spellTrapCard.getStatus(), spellTrapCard.getPrice());
+                spellTrapCard.getCardType(), spellTrapCard.getIcon(), spellTrapCard.getStatus(),
+                spellTrapCard.getCardPath(), spellTrapCard.getPrice());
     }
 
     public Icon getIcon() { return icon; }

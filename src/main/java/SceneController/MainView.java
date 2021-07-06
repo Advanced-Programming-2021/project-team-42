@@ -5,12 +5,14 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-public class MainView extends Application {
+public class MainView {
     private static MainView instance = null;
     public String userName;
     public Rectangle deckItem;
@@ -21,9 +23,13 @@ public class MainView extends Application {
     public Rectangle ImpExpItem;
     public Rectangle exitItem;
 
-    @Override
     public void start(Stage stage) throws Exception {
-        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/FXML/MainScene.fxml"))));
+        Image image = new Image(getClass().getResource("/Assets/rsz_1background.jpg").toExternalForm());
+        ImageView imageView = new ImageView(image);
+        Pane pane = FXMLLoader.load(getClass().getResource("/FXML/MainScene.fxml"));
+        pane.getChildren().add(0, imageView);
+        Scene scene = new Scene(pane);
+        stage.setScene(scene);
         stage.show();
     }
 

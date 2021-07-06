@@ -38,7 +38,7 @@ public class RegisterMenu extends Menu {
 
                 if (username != null && password != null) {
                     try {
-                        RegisterController.getInstance().loginUser(username, password, this.parentMenu);
+                        RegisterController.getInstance().loginUser(username, password);
                     } catch (Exception e){
                         System.out.println(e.getMessage());
                     }

@@ -1,6 +1,5 @@
 package View;
 
-import Controller.LoginController;
 import SceneController.Login;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -11,7 +10,6 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
-        LoginController.parseUsers();
         RegisterMenu registerMenu = new RegisterMenu(null);
         Menu.setScanner(new Scanner(System.in));
         registerMenu.run();
@@ -19,7 +17,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        this.stage = stage;
-        Login.getInstance().start(this.stage);
+        Main.stage = stage;
+        Login.getInstance().start(Main.stage);
     }
 }

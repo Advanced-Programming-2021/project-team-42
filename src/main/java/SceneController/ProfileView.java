@@ -2,29 +2,36 @@ package SceneController;
 
 import Controller.UserController;
 import View.Main;
-import javafx.application.Application;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class ProfileView extends Application {
+public class ProfileView {
     private static ProfileView instance = null;
+    private static Stage stage;
     public TextField newNickName;
     public TextField currentPassWord;
     public TextField newPassWord;
-    public TextField changeNickNameError;
-    public TextField changePassWordError;
+    public Label changeNickNameError;
+    public Label changePassWordError;
 
 
-    @Override
     public void start(Stage stage) throws Exception {
-        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/FXML/ProfileScene.fxml"))));
+        ProfileView.stage = stage;
+        Image image = new Image(getClass().getResource("/Assets/rsz_2scoreboardnew.jpg").toExternalForm());
+        ImageView imageView = new ImageView(image);
+        Pane pane = FXMLLoader.load(getClass().getResource("/FXML/ProfileScene.fxml"));
+        pane.getChildren().add(0, imageView);
+        Scene scene = new Scene(pane);
+        stage.setScene(scene);
         stage.show();
     }
-
-
 
     public static ProfileView getInstance() {
         if (instance == null)
@@ -32,17 +39,31 @@ public class ProfileView extends Application {
         return instance;
     }
 
-    public void changeNickName(MouseEvent mouseEvent) {
-        String userName = UserController.getInstance().userName;
-        changeNickNameError.setText(UserController.getInstance().changeNickname(userName ,newNickName.getText().trim()));
+    public void changeNickName() {
+        String username = UserController.getInstance().getLoggedInUser().getUsername();
+        try {
+            UserController.getInstance().changeNickname(username, newNickName.getText().trim());
+            changeNickNameError.setText("Nickname changed successfully");
+            changeNickNameError.setVisible(true);
+        } catch (Exception e){
+            changeNickNameError.setText(e.getMessage());
+            changeNickNameError.setVisible(true);
+        }
     }
 
-    public void changePassWord(MouseEvent mouseEvent) {
-        String userName = UserController.getInstance().userName;
-        changePassWordError.setText(UserController.getInstance().changePassword(userName ,currentPassWord.getText().trim() ,newPassWord.getText().trim()));
+    public void changePassWord() {
+        String userName = UserController.getInstance().getLoggedInUser().getUsername();
+        try {
+            UserController.getInstance().changePassword(userName, currentPassWord.getText().trim(), newPassWord.getText().trim());
+            changePassWordError.setText("Password changed successfully");
+            changePassWordError.setVisible(true);
+        } catch (Exception e){
+            changePassWordError.setText(e.getMessage());
+            changePassWordError.setVisible(true);
+        }
     }
 
-    public void exitClicked(MouseEvent mouseEvent) {
+    public void exitClicked() {
         try {
             MainView.getInstance().start(Main.stage);
         } catch (Exception e) {

@@ -51,18 +51,15 @@ public class RegisterController {
         }
     }
 
-    public void loginUser(String username, String password, Menu parentMenu) throws Exception {
+    public void loginUser(String username, String password) throws Exception {
         if (User.getUserByUsername(username) == null)
             throw new Exception("Username and Password did not match!");
         else {
             User user = User.getUserByUsername(username);
             if (!user.getPassword().equals(password))
                 throw new Exception("Username and Password did not match!");
-            else {
-                MainMenu mainMenu = MainMenu.getInstance(parentMenu);
-                mainMenu.setUsersName(username);
-                mainMenu.run();
-            }
+            else
+                UserController.getInstance().setLoggedInUser(user);
         }
     }
 
