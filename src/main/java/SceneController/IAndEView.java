@@ -13,20 +13,18 @@ import javafx.stage.Stage;
 
 public class IAndEView {
     private static IAndEView instance = null;
-    private static Stage stage;
+    public static Stage stage;
     public TextField importedCard;
     public TextField exportedCard;
     public Label importReview;
     public Label exportReview;
-
-    private IAndEView(){}
-
 
     public void start(Stage stage) throws Exception{
         IAndEView.stage = stage;
         Pane pane = FXMLLoader.load(getClass().getResource("/FXML/IAndEScene.fxml"));
         Image image = new Image(getClass().getResource("/Assets/rsz_impexpbackground.jpg").toExternalForm());
         ImageView imageView = new ImageView(image);
+        imageView.setOpacity(0.5);
         pane.getChildren().add(0, imageView);
         Scene scene = new Scene(pane);
         IAndEView.stage.setScene(scene);

@@ -7,8 +7,6 @@ public class ShopView {
     private static ShopView instance = null;
     private static Stage stage;
 
-    private ShopView(){}
-
     public void start(Stage stage){
         ShopView.stage = stage;
     }

@@ -11,8 +11,6 @@ public class DeckView {
     private static DeckView instance = null;
     private static Stage stage;
 
-    private DeckView(){}
-
     public void start(Stage stage) throws Exception{
         DeckView.stage = stage;
         Pane pane = FXMLLoader.load(getClass().getResource("/FXML/DeckScene.fxml"));
