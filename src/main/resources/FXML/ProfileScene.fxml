@@ -83,4 +83,9 @@
          <Font name="Copperplate Gothic Bold" size="12.0" />
       </font>
    </Button>
+   <Label layoutX="62.0" layoutY="426.0" prefHeight="28.0" prefWidth="197.0" text="Change Profile Photo" textAlignment="CENTER" textFill="WHITE">
+      <font>
+         <Font name="Calisto MT Bold" size="20.0" />
+      </font>
+   </Label>
 </Pane>

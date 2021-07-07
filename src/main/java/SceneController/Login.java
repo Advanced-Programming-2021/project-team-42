@@ -10,7 +10,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -69,7 +68,7 @@ public class Login {
 
 
 
-    public void exitGame(MouseEvent mouseEvent) {
+    public void exitGame() {
         RegisterController.rewriteData();
         DeckController.rewriteData();
         System.exit(0);

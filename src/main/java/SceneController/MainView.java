@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -14,6 +13,7 @@ import javafx.stage.Stage;
 
 public class MainView {
     private static MainView instance = null;
+    public static Stage stage;
     public String userName;
     public Rectangle deckItem;
     public Rectangle shopItem;
@@ -24,6 +24,7 @@ public class MainView {
     public Rectangle exitItem;
 
     public void start(Stage stage) throws Exception {
+        MainView.stage = stage;
         Image image = new Image(getClass().getResource("/Assets/rsz_newback.jpg").toExternalForm());
         ImageView imageView = new ImageView(image);
         Pane pane = FXMLLoader.load(getClass().getResource("/FXML/MainScene.fxml"));
@@ -60,13 +61,23 @@ public class MainView {
         exitItem.setStroke(Color.TRANSPARENT);
     }
 
-    public void deckClicked(MouseEvent mouseEvent) {
+    public void deckClicked() {
+        try {
+            DeckView.getInstance().start(MainView.stage);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
-    public void shopClicked(MouseEvent mouseEvent) {
+    public void shopClicked() {
+        try {
+            ShopView.getInstance().start(MainView.stage);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
-    public void scoreBoardClicked(MouseEvent mouseEvent) {
+    public void scoreBoardClicked() {
         try {
             ScoreBoardView.getInstance().start(Main.stage);
         } catch (Exception e) {
@@ -74,7 +85,7 @@ public class MainView {
         }
     }
 
-    public void profileClicked(MouseEvent mouseEvent) {
+    public void profileClicked() {
         try {
             ProfileView.getInstance().start(Main.stage);
         } catch (Exception e) {
@@ -82,15 +93,25 @@ public class MainView {
         }
     }
 
-    public void duelClicked(MouseEvent mouseEvent) {
-    }
-
-    public void ImportExportClicked(MouseEvent mouseEvent) {
-    }
-
-    public void ExitClicked(MouseEvent mouseEvent) {
+    public void duelClicked() {
         try {
-            Login.getInstance().start(Main.stage);
+            DuelView.getInstance().start(Main.stage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void ImportExportClicked() {
+        try {
+            IAndEView.getInstance().start(MainView.stage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void ExitClicked() {
+        try {
+            Login.getInstance().start(MainView.stage);
         } catch (Exception e) {
             e.printStackTrace();
         }
