@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
 
-<Pane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SceneController.MainView">
-   <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="344.0" layoutX="16.0" layoutY="40.0" fx:id="deckItem" onMouseClicked="#deckClicked" stroke="BLACK" strokeType="INSIDE" width="211.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="344.0" layoutX="235.0" layoutY="40.0" fx:id="shopItem" onMouseClicked="#shopClicked" stroke="BLACK" strokeType="INSIDE" width="211.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="344.0" layoutX="454.0" layoutY="40.0" fx:id="scoreBordItem" onMouseClicked="#scoreBoardClicked" stroke="BLACK" strokeType="INSIDE" width="211.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="344.0" layoutX="675.0" layoutY="40.0" fx:id="profileItem" onMouseClicked="#profileClicked" stroke="BLACK" strokeType="INSIDE" width="211.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="84.0" layoutX="675.0" layoutY="505.0" fx:id="duelItem" onMouseClicked="#duelClicked" stroke="BLACK" strokeType="INSIDE" width="211.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="47.0" layoutX="12.0" layoutY="546.0" fx:id="ImpExpItem" onMouseClicked="#ImportExportClicked" stroke="BLACK" strokeType="INSIDE" width="211.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="47.0" layoutX="12.0" layoutY="496.0" fx:id="exitItem" onMouseClicked="#ExitClicked" stroke="BLACK" strokeType="INSIDE" width="211.0" />
-   </children>
+<Pane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SceneController.MainView">
+   <Rectangle fx:id="duelItem" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="84.0" layoutX="654.0" layoutY="502.0" onMouseClicked="#duelClicked" stroke="BLACK" strokeType="INSIDE" width="211.0" />
+   <Rectangle fx:id="exitItem" arcHeight="35.0" arcWidth="35.0" fill="DODGERBLUE" height="47.0" layoutX="14.0" layoutY="538.0" onMouseClicked="#ExitClicked" stroke="BLACK" strokeType="INSIDE" width="211.0" />
+   <Rectangle fx:id="profileItem" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="110.0" layoutX="625.0" layoutY="125.0" onMouseClicked="#profileClicked" stroke="BLACK" strokeType="INSIDE" width="240.0" />
+   <Rectangle fx:id="scoreBoardItem" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="110.0" layoutX="340.0" layoutY="125.0" onMouseClicked="#scoreBoardClicked" stroke="BLACK" strokeType="INSIDE" width="240.0" />
+   <Rectangle fx:id="ImpExpItem" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="110.0" layoutX="55.0" layoutY="125.0" onMouseClicked="#ImportExportClicked" stroke="BLACK" strokeType="INSIDE" width="240.0" />
+   <Rectangle fx:id="deckItem" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="110.0" layoutX="187.5" layoutY="250.0" onMouseClicked="#deckClicked" stroke="BLACK" strokeType="INSIDE" width="240.0" />
+   <Rectangle fx:id="shopItem" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="110.0" layoutX="472.5" layoutY="250.0" onMouseClicked="#shopClicked" stroke="BLACK" strokeType="INSIDE" width="240.0" />
 </Pane>

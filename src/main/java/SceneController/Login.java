@@ -12,11 +12,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class Login {
     private static Login instance = null;
     private static Stage stage;
+    private static MediaPlayer mediaPlayer;
     public TextField userName;
     public PasswordField passWord;
     public Label error;
@@ -29,10 +33,20 @@ public class Login {
         pane.getChildren().add(0, imageView);
         Scene scene = new Scene(pane);
         stage.setScene(scene);
+        playMusic();
         stage.show();
     }
 
-    public void loginClicked() throws Exception {
+    public void playMusic() {
+        Media media = new Media(getClass().getResource("/Assets/1-05 - Normal Duel (DM／GX).mp3").toExternalForm());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        Login.mediaPlayer = mediaPlayer;
+        mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.ZERO));
+        mediaPlayer.play();
+    }
+
+
+    public void loginClicked() {
         try{
             RegisterController.getInstance().loginUser(userName.getText(), passWord.getText());
             MainView.getInstance().start(Main.stage);
@@ -41,12 +55,6 @@ public class Login {
             error.setText(e.getMessage());
             error.setVisible(true);
         }
-//        if (LoginController.getInstance().canLogin(userName.getText() ,passWord.getText())) {
-//            UserController.getInstance().userName = this.userName.getText().trim();
-//            MainView.getInstance().start(Main.stage);
-//        }
-//        else
-//            error.setVisible(true);
     }
 
 

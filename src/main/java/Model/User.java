@@ -13,6 +13,7 @@ public class User {
     private String password;
     private String nickname;
     private String activeDeck;
+    private String pathToProfilePhoto = "/Assets/ProfileImages/Chara001.dds1.png";
     private int wins;
     private int loses;
     private int draws;
@@ -124,6 +125,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPathToProfilePhoto() {
+        return pathToProfilePhoto;
+    }
+
+    public void setPathToProfilePhoto(String pathToProfilePhoto) {
+        this.pathToProfilePhoto = pathToProfilePhoto;
     }
 
     public String getPassword() {

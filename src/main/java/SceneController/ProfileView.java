@@ -6,6 +6,7 @@ import View.Main;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,8 +17,12 @@ public class ProfileView {
     private static ProfileView instance = null;
     private static Stage stage;
     public TextField newNickName;
-    public TextField currentPassWord;
-    public TextField newPassWord;
+    public PasswordField currentPassWord;
+    public PasswordField newPassWord;
+    public ImageView profilePic;
+    public ImageView shownProfilePic;
+    public Label nickname;
+    public Label username;
     public Label changeNickNameError;
     public Label changePassWordError;
 
@@ -33,6 +38,11 @@ public class ProfileView {
         stage.show();
     }
 
+    public void initialize() {
+        UserController.getInstance().load(username, nickname, profilePic);
+        shownProfilePic.setImage(new Image(getClass().getResource("/Assets/ProfileImages/Chara001.dds1.png").toExternalForm()));
+    }
+
     public static ProfileView getInstance() {
         if (instance == null)
             instance = new ProfileView();
@@ -45,7 +55,7 @@ public class ProfileView {
             UserController.getInstance().changeNickname(username, newNickName.getText().trim());
             changeNickNameError.setText("Nickname changed successfully");
             changeNickNameError.setVisible(true);
-        } catch (Exception e){
+        } catch (Exception e) {
             changeNickNameError.setText(e.getMessage());
             changeNickNameError.setVisible(true);
         }
@@ -57,7 +67,7 @@ public class ProfileView {
             UserController.getInstance().changePassword(userName, currentPassWord.getText().trim(), newPassWord.getText().trim());
             changePassWordError.setText("Password changed successfully");
             changePassWordError.setVisible(true);
-        } catch (Exception e){
+        } catch (Exception e) {
             changePassWordError.setText(e.getMessage());
             changePassWordError.setVisible(true);
         }
@@ -69,5 +79,17 @@ public class ProfileView {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void nextPic() {
+        UserController.getInstance().loadImage(shownProfilePic, true);
+    }
+
+    public void previousPic() {
+        UserController.getInstance().loadImage(shownProfilePic, false);
+    }
+
+    public void changeProfilePic() {
+        UserController.getInstance().setProfilePic(profilePic);
     }
 }
