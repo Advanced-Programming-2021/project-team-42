@@ -47,6 +47,7 @@ public class RegisterController {
                 throw new Exception("User with nickname " + nickname + " already exists");
             else {
                 User user = new User(username, password, nickname);
+                rewriteData();
             }
         }
     }

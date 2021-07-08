@@ -1,4 +1,4 @@
-module APP {
+module AP {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.media;

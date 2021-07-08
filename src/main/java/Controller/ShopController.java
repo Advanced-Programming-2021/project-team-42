@@ -24,6 +24,7 @@ public class ShopController {
             } else {
                 user.setBalance(userBalance - cardPrice);
                 user.increaseCard(cardName);
+                throw new Exception("Card added successfully");
             }
         }
     }
