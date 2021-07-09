@@ -1,6 +1,7 @@
 package SceneController;
 
 
+import Controller.RegisterController;
 import Controller.ShopController;
 import Controller.UserController;
 import Model.Card;
@@ -148,6 +149,7 @@ public class ShopView {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 try {
+                    RegisterController.rewriteData();
                     MainView.getInstance().start(MainView.stage);
                 } catch (Exception e) {
                     e.printStackTrace();

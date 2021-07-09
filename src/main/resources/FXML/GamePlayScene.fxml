@@ -9,6 +9,6 @@
 <Pane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="SceneController.GamePlayView"
-            prefHeight="800.0" prefWidth="1200.0">
+            prefHeight="600.0" prefWidth="570.0">
 
 </Pane>

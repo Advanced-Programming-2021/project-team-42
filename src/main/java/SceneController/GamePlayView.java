@@ -14,8 +14,6 @@ public class GamePlayView {
         Image image = new Image(getClass().getResource("/Assets/fie_dark.bmp").toExternalForm());
         ImageView imageView = new ImageView(image);
         Pane pane = FXMLLoader.load(getClass().getResource("/FXML/GamePlayScene.fxml"));
-        imageView.setX(315);
-        imageView.setY(100);
         pane.getChildren().add(0, imageView);
         Scene scene = new Scene(pane);
         stage.setScene(scene);
