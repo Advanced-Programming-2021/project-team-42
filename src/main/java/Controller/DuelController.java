@@ -15,7 +15,7 @@ public class DuelController {
     private DuelController() {
     }
 
-    public void startNewDuel(String player1, String player2, String rounds, Menu parentMenu) throws Exception {
+    public void startNewDuel(String player1, String player2, String rounds) throws Exception {
         if (User.getUserByUsername(player2) == null)
             throw new Exception("user with username " + player2 + " does mot exists!");
         else {
@@ -34,10 +34,8 @@ public class DuelController {
                             if (!rounds.matches("1|3"))
                                 throw new Exception("number of rounds is not supported");
                             else {
-                                System.out.println("new game between " + player1 + " and " +
-                                        player2 + " started");
-                                gamePreparation(parentMenu, User.getUserByUsername(player1), User.getUserByUsername(player2), Integer.parseInt(rounds),
-                                        null, null);
+                                gamePreparation(User.getUserByUsername(player1), User.getUserByUsername(player2), Integer.parseInt(rounds),null, null);
+                                throw new Exception("new game between " + player1 + " and " + player2 + " started");
                             }
                         }
                     }
@@ -46,7 +44,7 @@ public class DuelController {
         }
     }
 
-    public void gamePreparation(Menu parentMenu, User firstPlayer, User secondPlayer, int rounds,
+    public void gamePreparation(User firstPlayer, User secondPlayer, int rounds,
                                 GameBoard firstPlayerBoard, GameBoard secondPlayerBoard) {
         ArrayList<Card> firstPlayersMainCards = createCardsFromDeck(Deck.getDeckByName(firstPlayer.getActiveDeck()).getMainDeckCards());
         ArrayList<Card> firstPlayersSideCards = createCardsFromDeck(Deck.getDeckByName(firstPlayer.getActiveDeck()).getSideDeckCards());
@@ -65,11 +63,11 @@ public class DuelController {
         if (firstPlayerBoard == null && secondPlayerBoard == null) {
             GameBoard firstPlayersBoard = new GameBoard(firstPlayer, firstPlayersMainCards, firstPlayersSideCards, firstPlayersHand);
             GameBoard secondPlayersBoard = new GameBoard(secondPlayer, secondPlayersMainCards, secondPlayersSideCards, secondPlayersHand);
-            GamePlay gamePlay = new GamePlay(parentMenu, firstPlayersBoard, secondPlayersBoard, rounds);
-            gamePlay.run();
+//            GamePlay gamePlay = new GamePlay(parentMenu, firstPlayersBoard, secondPlayersBoard, rounds);
+//            gamePlay.run();
         } else {
-            GamePlay gamePlay = new GamePlay(parentMenu, firstPlayerBoard, secondPlayerBoard, rounds);
-            gamePlay.run();
+//            GamePlay gamePlay = new GamePlay(parentMenu, firstPlayerBoard, secondPlayerBoard, rounds);
+//            gamePlay.run();
         }
     }
 
@@ -146,7 +144,7 @@ public class DuelController {
                             }
                             else {
                                 if (firstPlayerBoard.spellTrapPlacesSize() >= 5)
-                                        throw new Exception("spell card zone is full");
+                                    throw new Exception("spell card zone is full");
                                 else {
                                     choseSpellCard.setEffectActive(true);
                                     choseSpellCard.setSet(false);
@@ -227,13 +225,13 @@ public class DuelController {
                 firstPlayersBoard.setSpellTrapsPlace(null ,firstPlayersBoard.getSelectedSpellTrapPlace());
                 break;
             case "Pot of Greed":
-                    for (int i = 0; i < 2 ; i++) {
-                        int deckSize = firstPlayersBoard.getMainDeckCards().size();
-                        if (deckSize > 0) {
-                            firstPlayersBoard.addCardToHand(firstPlayersBoard.getMainDeckCards().get(0));
-                            firstPlayersBoard.getMainDeckCards().remove(0);
-                        }
+                for (int i = 0; i < 2 ; i++) {
+                    int deckSize = firstPlayersBoard.getMainDeckCards().size();
+                    if (deckSize > 0) {
+                        firstPlayersBoard.addCardToHand(firstPlayersBoard.getMainDeckCards().get(0));
+                        firstPlayersBoard.getMainDeckCards().remove(0);
                     }
+                }
                 firstPlayersBoard.addCardToGraveyard(spellCard);
                 firstPlayersBoard.setSpellTrapsPlace(null ,firstPlayersBoard.spellTrapPlacesSize());
                 break;
@@ -243,9 +241,9 @@ public class DuelController {
                     if (SpellTrapCard.getSpellTrapCardByName(firstPlayersBoard.getMainDeckCards().get(i).getName()) != null) {
                         SpellTrapCard spell = SpellTrapCard.getSpellTrapCardByName(firstPlayersBoard.getMainDeckCards().get(i).getName());
                         if (spell.getCardType().equals("Spell Card") && spell.getIcon().equals(Icon.FIELD)) {
-                                firstPlayersBoard.addCardToHand(spell);
-                                firstPlayersBoard.getMainDeckCards().remove(i);
-                                break;
+                            firstPlayersBoard.addCardToHand(spell);
+                            firstPlayersBoard.getMainDeckCards().remove(i);
+                            break;
                         }
                     }
                 }
@@ -1051,7 +1049,7 @@ public class DuelController {
                     currentMenu.getCardsName(loser);
 
 
-                gamePreparation(mainMenu, loser, winner, rounds, secondPlayerBoard, firstPlayerBoard);
+                gamePreparation(loser, winner, rounds, secondPlayerBoard, firstPlayerBoard);
             } else {
                 winner.setScore(winner.getScore() + 3000);
                 winner.setWins(winner.getWins() + 1);

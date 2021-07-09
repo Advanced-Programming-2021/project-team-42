@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,15 +17,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 
 public class ShopView {
     private static ShopView instance = null;
-    private static Stage stage;
 
     public void start(Stage stage) throws Exception {
-        ShopView.stage = stage;
         Image image = new Image(getClass().getResource("/Assets/50061.png").toExternalForm());
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(600);
@@ -34,6 +35,7 @@ public class ShopView {
         pane.getChildren().add(0, imageView);
         fillCards(pane);
         fillBuyItems(pane);
+        setBackButton(pane);
         scrollPane.setContent(pane);
         Scene scene = new Scene(scrollPane);
         stage.setScene(scene);
@@ -130,6 +132,32 @@ public class ShopView {
     }
 
 
+    public void setBackButton(Pane pane) {
+        Button button = new Button();
+        button.setVisible(true);
+        button.setLayoutX(5);
+        button.setLayoutY(5);
+        button.setMinHeight(25.0);
+        button.setMinWidth(92.0);
+        button.setText("Back");
+        Font font = Font.font("Courier New", FontWeight.BOLD, 12);
+        button.setFont(font);
+        button.setMnemonicParsing(false);
+        button.setStyle("-fx-background-color: #d73535;");
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    MainView.getInstance().start(MainView.stage);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        pane.getChildren().add(99 , button);
+    }
+
+
     public static ShopView getInstance() {
         if (instance == null)
             instance = new ShopView();
@@ -137,11 +165,4 @@ public class ShopView {
     }
 
 
-    public void exitClicked(MouseEvent mouseEvent) {
-        try {
-            MainView.getInstance().start(stage);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 }

@@ -1,14 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<Pane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="SceneController.DuelView"
-            prefHeight="400.0" prefWidth="600.0">
-
+<Pane prefHeight="600.0" prefWidth="900.0"
+      xmlns="http://javafx.com/javafx/11.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="SceneController.DuelView">
+   <children>
+      <Rectangle fx:id="backGround" arcHeight="5.0" arcWidth="5.0" fill="#4a4a4a" height="600.0" stroke="WHITE" strokeType="INSIDE" width="900.0" />
+      <TextField fx:id="secondPlayer" layoutX="349.0" layoutY="288.0" prefHeight="25.0" prefWidth="202.0" />
+      <Label alignment="CENTER" layoutX="349.0" layoutY="256.0" prefHeight="17.0" prefWidth="202.0" text="Enter your opponent's username" textFill="#f7ff06">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="applyButton" layoutX="349.0" layoutY="364.0" mnemonicParsing="false" onMouseClicked="#applyClicked" prefHeight="25.0" prefWidth="202.0" text="apply" textFill="#3dae39">
+          <font>
+              <Font name="System Bold Italic" size="12.0" />
+          </font>
+      </Button>
+      <Label fx:id="Error" alignment="CENTER" layoutX="349.0" layoutY="223.0" prefHeight="17.0" prefWidth="202.0" text="Label" textFill="RED" visible="false">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="backButton" layoutX="788.0" layoutY="553.0" mnemonicParsing="false" onMouseClicked="#exitClicked" prefHeight="25.0" prefWidth="92.0" style="-fx-background-color: #d73535;" text="Back">
+         <font>
+            <Font name="System Bold Italic" size="12.0" />
+         </font></Button>
+      <SplitMenuButton fx:id="chooseRands" alignment="CENTER" layoutX="349.0" layoutY="326.0"  prefHeight="25.0" prefWidth="202.0" text="rands">
+        <items>
+          <MenuItem onAction="#oneRandSelected" text="1 rand" />
+          <MenuItem onAction="#threeRandsSelected" text="3 rands" />
+        </items>
+      </SplitMenuButton>
+   </children>
 </Pane>
