@@ -71,7 +71,7 @@ public class DuelView {
             alert.setAlertType(Alert.AlertType.INFORMATION);
             alert.setContentText(e.getMessage());
             alert.show();
-            //if (e.getMessage().startsWith("new"))
+            if (e.getMessage().startsWith("new"))
             GamePlayView.getInstance().start(MainView.stage);
         }
     }
