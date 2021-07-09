@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="SceneController.GamePlayView"
-            prefHeight="600.0" prefWidth="570.0">
+<Pane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SceneController.GamePlayView">
+   <children>
+      <ImageView fitHeight="600.0" fitWidth="900.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Assets/Field.JPEG" />
+         </image>
+      </ImageView>
+      <Pane fx:id="firstPlayersMonsterZone" layoutX="288.0" layoutY="309.0" prefHeight="88.0" prefWidth="339.0" />
+      <Pane fx:id="firstPlayersSpellTrapZone" layoutX="288.0" layoutY="397.0" prefHeight="88.0" prefWidth="339.0" />
+      <Pane fx:id="firstPlayersFieldZone" layoutX="635.0" layoutY="333.0" prefHeight="88.0" prefWidth="60.0" />
+      <ScrollPane fx:id="firstPlayersCardsInHand" layoutX="206.0" layoutY="485.0" prefHeight="72.0" prefWidth="489.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+        </content>
+      </ScrollPane>
+      <Pane fx:id="secondPlayersMonsterZone" layoutX="288.0" layoutY="201.0" prefHeight="88.0" prefWidth="339.0" />
+      <Pane fx:id="secondPlayersSpellTrapZone" layoutX="288.0" layoutY="113.0" prefHeight="88.0" prefWidth="339.0" />
+      <Pane fx:id="secondPlayersFieldZone" layoutX="219.0" layoutY="172.0" prefHeight="88.0" prefWidth="60.0" />
+      <ScrollPane fx:id="secondPlayersCardsInHand" layoutX="206.0" layoutY="41.0" prefHeight="72.0" prefWidth="489.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+        </content>
+      </ScrollPane>
 
+   </children>
 </Pane>

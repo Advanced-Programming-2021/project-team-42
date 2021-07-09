@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.GameBoard;
 import Model.User;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -13,6 +14,9 @@ public class UserController {
     private static int counter = 0;
     private static String shownImageName;
     private User loggedInUser;
+    private User opponentUser;
+    private GameBoard firstPlayersBoard;
+    private GameBoard secondPlayersBoard;
 
     private UserController() {
     }
@@ -66,6 +70,30 @@ public class UserController {
         if (instance == null)
             instance = new UserController();
         return instance;
+    }
+
+    public User getOpponentUser() {
+        return opponentUser;
+    }
+
+    public void setOpponentUser(User opponentUser) {
+        this.opponentUser = opponentUser;
+    }
+
+    public GameBoard getFirstPlayersBoard() {
+        return firstPlayersBoard;
+    }
+
+    public void setFirstPlayersBoard(GameBoard firstPlayersBoard) {
+        this.firstPlayersBoard = firstPlayersBoard;
+    }
+
+    public GameBoard getSecondPlayersBoard() {
+        return secondPlayersBoard;
+    }
+
+    public void setSecondPlayersBoard(GameBoard secondPlayersBoard) {
+        this.secondPlayersBoard = secondPlayersBoard;
     }
 
     public void loadImage(ImageView shownProfilePic, boolean isNext) {

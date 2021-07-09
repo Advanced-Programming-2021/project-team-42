@@ -65,10 +65,13 @@ public class DuelController {
             GameBoard secondPlayersBoard = new GameBoard(secondPlayer, secondPlayersMainCards, secondPlayersSideCards, secondPlayersHand);
 //            GamePlay gamePlay = new GamePlay(parentMenu, firstPlayersBoard, secondPlayersBoard, rounds);
 //            gamePlay.run();
-        } else {
+//        } else {
 //            GamePlay gamePlay = new GamePlay(parentMenu, firstPlayerBoard, secondPlayerBoard, rounds);
 //            gamePlay.run();
         }
+        UserController.getInstance().setOpponentUser(secondPlayer);
+        UserController.getInstance().setFirstPlayersBoard(firstPlayerBoard);
+        UserController.getInstance().setSecondPlayersBoard(secondPlayerBoard);
     }
 
 
