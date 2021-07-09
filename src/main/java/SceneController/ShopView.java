@@ -21,8 +21,10 @@ import javafx.stage.Stage;
 
 public class ShopView {
     private static ShopView instance = null;
+    private static Stage stage;
 
     public void start(Stage stage) throws Exception {
+        ShopView.stage = stage;
         Image image = new Image(getClass().getResource("/Assets/50061.png").toExternalForm());
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(600);
@@ -135,4 +137,11 @@ public class ShopView {
     }
 
 
+    public void exitClicked(MouseEvent mouseEvent) {
+        try {
+            MainView.getInstance().start(stage);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }

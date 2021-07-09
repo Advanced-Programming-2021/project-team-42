@@ -1,7 +1,23 @@
 package Controller;
 
 import Model.*;
+import SceneController.DeckControlView;
 import com.google.gson.Gson;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 import java.io.File;
 import java.io.FileReader;
@@ -183,6 +199,19 @@ public class DeckController {
         return result.toString();
     }
 
+    public void showAllDecks(User user, VBox vBox){
+        ArrayList<String> usersAllDecks = user.getUserDecks();
+        usersAllDecks.sort(Comparator.naturalOrder());
+        Font font = new Font("Book Antiqua", 24);
+        for (String deckName : usersAllDecks){
+            Text text = new Text(printDeck(deckName));
+            text.setFill(Color.BLACK);
+            text.setFont(font);
+            vBox.getChildren().add(text);
+            vBox.setAlignment(Pos.TOP_CENTER);
+        }
+    }
+
     public String printDeck(String deckName) {
         Deck deck = Deck.getDeckByName(deckName);
         boolean isValid = deck.isValid();
@@ -243,4 +272,71 @@ public class DeckController {
         return instance;
     }
 
+    public void loadCards(ScrollPane deckBox, Deck deck, boolean isSide,
+                          Button addToMainDeck, Button addToSideDeck, Button removeFromDeck) {
+        HashMap<String, Integer> cards;
+        if(!isSide)
+            cards = deck.getMainDeckCards();
+        else
+            cards = deck.getSideDeckCards();
+        HBox hBox = new HBox();
+        for(Map.Entry<String, Integer> entry : cards.entrySet()){
+            for (int i = 0; i < entry.getValue(); i++) {
+                Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getKey()) + ".jpg").toExternalForm());
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(67.2);
+                imageView.setFitHeight(98);
+                imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        DeckControlView.selectedCard = entry.getKey();
+                        DeckControlView.isSide = isSide;
+                        removeFromDeck.setDisable(false);
+                        addToMainDeck.setDisable(true);
+                        addToSideDeck.setDisable(true);
+                    }
+                });
+                hBox.getChildren().add(imageView);
+            }
+        }
+        deckBox.setContent(hBox);
+    }
+
+    public String toCamelCase(String s) {
+        String result = "";
+        String[] tokens = s.split(" ");
+        for (int i = 0, L = tokens.length; i<L; i++) {
+            String token = tokens[i];
+            if (i==0) result += token.toLowerCase();
+            else
+                result += token.substring(0, 1).toUpperCase() +
+                        token.substring(1).toLowerCase();
+        }
+        return result.substring(0, 1).toUpperCase() + result.substring(1);
+    }
+
+    public void loadYourCards(ScrollPane yourCards,
+                              Button removeFromDeck, Button addToMainDeck, Button addToSideDeck) {
+        HBox hBox = new HBox();
+        HashMap<String, Integer> cards = UserController.getInstance().getLoggedInUser().getUserAllCards();
+        for(Map.Entry<String, Integer> entry : cards.entrySet()){
+            for (int i = 0; i < entry.getValue(); i++) {
+                Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getKey()) + ".jpg").toExternalForm());
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(67.2);
+                imageView.setFitHeight(98);
+                imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        DeckControlView.selectedCard = entry.getKey();
+                        addToMainDeck.setDisable(false);
+                        addToSideDeck.setDisable(false);
+                        removeFromDeck.setDisable(true);
+                    }
+                });
+                hBox.getChildren().add(imageView);
+            }
+        }
+        yourCards.setContent(hBox);
+    }
 }
