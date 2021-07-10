@@ -12,7 +12,6 @@ public class SettingView {
         popup.close();
         GamePlayView.stage.close();
         DuelController.getInstance().setWinner(GamePlayView.secondPlayersBoard, GamePlayView.firstPlayersBoard, rounds, true);
-//        MainView.getInstance().start(MainView.stage);
     }
 
     public void exit() {

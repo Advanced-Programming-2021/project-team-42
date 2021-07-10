@@ -1022,8 +1022,6 @@ public class DuelController {
             loser.setLoses(loser.getLoses() + 1);
             winner.setBalance(winner.getLP() + 1000 + winner.getBalance());
             loser.setBalance(loser.getBalance() + 100);
-//            System.out.println(winner.getUsername() + " won the whole match with score: " +
-//                    winner.getScore() + "-" + loser.getScore());
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setContentText(winner.getUsername() + " won the whole match with score: " +
                     winner.getScore() + "-" + loser.getScore());
@@ -1037,8 +1035,6 @@ public class DuelController {
                     firstPlayerBoard.setMaxLP(winner.getLP());
                 winner.setLP(8000);
                 loser.setLP(8000);
-//                System.out.println(winner.getUsername() + " won the game and the score is: " +
-//                        winner.getScore() + "-" + loser.getScore());
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setContentText(winner.getUsername() + " won the game and the score is: " +
                         winner.getScore() + "-" + loser.getScore());
@@ -1052,8 +1048,6 @@ public class DuelController {
                 loser.setLoses(loser.getLoses() + 1);
                 winner.setBalance(winner.getBalance() + 3000 + 3 * firstPlayerBoard.getMaxLP());
                 loser.setBalance(loser.getBalance() + 300);
-//                System.out.println(winner.getUsername() + " won the whole match with score: " +
-//                        winner.getScore() + "-" + loser.getScore());
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setContentText(winner.getUsername() + " won the whole match with score: " +
                         winner.getScore() + "-" + loser.getScore());

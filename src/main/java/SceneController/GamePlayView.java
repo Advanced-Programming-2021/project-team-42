@@ -128,42 +128,6 @@ public class GamePlayView {
     }
 
 
-
-
-
-    public static GamePhases getCurrentPhase() {
-        return currentPhase;
-    }
-
-    public static void setCurrentPhase(GamePhases currentPhase) {
-        GamePlayView.currentPhase = currentPhase;
-    }
-
-    public static boolean isFirstTime() {
-        return FirstTime;
-    }
-
-    public static void setFirstTime(boolean firstTime) {
-        FirstTime = firstTime;
-    }
-
-    public static boolean isSummonedOrSetInThisPhase() {
-        return SummonedOrSetInThisPhase;
-    }
-
-    public static void setSummonedOrSetInThisPhase(boolean summonedOrSetInThisPhase) {
-        SummonedOrSetInThisPhase = summonedOrSetInThisPhase;
-    }
-
-    public boolean isCardAddedToHandInThisPhase() {
-        return CardAddedToHandInThisPhase;
-    }
-
-    public void setCardAddedToHandInThisPhase(boolean cardAddedToHandInThisPhase) {
-        CardAddedToHandInThisPhase = cardAddedToHandInThisPhase;
-    }
-
-
     public Pane loadFirstPlayersMonsterCards() {
         if (mainPane.getChildren().contains(previousFirstPlayerMonsterPane))
             mainPane.getChildren().remove(previousFirstPlayerMonsterPane);
@@ -639,6 +603,37 @@ public class GamePlayView {
 
 
 
+    public static GamePhases getCurrentPhase() {
+        return currentPhase;
+    }
+
+    public static void setCurrentPhase(GamePhases currentPhase) {
+        GamePlayView.currentPhase = currentPhase;
+    }
+
+    public static boolean isFirstTime() {
+        return FirstTime;
+    }
+
+    public static void setFirstTime(boolean firstTime) {
+        FirstTime = firstTime;
+    }
+
+    public static boolean isSummonedOrSetInThisPhase() {
+        return SummonedOrSetInThisPhase;
+    }
+
+    public static void setSummonedOrSetInThisPhase(boolean summonedOrSetInThisPhase) {
+        SummonedOrSetInThisPhase = summonedOrSetInThisPhase;
+    }
+
+    public boolean isCardAddedToHandInThisPhase() {
+        return CardAddedToHandInThisPhase;
+    }
+
+    public void setCardAddedToHandInThisPhase(boolean cardAddedToHandInThisPhase) {
+        CardAddedToHandInThisPhase = cardAddedToHandInThisPhase;
+    }
 
     public void swapPlayers() throws Exception {
         GameBoard temp = firstPlayersBoard;
@@ -648,41 +643,4 @@ public class GamePlayView {
         initialize();
     }
 
-
-
-
-
-//    public void refreshCards() {
-//        for (int i = 0 ; i < 5 ; i++){
-//            if (firstPlayersBoard.getMonstersPlace().containsKey(i+1))
-//                drawFirstPlayersCard(firstPlayersBoard.getMonstersPlace().get(i+1) ,i);
-//        }
-//        for (int i = 0 ; i < 5 ; i++){
-//            if (firstPlayersBoard.getSpellTrapsPlace().containsKey(i+1))
-//                drawFirstPlayersCard(firstPlayersBoard.getSpellTrapsPlace().get(i+1) ,i);
-//        }
-//        if (firstPlayersBoard.getFieldZone() != null) {
-//            Rectangle rectangle = new Rectangle();
-//            rectangle.setX(635.0);
-//            rectangle.setY(333);
-//            rectangle.setFill(new ImagePattern(new Image(getClass().getResource("/Assets/"+ toCamelCase(firstPlayersBoard.getFieldZone().getName()) +".png").toExternalForm())));
-//
-//        }
-//    }
-
-//    public void drawFirstPlayersCard(Card card ,int number) {
-//        Rectangle rectangle = new Rectangle();
-//        rectangle.setY(303);
-//        rectangle.setX(292 + 67*(number+1));
-//        rectangle.setFill(new ImagePattern(new Image(getClass().getResource("/Assets/"+ toCamelCase(card.getName()) +".png").toExternalForm())));
-//        if (MonsterCard.getAllMonsterCards().contains(card)){
-//            rectangle.setY(393);
-//            monsterZone.getChildren().add(rectangle);
-//            monsterCards.put(rectangle ,(MonsterCard) card);
-//        }
-//        else {
-//            spellTrapZone.getChildren().add(rectangle);
-//            spellTrapCards.put(rectangle ,(SpellTrapCard) card);
-//        }
-//    }
 }
