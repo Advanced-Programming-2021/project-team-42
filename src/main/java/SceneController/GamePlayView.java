@@ -552,7 +552,7 @@ public class GamePlayView {
 
 
 
-    public void swapPlayers() {
+    public void swapPlayers() throws Exception {
         GameBoard temp = firstPlayersBoard;
         firstPlayersBoard = secondPlayersBoard;
         secondPlayersBoard = temp;
