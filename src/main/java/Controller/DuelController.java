@@ -1022,6 +1022,7 @@ public class DuelController {
             loser.setLoses(loser.getLoses() + 1);
             winner.setBalance(winner.getLP() + 1000 + winner.getBalance());
             loser.setBalance(loser.getBalance() + 100);
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setContentText(winner.getUsername() + " won the whole match with score: " +
                     winner.getScore() + "-" + loser.getScore());

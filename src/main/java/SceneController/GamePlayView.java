@@ -7,7 +7,6 @@ import Model.GameBoard;
 import Model.MonsterCard;
 import Model.SpellTrapCard;
 import View.GamePhases;
-import View.GamePlay;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -83,8 +82,6 @@ public class GamePlayView {
     public void initialize() throws Exception {
         gameEndCheck();
         gamePhaseLabel.setText(currentPhase.name() + " PHASE");
-//        firstPlayersBoard = UserController.getInstance().getFirstPlayersBoard();
-//        secondPlayersBoard = UserController.getInstance().getSecondPlayersBoard();
         this.mainPane.getChildren().add(loadFirstPlayersMonsterCards());
         this.mainPane.getChildren().add(loadFirstPlayersSpellTrapCards());
         if (loadFirstPlayersFieldZoneCard() != null)
@@ -639,7 +636,7 @@ public class GamePlayView {
         GameBoard temp = firstPlayersBoard;
         firstPlayersBoard = secondPlayersBoard;
         secondPlayersBoard = temp;
-        DuelController.getInstance().checkFieldZone(this.firstPlayersBoard ,this.secondPlayersBoard);
+        DuelController.getInstance().checkFieldZone(firstPlayersBoard ,secondPlayersBoard);
         initialize();
     }
 
