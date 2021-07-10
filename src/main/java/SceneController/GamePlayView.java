@@ -63,8 +63,6 @@ public class GamePlayView {
     public Pane previousFirstPlayerSpellTrapPane;
     public Pane previousSecondPlayerMonsterPane;
     public Pane previousSecondPlayerSpellTrapPane;
-
-
     public Pane previousFirstPlayerFieldZonePane;
     public Pane previousSecondPlayerFieldZonePane;
 
@@ -86,18 +84,16 @@ public class GamePlayView {
         this.mainPane.getChildren().add(loadFirstPlayersSpellTrapCards());
         if (loadFirstPlayersFieldZoneCard() != null)
             this.mainPane.getChildren().add(loadFirstPlayersFieldZoneCard());
-        loadFirstPlayersGraveyard(firstPlayersGraveyard);
         loadFirstPlayersCardsInHand(firstPlayersCardsInHand);
         this.mainPane.getChildren().add(loadSecondPlayersMonsterCards());
         this.mainPane.getChildren().add(loadSecondPlayersSpellTrapCards());
         if (loadSecondPlayersFieldZoneCard() != null)
             this.mainPane.getChildren().add(loadSecondPlayersFieldZoneCard());
-        loadSecondPlayersGraveyard(secondPlayersGraveyard);
         loadSecondPlayersCardsInHand(secondPlayersCardsInHand);
         loadProfiles(yourProfile, opponentProfile, yourUsername, opponentUsername, yourLP, opponentLP, yourNickname, opponentNickname, firstPlayersBoard, secondPlayersBoard);
     }
 
-        public void gameEndCheck() throws Exception {
+    public void gameEndCheck() throws Exception {
         if (firstPlayersBoard.getPlayer().getLP() <= 0 ||
                 secondPlayersBoard.getMainDeckCards().size() == 0) {
             stage.close();
@@ -197,7 +193,6 @@ public class GamePlayView {
         if (firstPlayersBoard.getFieldZone() == null) return null;
         if (mainPane.getChildren().contains(previousFirstPlayerFieldZonePane))
             mainPane.getChildren().remove(previousFirstPlayerFieldZonePane);
-        HBox hBox = new HBox();
         Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(firstPlayersBoard.getFieldZone().getName()) + ".jpg").toExternalForm());
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(67.2);
@@ -215,28 +210,11 @@ public class GamePlayView {
         pane.setLayoutY(333);
         pane.setPrefHeight(88);
         pane.setPrefWidth(60);
-        pane.getChildren().add(hBox);
+        pane.getChildren().add(imageView);
         previousFirstPlayerFieldZonePane = pane;
         return pane;
     }
 
-
-
-    public void loadFirstPlayersGraveyard(Pane pane) {
-        for (int i = 0 ; i < firstPlayersBoard.getGraveYard().size() ; i++) {
-            Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(firstPlayersBoard.getGraveYard().get(i).getName()) + ".jpg").toExternalForm());
-            ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(67.2);
-            imageView.setFitHeight(98);
-            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-
-                }
-            });
-            pane.getChildren().add(0 ,imageView);
-        }
-    }
 
 
 
@@ -341,7 +319,6 @@ public class GamePlayView {
         if (secondPlayersBoard.getFieldZone() == null) return null;
         if (mainPane.getChildren().contains(previousSecondPlayerFieldZonePane))
             mainPane.getChildren().remove(previousSecondPlayerFieldZonePane);
-        HBox hBox = new HBox();
         Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(secondPlayersBoard.getFieldZone().getName()) + ".jpg").toExternalForm());
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(67.2);
@@ -359,28 +336,9 @@ public class GamePlayView {
         pane.setLayoutY(172);
         pane.setPrefHeight(88);
         pane.setPrefWidth(60);
-        pane.getChildren().add(hBox);
+        pane.getChildren().add(imageView);
         previousSecondPlayerFieldZonePane = pane;
         return pane;
-    }
-
-
-
-
-    public void loadSecondPlayersGraveyard(Pane pane) {
-        for (int i = 0 ; i < secondPlayersBoard.getGraveYard().size() ; i++) {
-            Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(secondPlayersBoard.getGraveYard().get(i).getName()) + ".jpg").toExternalForm());
-            ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(67.2);
-            imageView.setFitHeight(98);
-            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-
-                }
-            });
-            pane.getChildren().add(0 ,imageView);
-        }
     }
 
 
