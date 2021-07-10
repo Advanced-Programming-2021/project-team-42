@@ -37,10 +37,12 @@ public class GamePlayView {
     public Pane firstPlayersMonsterZone;
     public Pane firstPlayersSpellTrapZone;
     public Pane firstPlayersFieldZone;
+    public Pane firstPlayersGraveyard;
     public ScrollPane firstPlayersCardsInHand;
     public Pane secondPlayersMonsterZone;
     public Pane secondPlayersSpellTrapZone;
     public Pane secondPlayersFieldZone;
+    public Pane secondPlayersGraveyard;
     public ScrollPane secondPlayersCardsInHand;
 
     public void start(Stage stage) throws Exception {
@@ -60,13 +62,17 @@ public class GamePlayView {
         loadFirstPlayersMonsterCards(firstPlayersMonsterZone);
         loadFirstPlayersSpellTrapCards(firstPlayersSpellTrapZone);
         loadFirstPlayersFieldZoneCard(firstPlayersFieldZone);
+        loadFirstPlayersGraveyard(firstPlayersGraveyard);
         loadFirstPlayersCardsInHand(firstPlayersCardsInHand);
         loadSecondPlayersMonsterCards(secondPlayersMonsterZone);
         loadSecondPlayersSpellTrapCards(secondPlayersSpellTrapZone);
         loadSecondPlayersFieldZoneCard(secondPlayersFieldZone);
+        loadSecondPlayersGraveyard(secondPlayersGraveyard);
         loadSecondPlayersCardsInHand(secondPlayersCardsInHand);
         loadProfiles(yourProfile, opponentProfile, yourUsername, opponentUsername, yourLP, opponentLP, yourNickname, opponentNickname, firstPlayersBoard, secondPlayersBoard);
     }
+
+
 
     private void loadProfiles(ImageView yourProfile, ImageView opponentProfile, Label yourUsername, Label opponentUsername,Label yourLP, Label opponentLP, Label yourNickname, Label opponentNickname, GameBoard firstPlayersBoard, GameBoard secondPlayersBoard) {
         yourProfile.setImage(new Image(getClass().getResource(firstPlayersBoard.getPlayer().getPathToProfilePhoto()).toExternalForm()));
@@ -78,6 +84,8 @@ public class GamePlayView {
         yourNickname.setText("Nickname: " + firstPlayersBoard.getPlayer().getNickname());
         opponentNickname.setText("Nickname: " + secondPlayersBoard.getPlayer().getNickname());
     }
+
+
 
     public void loadFirstPlayersMonsterCards(Pane pane) {
         HBox hBox = new HBox();
@@ -142,6 +150,24 @@ public class GamePlayView {
 
 
 
+    public void loadFirstPlayersGraveyard(Pane pane) {
+        for (int i = 0 ; i < firstPlayersBoard.getGraveYard().size() ; i++) {
+            Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(firstPlayersBoard.getGraveYard().get(i).getName()) + ".jpg").toExternalForm());
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(67.2);
+            imageView.setFitHeight(98);
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+
+                }
+            });
+            pane.getChildren().add(0 ,imageView);
+        }
+    }
+
+
+
     public void loadFirstPlayersCardsInHand(ScrollPane scrollPane) {
         HBox hBox = new HBox();
         for (int i = 0 ; i < firstPlayersBoard.getCardsInHand().size() ; i++) {
@@ -159,6 +185,7 @@ public class GamePlayView {
         }
         scrollPane.setContent(hBox);
     }
+
 
 
     public void loadSecondPlayersMonsterCards(Pane pane) {
@@ -180,6 +207,7 @@ public class GamePlayView {
         }
         pane.getChildren().add(hBox);
     }
+
 
 
 
@@ -205,6 +233,7 @@ public class GamePlayView {
 
 
 
+
     public void loadSecondPlayersFieldZoneCard(Pane pane) {
         if (secondPlayersBoard.getFieldZone() == null) return;
         HBox hBox = new HBox();
@@ -221,6 +250,26 @@ public class GamePlayView {
         hBox.getChildren().add(imageView);
         pane.getChildren().add(hBox);
     }
+
+
+
+
+    public void loadSecondPlayersGraveyard(Pane pane) {
+        for (int i = 0 ; i < secondPlayersBoard.getGraveYard().size() ; i++) {
+            Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(secondPlayersBoard.getGraveYard().get(i).getName()) + ".jpg").toExternalForm());
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(67.2);
+            imageView.setFitHeight(98);
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+
+                }
+            });
+            pane.getChildren().add(0 ,imageView);
+        }
+    }
+    
 
 
 
