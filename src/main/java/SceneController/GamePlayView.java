@@ -7,7 +7,6 @@ import Model.GameBoard;
 import Model.MonsterCard;
 import Model.SpellTrapCard;
 import View.GamePhases;
-import View.GamePlay;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -63,8 +62,8 @@ public class GamePlayView {
     
     public void initialize() {
         gamePhaseLabel.setText(currentPhase.name() + " PHASE");
-//        firstPlayersBoard = UserController.getInstance().getFirstPlayersBoard();
-//        secondPlayersBoard = UserController.getInstance().getSecondPlayersBoard();
+//        this.firstPlayersBoard = UserController.getInstance().getFirstPlayersBoard();
+//        this.secondPlayersBoard = UserController.getInstance().getSecondPlayersBoard();
         loadFirstPlayersMonsterCards(firstPlayersMonsterZone);
         loadFirstPlayersSpellTrapCards(firstPlayersSpellTrapZone);
         loadFirstPlayersFieldZoneCard(firstPlayersFieldZone);
@@ -91,30 +90,6 @@ public class GamePlayView {
         opponentNickname.setText("Nickname: " + secondPlayersBoard.getPlayer().getNickname());
     }
 
-
-
-    public void loadFirstPlayersMonsterCards(Pane pane) {
-        HBox hBox = new HBox();
-        HashMap<Integer, MonsterCard> cards = firstPlayersBoard.getMonstersPlace();
-        for (Map.Entry<Integer, MonsterCard> entry : cards.entrySet()) {
-            if (entry.getValue() == null) continue;
-            Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getValue().getName()) + ".jpg").toExternalForm());
-            ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(67.2);
-            imageView.setFitHeight(98);
-            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    firstPlayersBoard.deselectAll();
-                    secondPlayersBoard.deselectAll();
-                    firstPlayersBoard.setMonsterSelectedCard(entry.getValue());
-                    firstPlayersBoard.setSelectedMonsterPlace(entry.getKey());
-                }
-            });
-            hBox.getChildren().add(imageView);
-        }
-        pane.getChildren().add(hBox);
-    }
 
     public static GamePhases getCurrentPhase() {
         return currentPhase;
@@ -148,6 +123,34 @@ public class GamePlayView {
         CardAddedToHandInThisPhase = cardAddedToHandInThisPhase;
     }
 
+
+
+    public void loadFirstPlayersMonsterCards(Pane pane) {
+        HBox hBox = new HBox();
+        HashMap<Integer, MonsterCard> cards = firstPlayersBoard.getMonstersPlace();
+        for (Map.Entry<Integer, MonsterCard> entry : cards.entrySet()) {
+            if (entry.getValue() == null) continue;
+            Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getValue().getName()) + ".jpg").toExternalForm());
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(67.2);
+            imageView.setFitHeight(98);
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    firstPlayersBoard.deselectAll();
+                    secondPlayersBoard.deselectAll();
+                    firstPlayersBoard.setMonsterSelectedCard(entry.getValue());
+                    firstPlayersBoard.setSelectedMonsterPlace(entry.getKey());
+                }
+            });
+            hBox.getChildren().add(imageView);
+        }
+        pane.getChildren().removeAll();
+        pane.getChildren().add(hBox);
+    }
+
+
+
     private void loadFirstPlayersSpellTrapCards(Pane pane) {
         HBox hBox = new HBox();
         HashMap<Integer, SpellTrapCard> cards = firstPlayersBoard.getSpellTrapsPlace();
@@ -168,6 +171,7 @@ public class GamePlayView {
             });
             hBox.getChildren().add(imageView);
         }
+        pane.getChildren().removeAll();
         pane.getChildren().add(hBox);
     }
 
@@ -175,7 +179,6 @@ public class GamePlayView {
 
     public void loadFirstPlayersFieldZoneCard(Pane pane) {
         if (firstPlayersBoard.getFieldZone() == null) return;
-        HBox hBox = new HBox();
         Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(firstPlayersBoard.getFieldZone().getName()) + ".jpg").toExternalForm());
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(67.2);
@@ -188,8 +191,8 @@ public class GamePlayView {
                 firstPlayersBoard.setFieldZoneSelectedCard(firstPlayersBoard.getFieldZone());
             }
         });
-        hBox.getChildren().add(imageView);
-        pane.getChildren().add(hBox);
+        pane.getChildren().removeAll();
+        pane.getChildren().add(imageView);
     }
 
 
@@ -242,7 +245,8 @@ public class GamePlayView {
         for (Map.Entry<Integer, MonsterCard> entry : cards.entrySet()) {
             if (entry.getValue() == null) continue;
             Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getValue().getName()) + ".jpg").toExternalForm());
-            if (entry.getValue().isSet()) image = new Image(getClass().getResource("/Assets/4009.png").toExternalForm());
+            if (entry.getValue().isSet()) image = new Image(getClass().getResource("/Assets/4008.png").toExternalForm());
+            if (entry.getValue().isDefensive()) image = new Image(getClass().getResource("/Assets/4014.png").toExternalForm());
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(67.2);
             imageView.setFitHeight(98);
@@ -257,6 +261,7 @@ public class GamePlayView {
             });
             hBox.getChildren().add(imageView);
         }
+        pane.getChildren().removeAll();
         pane.getChildren().add(hBox);
     }
 
@@ -284,6 +289,7 @@ public class GamePlayView {
             });
             hBox.getChildren().add(imageView);
         }
+        pane.getChildren().removeAll();
         pane.getChildren().add(hBox);
     }
 
@@ -292,7 +298,6 @@ public class GamePlayView {
 
     public void loadSecondPlayersFieldZoneCard(Pane pane) {
         if (secondPlayersBoard.getFieldZone() == null) return;
-        HBox hBox = new HBox();
         Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(secondPlayersBoard.getFieldZone().getName()) + ".jpg").toExternalForm());
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(67.2);
@@ -305,8 +310,8 @@ public class GamePlayView {
                 secondPlayersBoard.setFieldZoneSelectedCard(secondPlayersBoard.getFieldZone());
             }
         });
-        hBox.getChildren().add(imageView);
-        pane.getChildren().add(hBox);
+        pane.getChildren().removeAll();
+        pane.getChildren().add(imageView);
     }
 
 
@@ -334,7 +339,7 @@ public class GamePlayView {
     public void loadSecondPlayersCardsInHand(ScrollPane scrollPane) {
         HBox hBox = new HBox();
         for (int i = 0 ; i < secondPlayersBoard.getCardsInHand().size() ; i++) {
-            Image image = new Image(getClass().getResource("/Assets/4013.png").toExternalForm());
+            Image image = new Image(getClass().getResource("/Assets/4009.png").toExternalForm());
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(67.2);
             imageView.setFitHeight(98);
@@ -465,6 +470,27 @@ public class GamePlayView {
     }
 
     public void yourGraveyard(MouseEvent mouseEvent) {
+        Stage stage = new Stage();
+        stage.setHeight(270);
+        stage.setWidth(185);
+        ScrollPane scrollPane = new ScrollPane();
+        HBox hBox = new HBox();
+        for (int i = 0 ; i < secondPlayersBoard.getGraveYard().size() ; i++) {
+            Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(secondPlayersBoard.getGraveYard().get(i).getName()) + ".jpg").toExternalForm());
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(185);
+            imageView.setFitHeight(270);
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+
+                }
+            });
+            hBox.getChildren().add(imageView);
+        }
+        scrollPane.setContent(hBox);
+        stage.setScene(new Scene(scrollPane));
+        stage.show();
     }
 
     public void opponentGraveyard(MouseEvent mouseEvent) {
@@ -476,6 +502,7 @@ public class GamePlayView {
         firstPlayersBoard = secondPlayersBoard;
         secondPlayersBoard = temp;
         DuelController.getInstance().checkFieldZone(this.firstPlayersBoard ,this.secondPlayersBoard);
+        initialize();
     }
 
 
