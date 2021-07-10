@@ -483,7 +483,7 @@ public class DuelController {
             playersBoard.removeCardFromHand(playersBoard.getSelectedHandPlace());
             whileSummonTrapsActivation(playersBoard, opponentBoard, currentMenu, selectedCard);
             playersBoard.deselectAll();
-            GamePlay.setSummonOrSet(true);
+            GamePlayView.setSummonedOrSetInThisPhase(true);
         }
     }
 
@@ -507,7 +507,7 @@ public class DuelController {
             playersBoard.removeCardFromHand(playersBoard.getSelectedHandPlace());
             whileSummonTrapsActivation(playersBoard, opponentBoard, currentMenu, selectedCard);
             playersBoard.deselectAll();
-            GamePlay.setSummonOrSet(true);
+            GamePlayView.setSummonedOrSetInThisPhase(true);
         }
     }
 
@@ -535,7 +535,7 @@ public class DuelController {
             playersBoard.removeCardFromHand(playersBoard.getSelectedHandPlace());
             whileSummonTrapsActivation(playersBoard, opponentBoard, currentMenu, selectedCard);
             playersBoard.deselectAll();
-            GamePlay.setSummonOrSet(true);
+            GamePlayView.setSummonedOrSetInThisPhase(true);
         }
 
     }
@@ -578,7 +578,7 @@ public class DuelController {
                 selectedCard.setReadyToAttack(false);
                 playerBoard.setSummonedMonster(selectedCard);
                 playerBoard.removeCardFromHand(playerBoard.getSelectedHandPlace());
-                GamePlay.setSummonOrSet(true);
+                GamePlayView.setSummonedOrSetInThisPhase(true);
                 playerBoard.deselectAll();
             }
         }
@@ -595,14 +595,14 @@ public class DuelController {
             playerBoard.setFieldZone(selectedCard);
             playerBoard.removeCardFromHand(playerBoard.getSelectedHandPlace());
             playerBoard.deselectAll();
-            GamePlay.setSummonOrSet(true);
+            GamePlayView.setSummonedOrSetInThisPhase(true);
         } else {
             selectedCard.setSet(true);
             selectedCard.setEffectActive(false);
             playerBoard.setSpellTrapsPlace(selectedCard, playerBoard.spellTrapPlacesSize() + 1);
             playerBoard.removeCardFromHand(playerBoard.getSelectedHandPlace());
             playerBoard.deselectAll();
-            GamePlay.setSummonOrSet(true);
+            GamePlayView.setSummonedOrSetInThisPhase(true);
         }
     }
 
