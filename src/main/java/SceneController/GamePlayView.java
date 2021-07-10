@@ -275,7 +275,7 @@ public class GamePlayView {
         for (Map.Entry<Integer, MonsterCard> entry : cards.entrySet()) {
             if (entry.getValue() == null) continue;
             Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getValue().getName()) + ".jpg").toExternalForm());
-            if (entry.getValue().isSet()) image = new Image(getClass().getResource("/Assets/4009.png").toExternalForm());
+            if (entry.getValue().isSet()) image = new Image(getClass().getResource("/Assets/4008.png").toExternalForm());
             if (entry.getValue().isDefensive()) image = new Image(getClass().getResource("/Assets/4014.png").toExternalForm());
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(67.2);
