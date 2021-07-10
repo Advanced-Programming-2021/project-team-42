@@ -1,7 +1,10 @@
 package SceneController;
 
+
 import Controller.UserController;
 import Model.GameBoard;
+import Model.MonsterCard;
+import Model.SpellTrapCard;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -12,6 +15,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GamePlayView {
     private static GamePlayView instance = null;
@@ -55,9 +60,10 @@ public class GamePlayView {
 
     public void loadFirstPlayersMonsterCards(Pane pane) {
         HBox hBox = new HBox();
-        for (int i = 0; i < 5; i++) {
-            if (!firstPlayersBoard.getMonstersPlace().containsKey(i+1)) continue;
-            Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(firstPlayersBoard.getMonstersPlace().get(i+1).getName()) + ".jpg").toExternalForm());
+        HashMap<Integer, MonsterCard> cards = UserController.getInstance().getFirstPlayersBoard().getMonstersPlace();
+        for (Map.Entry<Integer, MonsterCard> entry : cards.entrySet()) {
+            if (entry.getValue() == null) continue;
+            Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getValue().getName()) + ".jpg").toExternalForm());
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(67.2);
             imageView.setFitHeight(98);
@@ -76,9 +82,10 @@ public class GamePlayView {
 
     private void loadFirstPlayersSpellTrapCards(Pane pane) {
         HBox hBox = new HBox();
-        for (int i = 0; i < 5; i++) {
-            if (!firstPlayersBoard.getSpellTrapsPlace().containsKey(i+1)) continue;
-            Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(firstPlayersBoard.getSpellTrapsPlace().get(i+1).getName()) + ".jpg").toExternalForm());
+        HashMap<Integer, SpellTrapCard> cards = UserController.getInstance().getFirstPlayersBoard().getSpellTrapsPlace();
+        for (Map.Entry<Integer, SpellTrapCard> entry : cards.entrySet()) {
+            if (entry.getValue() == null) continue;
+            Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getValue().getName()) + ".jpg").toExternalForm());
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(67.2);
             imageView.setFitHeight(98);
@@ -135,9 +142,10 @@ public class GamePlayView {
 
     public void loadSecondPlayersMonsterCards(Pane pane) {
         HBox hBox = new HBox();
-        for (int i = 0; i < 5; i++) {
-            if (!secondPlayersBoard.getMonstersPlace().containsKey(i+1)) continue;
-            Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(secondPlayersBoard.getMonstersPlace().get(i+1).getName()) + ".jpg").toExternalForm());
+        HashMap<Integer, MonsterCard> cards = UserController.getInstance().getSecondPlayersBoard().getMonstersPlace();
+        for (Map.Entry<Integer, MonsterCard> entry : cards.entrySet()) {
+            if (entry.getValue() == null) continue;
+            Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getValue().getName()) + ".jpg").toExternalForm());
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(67.2);
             imageView.setFitHeight(98);
@@ -156,9 +164,10 @@ public class GamePlayView {
 
     private void loadSecondPlayersSpellTrapCards(Pane pane) {
         HBox hBox = new HBox();
-        for (int i = 0; i < 5; i++) {
-            if (!secondPlayersBoard.getSpellTrapsPlace().containsKey(i+1)) continue;
-            Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(secondPlayersBoard.getSpellTrapsPlace().get(i+1).getName()) + ".jpg").toExternalForm());
+        HashMap<Integer, SpellTrapCard> cards = UserController.getInstance().getSecondPlayersBoard().getSpellTrapsPlace();
+        for (Map.Entry<Integer, SpellTrapCard> entry : cards.entrySet()) {
+            if (entry.getValue() == null) continue;
+            Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getValue().getName()) + ".jpg").toExternalForm());
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(67.2);
             imageView.setFitHeight(98);

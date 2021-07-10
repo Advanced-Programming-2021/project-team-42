@@ -6,6 +6,12 @@ import Model.Enums.MonsterType;
 import View.GamePhases;
 import View.GamePlay;
 import View.Menu;
+import javafx.event.EventHandler;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 
 import java.util.*;
 
@@ -63,15 +69,13 @@ public class DuelController {
         if (firstPlayerBoard == null && secondPlayerBoard == null) {
             GameBoard firstPlayersBoard = new GameBoard(firstPlayer, firstPlayersMainCards, firstPlayersSideCards, firstPlayersHand);
             GameBoard secondPlayersBoard = new GameBoard(secondPlayer, secondPlayersMainCards, secondPlayersSideCards, secondPlayersHand);
-//            GamePlay gamePlay = new GamePlay(parentMenu, firstPlayersBoard, secondPlayersBoard, rounds);
-//            gamePlay.run();
-//        } else {
-//            GamePlay gamePlay = new GamePlay(parentMenu, firstPlayerBoard, secondPlayerBoard, rounds);
-//            gamePlay.run();
+            UserController.getInstance().setFirstPlayersBoard(firstPlayersBoard);
+            UserController.getInstance().setSecondPlayersBoard(secondPlayersBoard);
+        } else {
+            UserController.getInstance().setFirstPlayersBoard(firstPlayerBoard);
+            UserController.getInstance().setSecondPlayersBoard(secondPlayerBoard);
         }
         UserController.getInstance().setOpponentUser(secondPlayer);
-        UserController.getInstance().setFirstPlayersBoard(firstPlayerBoard);
-        UserController.getInstance().setSecondPlayersBoard(secondPlayerBoard);
     }
 
 
@@ -1094,4 +1098,6 @@ public class DuelController {
             instance = new DuelController();
         return instance;
     }
+
+
 }

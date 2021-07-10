@@ -14,7 +14,7 @@
       <Pane fx:id="firstPlayersMonsterZone" layoutX="288.0" layoutY="309.0" prefHeight="88.0" prefWidth="339.0" />
       <Pane fx:id="firstPlayersSpellTrapZone" layoutX="288.0" layoutY="397.0" prefHeight="88.0" prefWidth="339.0" />
       <Pane fx:id="firstPlayersFieldZone" layoutX="635.0" layoutY="333.0" prefHeight="88.0" prefWidth="60.0" />
-      <ScrollPane fx:id="firstPlayersCardsInHand" layoutX="206.0" layoutY="485.0" prefHeight="72.0" prefWidth="489.0">
+      <ScrollPane fx:id="firstPlayersCardsInHand" layoutX="206.0" layoutY="485.0" prefHeight="88.0" prefWidth="489.0">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
         </content>
@@ -22,7 +22,7 @@
       <Pane fx:id="secondPlayersMonsterZone" layoutX="288.0" layoutY="201.0" prefHeight="88.0" prefWidth="339.0" />
       <Pane fx:id="secondPlayersSpellTrapZone" layoutX="288.0" layoutY="113.0" prefHeight="88.0" prefWidth="339.0" />
       <Pane fx:id="secondPlayersFieldZone" layoutX="219.0" layoutY="172.0" prefHeight="88.0" prefWidth="60.0" />
-      <ScrollPane fx:id="secondPlayersCardsInHand" layoutX="206.0" layoutY="41.0" prefHeight="72.0" prefWidth="489.0">
+      <ScrollPane fx:id="secondPlayersCardsInHand" layoutX="206.0" layoutY="25.0" prefHeight="88.0" prefWidth="489.0">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
         </content>
