@@ -284,21 +284,21 @@ public class GamePlay extends Menu {
         return new Menu("Attack to Card", this) {
             @Override
             public void executeCommand(String command) {
-                int place = 0;
-                Pattern pattern = Pattern.compile("(\\d)");
-                Matcher matcher = pattern.matcher(command);
-                if (matcher.find())
-                    place = Integer.parseInt(matcher.group(1));
-
-                try {
-                    if (DuelController.getInstance().canAttackToCard(firstPlayersBoard, secondPlayersBoard, currentPhase, place))
-                        System.out.println(DuelController.getInstance().attackToCard(firstPlayersBoard, secondPlayersBoard,
-                                (GamePlay) this.parentMenu, place));
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-
-                parentMenu.execute();
+//                int place = 0;
+//                Pattern pattern = Pattern.compile("(\\d)");
+//                Matcher matcher = pattern.matcher(command);
+//                if (matcher.find())
+//                    place = Integer.parseInt(matcher.group(1));
+//
+//                try {
+//                    if (DuelController.getInstance().canAttackToCard(firstPlayersBoard, secondPlayersBoard, currentPhase, place))
+//                        System.out.println(DuelController.getInstance().attackToCard(firstPlayersBoard, secondPlayersBoard,
+//                                (GamePlay) this.parentMenu, place));
+//                } catch (Exception e) {
+//                    System.out.println(e.getMessage());
+//                }
+//
+//                parentMenu.execute();
             }
         };
     }
@@ -370,8 +370,8 @@ public class GamePlay extends Menu {
         return new Menu("Surrender", this) {
             @Override
             public void executeCommand(String command) {
-                DuelController.getInstance().setWinner(secondPlayersBoard, firstPlayersBoard, rounds,
-                        this.parentMenu.parentMenu, (GamePlay) this.parentMenu, true);
+//                DuelController.getInstance().setWinner(secondPlayersBoard, firstPlayersBoard, rounds,
+//                        this.parentMenu.parentMenu, (GamePlay) this.parentMenu, true);
             }
         };
     }
@@ -406,7 +406,6 @@ public class GamePlay extends Menu {
     }
 
     public void execute() {
-        gameEndCheck();
         phaseChangeToDo();
         secondPlayersBoard.drawBoardAsOpponent();
         System.out.println("\n--------------------------");
@@ -471,16 +470,16 @@ public class GamePlay extends Menu {
         }
     }
 
-    public void gameEndCheck() {
-        if (firstPlayersBoard.getPlayer().getLP() <= 0 ||
-                secondPlayersBoard.getMainDeckCards().size() == 0)
-            DuelController.getInstance().setWinner(firstPlayersBoard, secondPlayersBoard,
-                    rounds, this.parentMenu, this, false);
-        if (secondPlayersBoard.getPlayer().getLP() <= 0 ||
-                firstPlayersBoard.getMainDeckCards().size() == 0)
-            DuelController.getInstance().setWinner(secondPlayersBoard, firstPlayersBoard,
-                    rounds, this.parentMenu, this, false);
-    }
+//    public void gameEndCheck() {
+//        if (firstPlayersBoard.getPlayer().getLP() <= 0 ||
+//                secondPlayersBoard.getMainDeckCards().size() == 0)
+//            DuelController.getInstance().setWinner(firstPlayersBoard, secondPlayersBoard,
+//                    rounds, this.parentMenu, this, false);
+//        if (secondPlayersBoard.getPlayer().getLP() <= 0 ||
+//                firstPlayersBoard.getMainDeckCards().size() == 0)
+//            DuelController.getInstance().setWinner(secondPlayersBoard, firstPlayersBoard,
+//                    rounds, this.parentMenu, this, false);
+//    }
 
     public boolean exchangeCardsCheck(String nickName) {
         System.out.println(nickName + " Do you want to exchange cards between MainDeck and SideDeck?");

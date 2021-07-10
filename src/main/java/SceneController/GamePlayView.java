@@ -7,23 +7,29 @@ import Model.GameBoard;
 import Model.MonsterCard;
 import Model.SpellTrapCard;
 import View.GamePhases;
+import View.GamePlay;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GamePlayView {
     private static GamePlayView instance = null;
+    public static Stage stage;
     public ImageView opponentProfile;
     public ImageView yourProfile;
     public Label opponentLP;
@@ -34,8 +40,8 @@ public class GamePlayView {
     public Label opponentUsername;
     private static GamePhases currentPhase = GamePhases.DRAW;
     public Label gamePhaseLabel;
-    private GameBoard firstPlayersBoard = UserController.getInstance().getFirstPlayersBoard();
-    private GameBoard secondPlayersBoard = UserController.getInstance().getSecondPlayersBoard();
+    public static GameBoard firstPlayersBoard = UserController.getInstance().getFirstPlayersBoard();
+    public static GameBoard secondPlayersBoard = UserController.getInstance().getSecondPlayersBoard();
     public Pane firstPlayersMonsterZone;
     public Pane firstPlayersSpellTrapZone;
     public Pane firstPlayersFieldZone;
@@ -46,26 +52,25 @@ public class GamePlayView {
     public Pane secondPlayersFieldZone;
     public Pane secondPlayersGraveyard;
     public ScrollPane secondPlayersCardsInHand;
+    public static int rounds;
     private static boolean FirstTime = true;
     private static boolean SummonedOrSetInThisPhase = false;
+    public TextField cardNumber;
     private boolean CardAddedToHandInThisPhase = false;
 
     public void start(Stage stage) throws Exception {
-        Login.getInstance().stopMusic();
-        Login.getInstance().playMusic("/Assets/Ramin Djawadi _ Game Of Thrones (320).mp3");
+        GamePlayView.stage = stage;
         Pane pane = FXMLLoader.load(getClass().getResource("/FXML/GamePlayScene.fxml"));
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.show();
     }
 
-
-
-    
-    public void initialize() {
+    public void initialize() throws Exception {
+        gameEndCheck();
         gamePhaseLabel.setText(currentPhase.name() + " PHASE");
-//        this.firstPlayersBoard = UserController.getInstance().getFirstPlayersBoard();
-//        this.secondPlayersBoard = UserController.getInstance().getSecondPlayersBoard();
+//        firstPlayersBoard = UserController.getInstance().getFirstPlayersBoard();
+//        secondPlayersBoard = UserController.getInstance().getSecondPlayersBoard();
         loadFirstPlayersMonsterCards(firstPlayersMonsterZone);
         loadFirstPlayersSpellTrapCards(firstPlayersSpellTrapZone);
         loadFirstPlayersFieldZoneCard(firstPlayersFieldZone);
@@ -79,6 +84,20 @@ public class GamePlayView {
         loadProfiles(yourProfile, opponentProfile, yourUsername, opponentUsername, yourLP, opponentLP, yourNickname, opponentNickname, firstPlayersBoard, secondPlayersBoard);
     }
 
+        public void gameEndCheck() throws Exception {
+        if (firstPlayersBoard.getPlayer().getLP() <= 0 ||
+                secondPlayersBoard.getMainDeckCards().size() == 0) {
+            stage.close();
+            DuelController.getInstance().setWinner(firstPlayersBoard, secondPlayersBoard,
+                    rounds, false);
+        }
+        if (secondPlayersBoard.getPlayer().getLP() <= 0 ||
+                firstPlayersBoard.getMainDeckCards().size() == 0) {
+            stage.close();
+            DuelController.getInstance().setWinner(secondPlayersBoard, firstPlayersBoard,
+                    rounds, false);
+        }
+    }
 
 
     private void loadProfiles(ImageView yourProfile, ImageView opponentProfile, Label yourUsername, Label opponentUsername,Label yourLP, Label opponentLP, Label yourNickname, Label opponentNickname, GameBoard firstPlayersBoard, GameBoard secondPlayersBoard) {
@@ -92,6 +111,31 @@ public class GamePlayView {
         opponentNickname.setText("Nickname: " + secondPlayersBoard.getPlayer().getNickname());
     }
 
+
+
+    public void loadFirstPlayersMonsterCards(Pane pane) {
+        HBox hBox = new HBox();
+        HashMap<Integer, MonsterCard> cards = firstPlayersBoard.getMonstersPlace();
+        for (Map.Entry<Integer, MonsterCard> entry : cards.entrySet()) {
+            if (entry.getValue() == null) continue;
+            Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getValue().getName()) + ".jpg").toExternalForm());
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(67.2);
+            imageView.setFitHeight(98);
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    firstPlayersBoard.deselectAll();
+                    secondPlayersBoard.deselectAll();
+                    firstPlayersBoard.setMonsterSelectedCard(entry.getValue());
+                    firstPlayersBoard.setSelectedMonsterPlace(entry.getKey());
+                }
+            });
+            hBox.getChildren().add(imageView);
+        }
+        pane.getChildren().removeAll();
+        pane.getChildren().add(hBox);
+    }
 
     public static GamePhases getCurrentPhase() {
         return currentPhase;
@@ -125,34 +169,6 @@ public class GamePlayView {
         CardAddedToHandInThisPhase = cardAddedToHandInThisPhase;
     }
 
-
-
-    public void loadFirstPlayersMonsterCards(Pane pane) {
-        HBox hBox = new HBox();
-        HashMap<Integer, MonsterCard> cards = firstPlayersBoard.getMonstersPlace();
-        for (Map.Entry<Integer, MonsterCard> entry : cards.entrySet()) {
-            if (entry.getValue() == null) continue;
-            Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getValue().getName()) + ".jpg").toExternalForm());
-            ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(67.2);
-            imageView.setFitHeight(98);
-            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    firstPlayersBoard.deselectAll();
-                    secondPlayersBoard.deselectAll();
-                    firstPlayersBoard.setMonsterSelectedCard(entry.getValue());
-                    firstPlayersBoard.setSelectedMonsterPlace(entry.getKey());
-                }
-            });
-            hBox.getChildren().add(imageView);
-        }
-        pane.getChildren().removeAll();
-        pane.getChildren().add(hBox);
-    }
-
-
-
     private void loadFirstPlayersSpellTrapCards(Pane pane) {
         HBox hBox = new HBox();
         HashMap<Integer, SpellTrapCard> cards = firstPlayersBoard.getSpellTrapsPlace();
@@ -181,6 +197,7 @@ public class GamePlayView {
 
     public void loadFirstPlayersFieldZoneCard(Pane pane) {
         if (firstPlayersBoard.getFieldZone() == null) return;
+        HBox hBox = new HBox();
         Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(firstPlayersBoard.getFieldZone().getName()) + ".jpg").toExternalForm());
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(67.2);
@@ -224,7 +241,7 @@ public class GamePlayView {
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(67.2);
             imageView.setFitHeight(98);
-            int finalI = i +1 ;
+            int finalI = i + 1;
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
@@ -247,7 +264,7 @@ public class GamePlayView {
         for (Map.Entry<Integer, MonsterCard> entry : cards.entrySet()) {
             if (entry.getValue() == null) continue;
             Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getValue().getName()) + ".jpg").toExternalForm());
-            if (entry.getValue().isSet()) image = new Image(getClass().getResource("/Assets/4008.png").toExternalForm());
+            if (entry.getValue().isSet()) image = new Image(getClass().getResource("/Assets/4009.png").toExternalForm());
             if (entry.getValue().isDefensive()) image = new Image(getClass().getResource("/Assets/4014.png").toExternalForm());
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(67.2);
@@ -300,6 +317,7 @@ public class GamePlayView {
 
     public void loadSecondPlayersFieldZoneCard(Pane pane) {
         if (secondPlayersBoard.getFieldZone() == null) return;
+        HBox hBox = new HBox();
         Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(secondPlayersBoard.getFieldZone().getName()) + ".jpg").toExternalForm());
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(67.2);
@@ -387,9 +405,7 @@ public class GamePlayView {
         return instance;
     }
 
-
-
-    public void changePhase() {
+    public void changePhase() throws Exception {
         DuelController.getInstance().changePhase(firstPlayersBoard, secondPlayersBoard,
                 currentPhase);
         phaseChangeToDo();
@@ -397,10 +413,7 @@ public class GamePlayView {
         initialize();
     }
 
-
-
-
-    public void phaseChangeToDo() {
+    public void phaseChangeToDo() throws Exception {
         if (currentPhase.equals(GamePhases.DRAW)) {
             if (!FirstTime && !CardAddedToHandInThisPhase && firstPlayersBoard.getCardsInHand().size() < 6) {
                 System.out.println("new card added to hand: " +
@@ -421,10 +434,17 @@ public class GamePlayView {
         }
     }
 
+    public void settingPopup(MouseEvent mouseEvent) throws IOException {
+        Stage popup = new Stage();
+        SettingView.rounds = rounds;
+        SettingView.popup = popup;
+        Pane pane = FXMLLoader.load(getClass().getResource("/FXML/SettingPopup.fxml"));
+        Scene scene = new Scene(pane);
+        popup.setScene(scene);
 
-
-
-    public void settingPopup(MouseEvent mouseEvent) {
+        popup.initModality(Modality.APPLICATION_MODAL);
+//        popup.showAndWait();
+        popup.show();
     }
 
     public void summon() {
@@ -469,11 +489,17 @@ public class GamePlayView {
         }
     }
 
-
-
-
-    public void attackToCard(MouseEvent mouseEvent) {
-
+    public void attackToCard() {
+        try {
+            int place = Integer.parseInt(cardNumber.getText());
+            if (DuelController.getInstance().canAttackToCard(firstPlayersBoard, secondPlayersBoard, currentPhase, place))
+                System.out.println(DuelController.getInstance().attackToCard(firstPlayersBoard, secondPlayersBoard, place));
+            initialize();
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText(e.getMessage());
+            alert.show();
+        }
     }
 
 

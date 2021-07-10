@@ -15,6 +15,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 
 public class DuelView {
@@ -27,6 +28,7 @@ public class DuelView {
     public Button applyButton;
     public Button backButton;
     public TextField secondPlayer;
+    private int rounds;
 
     public void start(Stage stage) throws IOException {
         DuelView.stage = stage;
@@ -63,22 +65,24 @@ public class DuelView {
             Error.setVisible(true);
             return;
         }
-        try{
+        try {
             DuelController.getInstance().startNewDuel(UserController.getInstance().getLoggedInUser().getUsername()
-                    ,secondPlayer.getText().trim() , rands);
-        } catch (Exception e){
+                    , secondPlayer.getText().trim(), rands);
+        } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.NONE);
             alert.setAlertType(Alert.AlertType.INFORMATION);
             alert.setContentText(e.getMessage());
             alert.show();
-            if (e.getMessage().startsWith("new"))
-            GamePlayView.getInstance().start(MainView.stage);
+            if (e.getMessage().startsWith("new")) {
+                GamePlayView.rounds = rounds;
+                GamePlayView.getInstance().start(MainView.stage);
+            }
         }
     }
 
 
-    public static DuelView getInstance(){
-        if(instance == null)
+    public static DuelView getInstance() {
+        if (instance == null)
             instance = new DuelView();
         return instance;
     }
@@ -94,11 +98,13 @@ public class DuelView {
 
     public void oneRandSelected(ActionEvent actionEvent) {
         rands = "1";
+        rounds = Integer.parseInt(rands);
         chooseRands.setText("1 rand");
     }
 
     public void threeRandsSelected(ActionEvent actionEvent) {
         rands = "3";
+        rounds = Integer.parseInt(rands);
         chooseRands.setText("3 rands");
     }
 }

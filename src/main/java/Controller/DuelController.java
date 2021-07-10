@@ -4,15 +4,11 @@ import Model.*;
 import Model.Enums.Icon;
 import Model.Enums.MonsterType;
 import SceneController.GamePlayView;
+import SceneController.MainView;
 import View.GamePhases;
 import View.GamePlay;
 import View.Menu;
-import javafx.event.EventHandler;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.Alert;
 
 import java.util.*;
 
@@ -673,10 +669,7 @@ public class DuelController {
         }
     }
 
-    public String attackToCard(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard,
-                               GamePlay currentMenu, int number) {
-
-        whileAttackTrapsActivation(firstPlayersBoard, secondPlayersBoard, currentMenu);
+    public String attackToCard(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard, int number) {
 
         if (firstPlayersBoard.getMonsterSelectedCard().getName().equals("The Calculator")) {
             for (Map.Entry<Integer, MonsterCard> entry : firstPlayersBoard.getMonstersPlace().entrySet()) {
@@ -1019,7 +1012,7 @@ public class DuelController {
     }
 
     public void setWinner(GameBoard firstPlayerBoard, GameBoard secondPlayerBoard,
-                          int rounds, Menu mainMenu, GamePlay currentMenu, boolean isSurrender) {
+                          int rounds, boolean isSurrender) throws Exception{
         User winner = firstPlayerBoard.getPlayer();
         User loser = secondPlayerBoard.getPlayer();
         if (rounds == 1) {
@@ -1028,9 +1021,12 @@ public class DuelController {
             loser.setLoses(loser.getLoses() + 1);
             winner.setBalance(winner.getLP() + 1000 + winner.getBalance());
             loser.setBalance(loser.getBalance() + 100);
-            System.out.println(winner.getUsername() + " won the whole match with score: " +
+//            System.out.println(winner.getUsername() + " won the whole match with score: " +
+//                    winner.getScore() + "-" + loser.getScore());
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setContentText(winner.getUsername() + " won the whole match with score: " +
                     winner.getScore() + "-" + loser.getScore());
-            mainMenu.run();
+            MainView.getInstance().start(MainView.stage);
         } else {
             if (firstPlayerBoard.getWinsCount() == 0) {
                 firstPlayerBoard.setWinsCount(firstPlayerBoard.getWinsCount() + 1);
@@ -1038,25 +1034,28 @@ public class DuelController {
                     firstPlayerBoard.setMaxLP(winner.getLP());
                 winner.setLP(8000);
                 loser.setLP(8000);
-                System.out.println(winner.getUsername() + " won the game and the score is: " +
+//                System.out.println(winner.getUsername() + " won the game and the score is: " +
+//                        winner.getScore() + "-" + loser.getScore());
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText(winner.getUsername() + " won the game and the score is: " +
                         winner.getScore() + "-" + loser.getScore());
+                alert.show();
 
-                if (currentMenu.exchangeCardsCheck(winner.getNickname()))
-                    currentMenu.getCardsName(winner);
-                if (currentMenu.exchangeCardsCheck(loser.getNickname()))
-                    currentMenu.getCardsName(loser);
-
-
-                gamePreparation(loser, winner, rounds, secondPlayerBoard, firstPlayerBoard);
+                GamePlayView.rounds = rounds;
+                GamePlayView.getInstance().start(MainView.stage);
             } else {
                 winner.setScore(winner.getScore() + 3000);
                 winner.setWins(winner.getWins() + 1);
                 loser.setLoses(loser.getLoses() + 1);
                 winner.setBalance(winner.getBalance() + 3000 + 3 * firstPlayerBoard.getMaxLP());
                 loser.setBalance(loser.getBalance() + 300);
-                System.out.println(winner.getUsername() + " won the whole match with score: " +
+//                System.out.println(winner.getUsername() + " won the whole match with score: " +
+//                        winner.getScore() + "-" + loser.getScore());
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText(winner.getUsername() + " won the whole match with score: " +
                         winner.getScore() + "-" + loser.getScore());
-                mainMenu.run();
+                alert.show();
+                MainView.getInstance().start(MainView.stage);
             }
         }
     }
