@@ -4,6 +4,7 @@ import Model.*;
 import Model.Enums.Icon;
 import Model.Enums.MonsterType;
 import SceneController.GamePlayView;
+import SceneController.Login;
 import SceneController.MainView;
 import View.GamePhases;
 import View.GamePlay;
@@ -1026,6 +1027,8 @@ public class DuelController {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setContentText(winner.getUsername() + " won the whole match with score: " +
                     winner.getScore() + "-" + loser.getScore());
+            Login.getInstance().stopMusic();
+            Login.getInstance().playMusic("/Assets/1-05 - Normal Duel (DM／GX).mp3");
             MainView.getInstance().start(MainView.stage);
         } else {
             if (firstPlayerBoard.getWinsCount() == 0) {
@@ -1055,6 +1058,8 @@ public class DuelController {
                 alert.setContentText(winner.getUsername() + " won the whole match with score: " +
                         winner.getScore() + "-" + loser.getScore());
                 alert.show();
+                Login.getInstance().stopMusic();
+                Login.getInstance().playMusic("/Assets/1-05 - Normal Duel (DM／GX).mp3");
                 MainView.getInstance().start(MainView.stage);
             }
         }

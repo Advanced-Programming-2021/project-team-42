@@ -59,6 +59,8 @@ public class GamePlayView {
     private boolean CardAddedToHandInThisPhase = false;
 
     public void start(Stage stage) throws Exception {
+        Login.getInstance().stopMusic();
+        Login.getInstance().playMusic("/Assets/Ramin Djawadi _ Game Of Thrones (320).mp3");
         GamePlayView.stage = stage;
         Pane pane = FXMLLoader.load(getClass().getResource("/FXML/GamePlayScene.fxml"));
         Scene scene = new Scene(pane);
@@ -422,10 +424,8 @@ public class GamePlayView {
             }
             setSummonedOrSetInThisPhase(false);
         } else if (currentPhase.equals(GamePhases.END)) {
-            System.out.println("yes now");
             DuelController.getInstance().changePositionReset(firstPlayersBoard);
             firstPlayersBoard.setTrapEffect(false);
-            System.out.println(firstPlayersBoard.getPlayer().getUsername() + " " + secondPlayersBoard.getPlayer().getUsername());
             swapPlayers();
             FirstTime = false;
             CardAddedToHandInThisPhase = false;

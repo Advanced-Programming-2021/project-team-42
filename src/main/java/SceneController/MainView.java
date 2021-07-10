@@ -111,6 +111,7 @@ public class MainView {
 
     public void ExitClicked() {
         try {
+            Login.getInstance().stopMusic();
             Login.getInstance().start(MainView.stage);
         } catch (Exception e) {
             e.printStackTrace();
