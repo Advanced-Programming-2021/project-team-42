@@ -5,9 +5,11 @@ import Controller.UserController;
 import Model.GameBoard;
 import Model.MonsterCard;
 import Model.SpellTrapCard;
+import View.GamePhases;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,7 +22,16 @@ import java.util.Map;
 
 public class GamePlayView {
     private static GamePlayView instance = null;
-
+    public ImageView opponentProfile;
+    public ImageView yourProfile;
+    public Label opponentLP;
+    public Label opponentNickname;
+    public Label yourLP;
+    public Label yourNickname;
+    public Label yourUsername;
+    public Label opponentUsername;
+    private static GamePhases currentPhase = GamePhases.DRAW;
+    public Label gamePhaseLabel;
     private GameBoard firstPlayersBoard = null;
     private GameBoard secondPlayersBoard = null;
     public Pane firstPlayersMonsterZone;
@@ -43,6 +54,7 @@ public class GamePlayView {
 
     
     public void initialize() {
+        gamePhaseLabel.setText(currentPhase.name() + " PHASE");
         firstPlayersBoard = UserController.getInstance().getFirstPlayersBoard();
         secondPlayersBoard = UserController.getInstance().getSecondPlayersBoard();
         loadFirstPlayersMonsterCards(firstPlayersMonsterZone);
@@ -53,10 +65,19 @@ public class GamePlayView {
         loadSecondPlayersSpellTrapCards(secondPlayersSpellTrapZone);
         loadSecondPlayersFieldZoneCard(secondPlayersFieldZone);
         loadSecondPlayersCardsInHand(secondPlayersCardsInHand);
+        loadProfiles(yourProfile, opponentProfile, yourUsername, opponentUsername, yourLP, opponentLP, yourNickname, opponentNickname, firstPlayersBoard, secondPlayersBoard);
     }
 
-
-
+    private void loadProfiles(ImageView yourProfile, ImageView opponentProfile, Label yourUsername, Label opponentUsername,Label yourLP, Label opponentLP, Label yourNickname, Label opponentNickname, GameBoard firstPlayersBoard, GameBoard secondPlayersBoard) {
+        yourProfile.setImage(new Image(getClass().getResource(firstPlayersBoard.getPlayer().getPathToProfilePhoto()).toExternalForm()));
+        opponentProfile.setImage(new Image(getClass().getResource(secondPlayersBoard.getPlayer().getPathToProfilePhoto()).toExternalForm()));
+        yourLP.setText("LP: " + firstPlayersBoard.getPlayer().getLP());
+        opponentLP.setText("LP: " + secondPlayersBoard.getPlayer().getLP());
+        yourUsername.setText("Username: " + firstPlayersBoard.getPlayer().getUsername());
+        opponentUsername.setText("Username: " + secondPlayersBoard.getPlayer().getUsername());
+        yourNickname.setText("Nickname: " + firstPlayersBoard.getPlayer().getNickname());
+        opponentNickname.setText("Nickname: " + secondPlayersBoard.getPlayer().getNickname());
+    }
 
     public void loadFirstPlayersMonsterCards(Pane pane) {
         HBox hBox = new HBox();
@@ -232,10 +253,12 @@ public class GamePlayView {
             if (i==0) result += token.toLowerCase();
             else
                 result += token.substring(0, 1).toUpperCase() +
-                        token.substring(1, token.length()).toLowerCase();
+                        token.substring(1).toLowerCase();
         }
         return result.substring(0, 1).toUpperCase() + result.substring(1);
     }
+
+
 
 
 
@@ -246,7 +269,32 @@ public class GamePlayView {
         return instance;
     }
 
+    public void changePhase(MouseEvent mouseEvent) {
+    }
 
+    public void settingPopup(MouseEvent mouseEvent) {
+    }
+
+    public void summon(MouseEvent mouseEvent) {
+    }
+
+    public void set(MouseEvent mouseEvent) {
+    }
+
+    public void directAttack(MouseEvent mouseEvent) {
+    }
+
+    public void attackToCard(MouseEvent mouseEvent) {
+    }
+
+    public void changePosition(MouseEvent mouseEvent) {
+    }
+
+    public void yourGraveyard(MouseEvent mouseEvent) {
+    }
+
+    public void opponentGraveyard(MouseEvent mouseEvent) {
+    }
 
 
 //    public void refreshCards() {
