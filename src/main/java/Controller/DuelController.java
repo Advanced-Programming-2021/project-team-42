@@ -3,6 +3,7 @@ package Controller;
 import Model.*;
 import Model.Enums.Icon;
 import Model.Enums.MonsterType;
+import SceneController.GamePlayView;
 import View.GamePhases;
 import View.GamePlay;
 import View.Menu;
@@ -40,7 +41,7 @@ public class DuelController {
                             if (!rounds.matches("1|3"))
                                 throw new Exception("number of rounds is not supported");
                             else {
-                                gamePreparation(User.getUserByUsername(player1), User.getUserByUsername(player2), Integer.parseInt(rounds),null, null);
+                                gamePreparation(User.getUserByUsername(player1), User.getUserByUsername(player2), Integer.parseInt(rounds), null, null);
                                 throw new Exception("new game between " + player1 + " and " + player2 + " started");
                             }
                         }
@@ -144,19 +145,18 @@ public class DuelController {
                                 if (firstPlayerBoard.getFieldZone() != null)
                                     firstPlayerBoard.addCardToGraveyard(firstPlayerBoard.getFieldZone());
                                 firstPlayerBoard.setFieldZone(choseSpellCard);
-                                activeFieldZone(choseSpellCard.getName() ,firstPlayerBoard ,secondPlayerBoard);
+                                activeFieldZone(choseSpellCard.getName(), firstPlayerBoard, secondPlayerBoard);
                                 firstPlayerBoard.removeCardFromHand(firstPlayerBoard.getSelectedHandPlace());
                                 firstPlayerBoard.deselectAll();
                                 secondPlayerBoard.deselectAll();
-                            }
-                            else {
+                            } else {
                                 if (firstPlayerBoard.spellTrapPlacesSize() >= 5)
                                     throw new Exception("spell card zone is full");
                                 else {
                                     choseSpellCard.setEffectActive(true);
                                     choseSpellCard.setSet(false);
                                     firstPlayerBoard.setSpellTrapsPlace(choseSpellCard, firstPlayerBoard.spellTrapPlacesSize() + 1);
-                                    activeSpellEffect(choseSpellCard ,firstPlayerBoard , secondPlayerBoard);
+                                    activeSpellEffect(choseSpellCard, firstPlayerBoard, secondPlayerBoard);
                                     firstPlayerBoard.removeCardFromHand(firstPlayerBoard.getSelectedHandPlace());
                                     firstPlayerBoard.deselectAll();
                                     secondPlayerBoard.deselectAll();
@@ -165,7 +165,7 @@ public class DuelController {
                         }
                     }
 
-                }  else if (spellTrapCard != null) {
+                } else if (spellTrapCard != null) {
                     if (phaseCheck)
                         throw new Exception("you can’t activate an effect on this turn");
                     else {
@@ -177,7 +177,7 @@ public class DuelController {
                             else {
                                 spellTrapCard.setEffectActive(true);
                                 spellTrapCard.setSet(false);
-                                activeSpellEffect(spellTrapCard ,firstPlayerBoard , secondPlayerBoard);
+                                activeSpellEffect(spellTrapCard, firstPlayerBoard, secondPlayerBoard);
                                 firstPlayerBoard.deselectAll();
                                 secondPlayerBoard.deselectAll();
                             }
@@ -199,7 +199,7 @@ public class DuelController {
                     }
                 }
                 firstPlayersBoard.addCardToGraveyard(spellCard);
-                firstPlayersBoard.setSpellTrapsPlace(null ,firstPlayersBoard.getSelectedSpellTrapPlace());
+                firstPlayersBoard.setSpellTrapsPlace(null, firstPlayersBoard.getSelectedSpellTrapPlace());
                 break;
             case "Harpie's Feather Duster":
                 for (Map.Entry<Integer, SpellTrapCard> entry : secondPlayersBoard.getSpellTrapsPlace().entrySet()) {
@@ -213,7 +213,7 @@ public class DuelController {
                     secondPlayersBoard.setFieldZone(null);
                 }
                 firstPlayersBoard.addCardToGraveyard(spellCard);
-                firstPlayersBoard.setSpellTrapsPlace(null ,firstPlayersBoard.getSelectedSpellTrapPlace());
+                firstPlayersBoard.setSpellTrapsPlace(null, firstPlayersBoard.getSelectedSpellTrapPlace());
                 break;
             case "Dark Hole":
                 for (Map.Entry<Integer, MonsterCard> entry : secondPlayersBoard.getMonstersPlace().entrySet()) {
@@ -229,10 +229,10 @@ public class DuelController {
                     }
                 }
                 firstPlayersBoard.addCardToGraveyard(spellCard);
-                firstPlayersBoard.setSpellTrapsPlace(null ,firstPlayersBoard.getSelectedSpellTrapPlace());
+                firstPlayersBoard.setSpellTrapsPlace(null, firstPlayersBoard.getSelectedSpellTrapPlace());
                 break;
             case "Pot of Greed":
-                for (int i = 0; i < 2 ; i++) {
+                for (int i = 0; i < 2; i++) {
                     int deckSize = firstPlayersBoard.getMainDeckCards().size();
                     if (deckSize > 0) {
                         firstPlayersBoard.addCardToHand(firstPlayersBoard.getMainDeckCards().get(0));
@@ -240,11 +240,11 @@ public class DuelController {
                     }
                 }
                 firstPlayersBoard.addCardToGraveyard(spellCard);
-                firstPlayersBoard.setSpellTrapsPlace(null ,firstPlayersBoard.spellTrapPlacesSize());
+                firstPlayersBoard.setSpellTrapsPlace(null, firstPlayersBoard.spellTrapPlacesSize());
                 break;
             case "Terraforming":
                 int deckSize = firstPlayersBoard.getMainDeckCards().size();
-                for (int i = 0 ; i < deckSize ; i++) {
+                for (int i = 0; i < deckSize; i++) {
                     if (SpellTrapCard.getSpellTrapCardByName(firstPlayersBoard.getMainDeckCards().get(i).getName()) != null) {
                         SpellTrapCard spell = SpellTrapCard.getSpellTrapCardByName(firstPlayersBoard.getMainDeckCards().get(i).getName());
                         if (spell.getCardType().equals("Spell Card") && spell.getIcon().equals(Icon.FIELD)) {
@@ -255,7 +255,7 @@ public class DuelController {
                     }
                 }
                 firstPlayersBoard.addCardToGraveyard(spellCard);
-                firstPlayersBoard.setSpellTrapsPlace(null ,firstPlayersBoard.getSelectedSpellTrapPlace());
+                firstPlayersBoard.setSpellTrapsPlace(null, firstPlayersBoard.getSelectedSpellTrapPlace());
                 break;
             case "Messenger of peace": //check
                 for (Map.Entry<Integer, MonsterCard> entry : secondPlayersBoard.getMonstersPlace().entrySet()) {
@@ -274,15 +274,15 @@ public class DuelController {
         }
     }
 
-    public void checkFieldZone(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard){
+    public void checkFieldZone(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard) {
         String cardName;
         if (firstPlayersBoard.getFieldZone() != null) {
             cardName = firstPlayersBoard.getFieldZone().getName();
-            activeFieldZone(cardName ,firstPlayersBoard ,secondPlayersBoard);
+            activeFieldZone(cardName, firstPlayersBoard, secondPlayersBoard);
         }
         if (secondPlayersBoard.getFieldZone() != null) {
             cardName = secondPlayersBoard.getFieldZone().getName();
-            activeFieldZone(cardName ,firstPlayersBoard ,secondPlayersBoard);
+            activeFieldZone(cardName, firstPlayersBoard, secondPlayersBoard);
         }
     }
 
@@ -426,9 +426,9 @@ public class DuelController {
         }
     }
 
-    public int summonMonsterCard(GameBoard firstPlayerBoard,
-                                 GameBoard secondPlayerBoard, GamePhases currentPhase,
-                                 GamePlay currentMenu, boolean isSummonedOrSetInThisPhase) throws Exception {
+    public void summonMonsterCard(GameBoard firstPlayerBoard,
+                                  GameBoard secondPlayerBoard, GamePhases currentPhase,
+                                  boolean isSummonedOrSetInThisPhase) throws Exception {
         if (firstPlayerBoard.checkSelections() && secondPlayerBoard.checkSelections())
             throw new Exception("no card is selected yet");
         else {
@@ -451,25 +451,7 @@ public class DuelController {
                             throw new Exception("you already summoned/set on this turn");
                         else {
                             MonsterCard selectedMonsterCard = MonsterCard.getMonsterCardByName(selectedCard.getName());
-                            if (selectedMonsterCard.getLevel() <= 4) {
-                                simpleSummon(firstPlayerBoard, secondPlayerBoard, currentMenu, selectedMonsterCard);
-                                return 1;
-                            } else if (selectedMonsterCard.getLevel() >= 5 && selectedMonsterCard.getLevel() <= 6) {
-                                if (firstPlayerBoard.monsterPlacesSize() == 0)
-                                    throw new Exception("there are not enough cards for tribute");
-                                else
-                                    return 2;
-                            } else if (selectedMonsterCard.getLevel() >= 7 && selectedMonsterCard.getLevel() <= 8) {
-                                if (firstPlayerBoard.monsterPlacesSize() < 2)
-                                    throw new Exception("there are not enough cards for tribute");
-                                else
-                                    return 3;
-                            } else {
-                                if (firstPlayerBoard.monsterPlacesSize() < 3)
-                                    throw new Exception("there are not enough cards for tribute");
-                                else
-                                    return 4;
-                            }
+                            simpleSummon(firstPlayerBoard, secondPlayerBoard, selectedMonsterCard);
                         }
                     }
                 }
@@ -478,15 +460,14 @@ public class DuelController {
     }
 
     public void simpleSummon(GameBoard playersBoard, GameBoard opponentBoard,
-                             GamePlay currentMenu, MonsterCard selectedCard) {
+                             MonsterCard selectedCard) {
         selectedCard.setSummoned(true);
         selectedCard.setSet(false);
         selectedCard.setDefensive(false);
         playersBoard.setSummonedMonster(selectedCard);
         playersBoard.removeCardFromHand(playersBoard.getSelectedHandPlace());
-        whileSummonTrapsActivation(playersBoard, opponentBoard, currentMenu, selectedCard);
         playersBoard.deselectAll();
-        GamePlay.setSummonOrSet(true);
+        GamePlayView.setSummonedOrSetInThisPhase(true);
     }
 
     public void lowLevelSummon(GameBoard playersBoard, GameBoard opponentBoard,
@@ -618,8 +599,7 @@ public class DuelController {
             playerBoard.removeCardFromHand(playerBoard.getSelectedHandPlace());
             playerBoard.deselectAll();
             GamePlay.setSummonOrSet(true);
-        }
-        else {
+        } else {
             selectedCard.setSet(true);
             selectedCard.setEffectActive(false);
             playerBoard.setSpellTrapsPlace(selectedCard, playerBoard.spellTrapPlacesSize() + 1);
@@ -883,9 +863,9 @@ public class DuelController {
         }
     }
 
-    public int directAttack(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard,
-                            GamePhases currentPhase, GamePlay currentMenu,
-                            boolean isFirstTime) throws Exception {
+    public void directAttack(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard,
+                             GamePhases currentPhase,
+                             boolean isFirstTime) throws Exception {
         if (firstPlayersBoard.checkSelections() && secondPlayersBoard.checkSelections())
             throw new Exception("you dont select any card yet");
         else {
@@ -902,14 +882,12 @@ public class DuelController {
                         if (isFirstTime || secondPlayersBoard.monsterPlacesSize() > 0)
                             throw new Exception("you can’t attack the opponent directly");
                         else {
-                            whileAttackTrapsActivation(firstPlayersBoard, secondPlayersBoard, currentMenu);
                             int lp = secondPlayersBoard.getPlayer().getLP();
                             int attackPoint = monsterCard.getAttackPoint();
                             secondPlayersBoard.getPlayer().setLP(lp - attackPoint);
                             monsterCard.setReadyToAttack(false);
                             firstPlayersBoard.deselectAll();
                             secondPlayersBoard.deselectAll();
-                            return attackPoint;
                         }
                     }
                 }
@@ -967,7 +945,7 @@ public class DuelController {
     }
 
     public void changePosition(GameBoard firstPlayerBoard,
-                               GameBoard secondPlayerBoard, String selectedPosition,
+                               GameBoard secondPlayerBoard,
                                GamePhases currentPhase) throws Exception {
         if (firstPlayerBoard.checkSelections() && secondPlayerBoard.checkSelections())
             throw new Exception("no card is selected yet");
@@ -980,19 +958,15 @@ public class DuelController {
                         !currentPhase.equals(GamePhases.SECOND_MAIN))
                     throw new Exception("you can’t do this action in this phase");
                 else {
-                    if ((selectedPosition.equals("attack") && selectedMonsterCard.isSummoned() && !selectedMonsterCard.isDefensive()) ||
-                            (selectedPosition.equals("defense") && selectedMonsterCard.isDefensive()))
-                        throw new Exception("this card is already in the wanted position");
+                    if (selectedMonsterCard.isPositionChangedInThisTurn())
+                        throw new Exception("you already changed this card position in this turn");
                     else {
-                        if (selectedMonsterCard.isPositionChangedInThisTurn())
-                            throw new Exception("you already changed this card position in this turn");
-                        else {
-                            selectedMonsterCard.setDefensive(!selectedPosition.equals("attack"));
-                            selectedMonsterCard.setPositionChangedInThisTurn(true);
-                            firstPlayerBoard.deselectAll();
-                            secondPlayerBoard.deselectAll();
-                        }
+                        selectedMonsterCard.setDefensive(!selectedMonsterCard.isDefensive());
+                        selectedMonsterCard.setPositionChangedInThisTurn(true);
+                        firstPlayerBoard.deselectAll();
+                        secondPlayerBoard.deselectAll();
                     }
+
                 }
             }
         }
@@ -1018,6 +992,23 @@ public class DuelController {
             resetMonsters(firstPlayersBoard);
             GamePlay.setPhase(GamePhases.END);
         }
+    }
+
+    public void changePhase(GameBoard firstPlayersBoard, GameBoard secondPlayersBoard,
+                            GamePhases currentPhase) {
+        if (currentPhase.equals(GamePhases.DRAW))
+            GamePlayView.setCurrentPhase(GamePhases.STANDBY);
+        else if (currentPhase.equals(GamePhases.STANDBY))
+            GamePlayView.setCurrentPhase(GamePhases.FIRST_MAIN);
+        else if (currentPhase.equals(GamePhases.FIRST_MAIN))
+            GamePlayView.setCurrentPhase(GamePhases.BATTLE);
+        else if (currentPhase.equals(GamePhases.BATTLE))
+            GamePlayView.setCurrentPhase(GamePhases.SECOND_MAIN);
+        else if (currentPhase.equals(GamePhases.SECOND_MAIN)) {
+            resetMonsters(firstPlayersBoard);
+            GamePlayView.setCurrentPhase(GamePhases.END);
+        } else
+            GamePlayView.setCurrentPhase(GamePhases.DRAW);
     }
 
     public String addOneCardToHand(GameBoard playersBoard) {

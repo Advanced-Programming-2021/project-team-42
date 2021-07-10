@@ -1,14 +1,17 @@
 package SceneController;
 
 
+import Controller.DuelController;
 import Controller.UserController;
 import Model.GameBoard;
 import Model.MonsterCard;
 import Model.SpellTrapCard;
 import View.GamePhases;
+import View.GamePlay;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -32,8 +35,8 @@ public class GamePlayView {
     public Label opponentUsername;
     private static GamePhases currentPhase = GamePhases.DRAW;
     public Label gamePhaseLabel;
-    private GameBoard firstPlayersBoard = null;
-    private GameBoard secondPlayersBoard = null;
+    private GameBoard firstPlayersBoard = UserController.getInstance().getFirstPlayersBoard();
+    private GameBoard secondPlayersBoard = UserController.getInstance().getSecondPlayersBoard();
     public Pane firstPlayersMonsterZone;
     public Pane firstPlayersSpellTrapZone;
     public Pane firstPlayersFieldZone;
@@ -44,6 +47,9 @@ public class GamePlayView {
     public Pane secondPlayersFieldZone;
     public Pane secondPlayersGraveyard;
     public ScrollPane secondPlayersCardsInHand;
+    private static boolean FirstTime = true;
+    private static boolean SummonedOrSetInThisPhase = false;
+    private boolean CardAddedToHandInThisPhase = false;
 
     public void start(Stage stage) throws Exception {
         Pane pane = FXMLLoader.load(getClass().getResource("/FXML/GamePlayScene.fxml"));
@@ -57,8 +63,8 @@ public class GamePlayView {
     
     public void initialize() {
         gamePhaseLabel.setText(currentPhase.name() + " PHASE");
-        firstPlayersBoard = UserController.getInstance().getFirstPlayersBoard();
-        secondPlayersBoard = UserController.getInstance().getSecondPlayersBoard();
+//        firstPlayersBoard = UserController.getInstance().getFirstPlayersBoard();
+//        secondPlayersBoard = UserController.getInstance().getSecondPlayersBoard();
         loadFirstPlayersMonsterCards(firstPlayersMonsterZone);
         loadFirstPlayersSpellTrapCards(firstPlayersSpellTrapZone);
         loadFirstPlayersFieldZoneCard(firstPlayersFieldZone);
@@ -89,7 +95,7 @@ public class GamePlayView {
 
     public void loadFirstPlayersMonsterCards(Pane pane) {
         HBox hBox = new HBox();
-        HashMap<Integer, MonsterCard> cards = UserController.getInstance().getFirstPlayersBoard().getMonstersPlace();
+        HashMap<Integer, MonsterCard> cards = firstPlayersBoard.getMonstersPlace();
         for (Map.Entry<Integer, MonsterCard> entry : cards.entrySet()) {
             if (entry.getValue() == null) continue;
             Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getValue().getName()) + ".jpg").toExternalForm());
@@ -99,7 +105,10 @@ public class GamePlayView {
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-
+                    firstPlayersBoard.deselectAll();
+                    secondPlayersBoard.deselectAll();
+                    firstPlayersBoard.setMonsterSelectedCard(entry.getValue());
+                    firstPlayersBoard.setSelectedMonsterPlace(entry.getKey());
                 }
             });
             hBox.getChildren().add(imageView);
@@ -107,11 +116,41 @@ public class GamePlayView {
         pane.getChildren().add(hBox);
     }
 
+    public static GamePhases getCurrentPhase() {
+        return currentPhase;
+    }
 
+    public static void setCurrentPhase(GamePhases currentPhase) {
+        GamePlayView.currentPhase = currentPhase;
+    }
+
+    public static boolean isFirstTime() {
+        return FirstTime;
+    }
+
+    public static void setFirstTime(boolean firstTime) {
+        FirstTime = firstTime;
+    }
+
+    public static boolean isSummonedOrSetInThisPhase() {
+        return SummonedOrSetInThisPhase;
+    }
+
+    public static void setSummonedOrSetInThisPhase(boolean summonedOrSetInThisPhase) {
+        SummonedOrSetInThisPhase = summonedOrSetInThisPhase;
+    }
+
+    public boolean isCardAddedToHandInThisPhase() {
+        return CardAddedToHandInThisPhase;
+    }
+
+    public void setCardAddedToHandInThisPhase(boolean cardAddedToHandInThisPhase) {
+        CardAddedToHandInThisPhase = cardAddedToHandInThisPhase;
+    }
 
     private void loadFirstPlayersSpellTrapCards(Pane pane) {
         HBox hBox = new HBox();
-        HashMap<Integer, SpellTrapCard> cards = UserController.getInstance().getFirstPlayersBoard().getSpellTrapsPlace();
+        HashMap<Integer, SpellTrapCard> cards = firstPlayersBoard.getSpellTrapsPlace();
         for (Map.Entry<Integer, SpellTrapCard> entry : cards.entrySet()) {
             if (entry.getValue() == null) continue;
             Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getValue().getName()) + ".jpg").toExternalForm());
@@ -121,7 +160,10 @@ public class GamePlayView {
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-
+                    firstPlayersBoard.deselectAll();
+                    secondPlayersBoard.deselectAll();
+                    firstPlayersBoard.setSpellTrapSelectedCard(entry.getValue());
+                    firstPlayersBoard.setSelectedMonsterPlace(entry.getKey());
                 }
             });
             hBox.getChildren().add(imageView);
@@ -141,7 +183,9 @@ public class GamePlayView {
         imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-
+                firstPlayersBoard.deselectAll();
+                secondPlayersBoard.deselectAll();
+                firstPlayersBoard.setFieldZoneSelectedCard(firstPlayersBoard.getFieldZone());
             }
         });
         hBox.getChildren().add(imageView);
@@ -175,10 +219,14 @@ public class GamePlayView {
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(67.2);
             imageView.setFitHeight(98);
+            int finalI = i;
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-
+                    firstPlayersBoard.deselectAll();
+                    secondPlayersBoard.deselectAll();
+                    firstPlayersBoard.setHandSelectedCard(firstPlayersBoard.getCardsInHand().get(finalI));
+                    firstPlayersBoard.setSelectedHandPlace(finalI);
                 }
             });
             hBox.getChildren().add(imageView);
@@ -190,7 +238,7 @@ public class GamePlayView {
 
     public void loadSecondPlayersMonsterCards(Pane pane) {
         HBox hBox = new HBox();
-        HashMap<Integer, MonsterCard> cards = UserController.getInstance().getSecondPlayersBoard().getMonstersPlace();
+        HashMap<Integer, MonsterCard> cards = secondPlayersBoard.getMonstersPlace();
         for (Map.Entry<Integer, MonsterCard> entry : cards.entrySet()) {
             if (entry.getValue() == null) continue;
             Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getValue().getName()) + ".jpg").toExternalForm());
@@ -201,7 +249,10 @@ public class GamePlayView {
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-
+                    firstPlayersBoard.deselectAll();
+                    secondPlayersBoard.deselectAll();
+                    secondPlayersBoard.setMonsterSelectedCard(entry.getValue());
+                    secondPlayersBoard.setSelectedMonsterPlace(entry.getKey());
                 }
             });
             hBox.getChildren().add(imageView);
@@ -214,7 +265,7 @@ public class GamePlayView {
 
     private void loadSecondPlayersSpellTrapCards(Pane pane) {
         HBox hBox = new HBox();
-        HashMap<Integer, SpellTrapCard> cards = UserController.getInstance().getSecondPlayersBoard().getSpellTrapsPlace();
+        HashMap<Integer, SpellTrapCard> cards = secondPlayersBoard.getSpellTrapsPlace();
         for (Map.Entry<Integer, SpellTrapCard> entry : cards.entrySet()) {
             if (entry.getValue() == null) continue;
             Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getValue().getName()) + ".jpg").toExternalForm());
@@ -225,7 +276,10 @@ public class GamePlayView {
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-
+                    firstPlayersBoard.deselectAll();
+                    secondPlayersBoard.deselectAll();
+                    secondPlayersBoard.setSpellTrapSelectedCard(entry.getValue());
+                    secondPlayersBoard.setSelectedMonsterPlace(entry.getKey());
                 }
             });
             hBox.getChildren().add(imageView);
@@ -246,7 +300,9 @@ public class GamePlayView {
         imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-
+                firstPlayersBoard.deselectAll();
+                secondPlayersBoard.deselectAll();
+                secondPlayersBoard.setFieldZoneSelectedCard(secondPlayersBoard.getFieldZone());
             }
         });
         hBox.getChildren().add(imageView);
@@ -282,10 +338,14 @@ public class GamePlayView {
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(67.2);
             imageView.setFitHeight(98);
+            int finalI = i;
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-
+                    firstPlayersBoard.deselectAll();
+                    secondPlayersBoard.deselectAll();
+                    secondPlayersBoard.setHandSelectedCard(secondPlayersBoard.getCardsInHand().get(finalI));
+                    secondPlayersBoard.setSelectedHandPlace(finalI);
                 }
             });
             hBox.getChildren().add(imageView);
@@ -320,31 +380,102 @@ public class GamePlayView {
         return instance;
     }
 
-    public void changePhase(MouseEvent mouseEvent) {
+    public void changePhase() {
+        DuelController.getInstance().changePhase(firstPlayersBoard, secondPlayersBoard,
+                currentPhase);
+        phaseChangeToDo();
+        System.out.println(currentPhase);
+        initialize();
+    }
+
+    public void phaseChangeToDo() {
+        if (currentPhase.equals(GamePhases.DRAW)) {
+            if (!FirstTime && !CardAddedToHandInThisPhase && firstPlayersBoard.getCardsInHand().size() < 6) {
+                System.out.println("new card added to hand: " +
+                        DuelController.getInstance().addOneCardToHand(firstPlayersBoard));
+                CardAddedToHandInThisPhase = true;
+            }
+            setSummonedOrSetInThisPhase(false);
+        } else if (currentPhase.equals(GamePhases.END)) {
+            System.out.println("yes now");
+            DuelController.getInstance().changePositionReset(firstPlayersBoard);
+            firstPlayersBoard.setTrapEffect(false);
+            System.out.println(firstPlayersBoard.getPlayer().getUsername() + " " + secondPlayersBoard.getPlayer().getUsername());
+            swapPlayers();
+            FirstTime = false;
+            CardAddedToHandInThisPhase = false;
+            secondPlayersBoard.setTrapEffect(false);
+            initialize();
+        }
     }
 
     public void settingPopup(MouseEvent mouseEvent) {
     }
 
-    public void summon(MouseEvent mouseEvent) {
+    public void summon() {
+        try{
+            DuelController.getInstance().summonMonsterCard(firstPlayersBoard, secondPlayersBoard,
+                    currentPhase, SummonedOrSetInThisPhase);
+            initialize();
+        } catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText(e.getMessage());
+            alert.show();
+        }
     }
 
-    public void set(MouseEvent mouseEvent) {
+    public void set() {
+        try {
+            DuelController.getInstance().generalCardSet(firstPlayersBoard, secondPlayersBoard,
+                    currentPhase, SummonedOrSetInThisPhase);
+            initialize();
+        } catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText(e.getMessage());
+            alert.show();
+        }
     }
 
-    public void directAttack(MouseEvent mouseEvent) {
+    public void directAttack() {
+        try {
+            DuelController.getInstance().directAttack(firstPlayersBoard, secondPlayersBoard,
+                    currentPhase, FirstTime);
+            initialize();
+        } catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText(e.getMessage());
+            alert.show();
+        }
     }
 
     public void attackToCard(MouseEvent mouseEvent) {
+
     }
 
     public void changePosition(MouseEvent mouseEvent) {
+        try {
+            DuelController.getInstance().changePosition(firstPlayersBoard, secondPlayersBoard,
+                    currentPhase);
+            initialize();
+        } catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText(e.getMessage());
+            alert.show();
+        }
     }
 
     public void yourGraveyard(MouseEvent mouseEvent) {
     }
 
     public void opponentGraveyard(MouseEvent mouseEvent) {
+    }
+
+
+    public void swapPlayers() {
+        GameBoard temp = firstPlayersBoard;
+        firstPlayersBoard = secondPlayersBoard;
+        secondPlayersBoard = temp;
+        DuelController.getInstance().checkFieldZone(this.firstPlayersBoard ,this.secondPlayersBoard);
     }
 
 

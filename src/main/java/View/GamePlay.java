@@ -123,23 +123,23 @@ public class GamePlay extends Menu {
         return new Menu("Summon Card", this) {
             @Override
             public void executeCommand(String command) {
-                try {
-                    int response = DuelController.getInstance().summonMonsterCard(firstPlayersBoard, secondPlayersBoard,
-                            currentPhase, (GamePlay) this.parentMenu, isSummonedOrSetInThisPhase);
-                    if (response == 1)
-                        System.out.println("summoned successfully");
-                    else if (response == 2)
-                        lowLevelSummon();
-                    else if(response == 3)
-                        highLevelSummon();
-                    else
-                        gateGuardianSummon();
-
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-
-                parentMenu.execute();
+//                try {
+//                    int response = DuelController.getInstance().summonMonsterCard(firstPlayersBoard, secondPlayersBoard,
+//                            currentPhase, (GamePlay) this.parentMenu, isSummonedOrSetInThisPhase);
+//                    if (response == 1)
+//                        System.out.println("summoned successfully");
+//                    else if (response == 2)
+//                        lowLevelSummon();
+//                    else if(response == 3)
+//                        highLevelSummon();
+//                    else
+//                        gateGuardianSummon();
+//
+//                } catch (Exception e) {
+//                    System.out.println(e.getMessage());
+//                }
+//
+//                parentMenu.execute();
             }
 
             public void gateGuardianSummon(){
@@ -220,9 +220,7 @@ public class GamePlay extends Menu {
                     return getValidCardNumber();
                 }
             }
-        }
-
-                ;
+        };
     }
 
     public Menu changeCardPosition() {
@@ -234,13 +232,13 @@ public class GamePlay extends Menu {
                 if (matcher.find())
                     selectedPosition = matcher.group(1);
 
-                try {
-                    DuelController.getInstance().changePosition(firstPlayersBoard, secondPlayersBoard,
-                            selectedPosition, currentPhase);
-                    System.out.println("card position changed successfully");
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
+//                try {
+//                    DuelController.getInstance().changePosition(firstPlayersBoard, secondPlayersBoard,
+//                            selectedPosition, currentPhase);
+//                    System.out.println("card position changed successfully");
+//                } catch (Exception e) {
+//                    System.out.println(e.getMessage());
+//                }
 
                 parentMenu.execute();
             }
@@ -309,14 +307,14 @@ public class GamePlay extends Menu {
         return new Menu("Direct Attack", this) {
             @Override
             public void executeCommand(String command) {
-                try {
-                    int attackPoint = DuelController.getInstance().directAttack(firstPlayersBoard, secondPlayersBoard,
-                            currentPhase, (GamePlay) this.parentMenu, isFirstTime);
-                    System.out.println("you opponent receives " + attackPoint + " battle damage");
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-                parentMenu.execute();
+//                try {
+//                    int attackPoint = DuelController.getInstance().directAttack(firstPlayersBoard, secondPlayersBoard,
+//                            currentPhase, (GamePlay) this.parentMenu, isFirstTime);
+//                    System.out.println("you opponent receives " + attackPoint + " battle damage");
+//                } catch (Exception e) {
+//                    System.out.println(e.getMessage());
+//                }
+//                parentMenu.execute();
             }
         };
     }
