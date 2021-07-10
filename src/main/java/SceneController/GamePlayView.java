@@ -194,6 +194,7 @@ public class GamePlayView {
         for (Map.Entry<Integer, MonsterCard> entry : cards.entrySet()) {
             if (entry.getValue() == null) continue;
             Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getValue().getName()) + ".jpg").toExternalForm());
+            if (entry.getValue().isSet()) image = new Image(getClass().getResource("/Assets/4009.png").toExternalForm());
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(67.2);
             imageView.setFitHeight(98);
@@ -217,6 +218,7 @@ public class GamePlayView {
         for (Map.Entry<Integer, SpellTrapCard> entry : cards.entrySet()) {
             if (entry.getValue() == null) continue;
             Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getValue().getName()) + ".jpg").toExternalForm());
+            if (entry.getValue().isSet()) image = new Image(getClass().getResource("/Assets/4010.png").toExternalForm());
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(67.2);
             imageView.setFitHeight(98);
@@ -269,14 +271,14 @@ public class GamePlayView {
             pane.getChildren().add(0 ,imageView);
         }
     }
-    
+
 
 
 
     public void loadSecondPlayersCardsInHand(ScrollPane scrollPane) {
         HBox hBox = new HBox();
         for (int i = 0 ; i < secondPlayersBoard.getCardsInHand().size() ; i++) {
-            Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(secondPlayersBoard.getCardsInHand().get(i).getName()) + ".jpg").toExternalForm());
+            Image image = new Image(getClass().getResource("/Assets/4013.png").toExternalForm());
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(67.2);
             imageView.setFitHeight(98);
