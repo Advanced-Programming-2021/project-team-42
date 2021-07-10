@@ -286,14 +286,14 @@ public class GamePlayView {
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(67.2);
             imageView.setFitHeight(98);
-            int finalI = i + 1;
+            int finalI = i;
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     firstPlayersBoard.deselectAll();
                     secondPlayersBoard.deselectAll();
                     firstPlayersBoard.setHandSelectedCard(firstPlayersBoard.getCardsInHand().get(finalI));
-                    firstPlayersBoard.setSelectedHandPlace(finalI);
+                    firstPlayersBoard.setSelectedHandPlace(finalI + 1);
                 }
             });
             hBox.getChildren().add(imageView);
@@ -432,14 +432,14 @@ public class GamePlayView {
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(67.2);
             imageView.setFitHeight(98);
-            int finalI = i + 1;
+            int finalI = i;
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     firstPlayersBoard.deselectAll();
                     secondPlayersBoard.deselectAll();
                     secondPlayersBoard.setHandSelectedCard(secondPlayersBoard.getCardsInHand().get(finalI));
-                    secondPlayersBoard.setSelectedHandPlace(finalI);
+                    secondPlayersBoard.setSelectedHandPlace(finalI + 1);
                 }
             });
             hBox.getChildren().add(imageView);
