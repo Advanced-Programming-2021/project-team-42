@@ -51,6 +51,8 @@ public class GamePlayView {
     private boolean CardAddedToHandInThisPhase = false;
 
     public void start(Stage stage) throws Exception {
+        Login.getInstance().stopMusic();
+        Login.getInstance().playMusic("/Assets/Ramin Djawadi _ Game Of Thrones (320).mp3");
         Pane pane = FXMLLoader.load(getClass().getResource("/FXML/GamePlayScene.fxml"));
         Scene scene = new Scene(pane);
         stage.setScene(scene);
@@ -385,6 +387,8 @@ public class GamePlayView {
         return instance;
     }
 
+
+
     public void changePhase() {
         DuelController.getInstance().changePhase(firstPlayersBoard, secondPlayersBoard,
                 currentPhase);
@@ -392,6 +396,9 @@ public class GamePlayView {
         System.out.println(currentPhase);
         initialize();
     }
+
+
+
 
     public void phaseChangeToDo() {
         if (currentPhase.equals(GamePhases.DRAW)) {
@@ -414,6 +421,9 @@ public class GamePlayView {
         }
     }
 
+
+
+
     public void settingPopup(MouseEvent mouseEvent) {
     }
 
@@ -429,6 +439,9 @@ public class GamePlayView {
         }
     }
 
+
+
+
     public void set() {
         try {
             DuelController.getInstance().generalCardSet(firstPlayersBoard, secondPlayersBoard,
@@ -440,6 +453,9 @@ public class GamePlayView {
             alert.show();
         }
     }
+
+
+
 
     public void directAttack() {
         try {
@@ -453,9 +469,15 @@ public class GamePlayView {
         }
     }
 
+
+
+
     public void attackToCard(MouseEvent mouseEvent) {
 
     }
+
+
+
 
     public void changePosition(MouseEvent mouseEvent) {
         try {
@@ -468,6 +490,8 @@ public class GamePlayView {
             alert.show();
         }
     }
+
+
 
     public void yourGraveyard(MouseEvent mouseEvent) {
         Stage stage = new Stage();
@@ -493,8 +517,13 @@ public class GamePlayView {
         stage.show();
     }
 
+
+
+
     public void opponentGraveyard(MouseEvent mouseEvent) {
     }
+
+
 
 
     public void swapPlayers() {
@@ -504,6 +533,9 @@ public class GamePlayView {
         DuelController.getInstance().checkFieldZone(this.firstPlayersBoard ,this.secondPlayersBoard);
         initialize();
     }
+
+
+
 
 
 //    public void refreshCards() {

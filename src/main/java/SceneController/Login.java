@@ -32,16 +32,20 @@ public class Login {
         pane.getChildren().add(0, imageView);
         Scene scene = new Scene(pane);
         stage.setScene(scene);
-        playMusic();
+        playMusic("/Assets/1-05 - Normal Duel (DM／GX).mp3");
         stage.show();
     }
 
-    public void playMusic() {
-        Media media = new Media(getClass().getResource("/Assets/1-05 - Normal Duel (DM／GX).mp3").toExternalForm());
+    public void playMusic(String musicPath) {
+        Media media = new Media(getClass().getResource(musicPath).toExternalForm());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         Login.mediaPlayer = mediaPlayer;
         mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.ZERO));
         mediaPlayer.play();
+    }
+
+    public void stopMusic(){
+        mediaPlayer.setMute(true);
     }
 
 
