@@ -6,10 +6,12 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -17,7 +19,9 @@ import javafx.stage.Stage;
 public class ScoreBoardView{
     private static ScoreBoardView instance = null;
     private static Stage stage;
-    public VBox scoreBoard;
+    public VBox vBox;
+    public ScrollPane scrollPane;
+    public AnchorPane anchorPane;
 
     public void start(Stage stage) throws Exception {
         ScoreBoardView.stage = stage;
@@ -31,7 +35,7 @@ public class ScoreBoardView{
     }
 
     public void initialize() {
-        ScoreBoardController.getInstance().showScoreboard(scoreBoard);
+        ScoreBoardController.getInstance().showScoreboard(vBox);
     }
 
     public static ScoreBoardView getInstance() {
