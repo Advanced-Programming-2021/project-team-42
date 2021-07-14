@@ -19,6 +19,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -120,6 +122,20 @@ public class GamePlayView {
         opponentNickname.setText("Nickname: " + secondPlayersBoard.getPlayer().getNickname());
     }
 
+    public void showCard (String cardName) {
+        Pane pane = new Pane();
+        pane.setPrefWidth(210.5);
+        pane.setPrefHeight(307);
+        Image image = new Image(getClass().getResource("/Assets/" + cardName + ".jpg").toExternalForm());
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(210.5);
+        imageView.setFitHeight(307);
+        pane.getChildren().add(imageView);
+        Scene scene = new Scene(pane);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
+    }
 
     public Pane loadFirstPlayersMonsterCards() {
         if (mainPane.getChildren().contains(previousFirstPlayerMonsterPane))
@@ -135,6 +151,7 @@ public class GamePlayView {
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
+                    showCard(toCamelCase(entry.getValue().getName()));
                     firstPlayersBoard.deselectAll();
                     secondPlayersBoard.deselectAll();
                     firstPlayersBoard.setMonsterSelectedCard(entry.getValue());
@@ -169,6 +186,7 @@ public class GamePlayView {
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
+                    showCard(toCamelCase(entry.getValue().getName()));
                     firstPlayersBoard.deselectAll();
                     secondPlayersBoard.deselectAll();
                     firstPlayersBoard.setSpellTrapSelectedCard(entry.getValue());
@@ -200,6 +218,7 @@ public class GamePlayView {
         imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
+                showCard(toCamelCase(firstPlayersBoard.getFieldZone().getName()));
                 firstPlayersBoard.deselectAll();
                 secondPlayersBoard.deselectAll();
                 firstPlayersBoard.setFieldZoneSelectedCard(firstPlayersBoard.getFieldZone());
@@ -229,6 +248,10 @@ public class GamePlayView {
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
+                    Media media = new Media(getClass().getResource("/Assets/mixkit-aggressive-beast-roar-13 (online-audio-converter.com).mp3").toExternalForm());
+                    MediaPlayer mediaPlayer = new MediaPlayer(media);
+                    mediaPlayer.play();
+                    showCard(toCamelCase(firstPlayersBoard.getCardsInHand().get(finalI).getName()));
                     firstPlayersBoard.deselectAll();
                     secondPlayersBoard.deselectAll();
                     firstPlayersBoard.setHandSelectedCard(firstPlayersBoard.getCardsInHand().get(finalI));
@@ -258,6 +281,8 @@ public class GamePlayView {
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
+                    if(!entry.getValue().isDefensive())
+                        showCard(toCamelCase(entry.getValue().getName()));
                     firstPlayersBoard.deselectAll();
                     secondPlayersBoard.deselectAll();
                     secondPlayersBoard.setMonsterSelectedCard(entry.getValue());
@@ -326,6 +351,7 @@ public class GamePlayView {
         imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
+                showCard(toCamelCase(secondPlayersBoard.getFieldZone().getName()));
                 firstPlayersBoard.deselectAll();
                 secondPlayersBoard.deselectAll();
                 secondPlayersBoard.setFieldZoneSelectedCard(secondPlayersBoard.getFieldZone());
@@ -429,7 +455,6 @@ public class GamePlayView {
         popup.setScene(scene);
 
         popup.initModality(Modality.APPLICATION_MODAL);
-//        popup.showAndWait();
         popup.show();
     }
 
@@ -437,6 +462,9 @@ public class GamePlayView {
         try{
             DuelController.getInstance().summonMonsterCard(firstPlayersBoard, secondPlayersBoard,
                     currentPhase, SummonedOrSetInThisPhase);
+            Media media = new Media(getClass().getResource("/Assets/set card .mp3").toExternalForm());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.play();
             initialize();
         } catch (Exception e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -480,6 +508,9 @@ public class GamePlayView {
             int place = Integer.parseInt(cardNumber.getText());
             if (DuelController.getInstance().canAttackToCard(firstPlayersBoard, secondPlayersBoard, currentPhase, place))
                 System.out.println(DuelController.getInstance().attackToCard(firstPlayersBoard, secondPlayersBoard, place));
+            Media media = new Media(getClass().getResource("/Assets/mixkit-monster-creature-scream-1965 (online-audio-converter.com).mp3").toExternalForm());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.play();
             initialize();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);

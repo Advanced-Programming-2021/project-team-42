@@ -50,6 +50,8 @@ public class DuelController {
 
     public void gamePreparation(User firstPlayer, User secondPlayer, int rounds,
                                 GameBoard firstPlayerBoard, GameBoard secondPlayerBoard) {
+        firstPlayer.setLP(8000);
+        secondPlayer.setLP(8000);
         ArrayList<Card> firstPlayersMainCards = createCardsFromDeck(Deck.getDeckByName(firstPlayer.getActiveDeck()).getMainDeckCards());
         ArrayList<Card> firstPlayersSideCards = createCardsFromDeck(Deck.getDeckByName(firstPlayer.getActiveDeck()).getSideDeckCards());
         ArrayList<Card> secondPlayersMainCards = createCardsFromDeck(Deck.getDeckByName(secondPlayer.getActiveDeck()).getMainDeckCards());
@@ -793,7 +795,7 @@ public class DuelController {
             secondPlayersBoard.setMonstersPlace(null, number);
             firstPlayersBoard.deselectAll();
             secondPlayersBoard.deselectAll();
-            return "your opponent’s monster is destroyed and your opponent receives" + damage + " battle damage";
+            return "your opponent’s monster is destroyed and your opponent receives " + damage + " battle damage";
         } else if (secondPlayerAP > firstPlayerAP) {
             firstPlayersBoard.getPlayer().decreaseLP(damage);
             firstPlayersBoard.addCardToGraveyard(firstPlayersBoard.getMonsterSelectedCard());
