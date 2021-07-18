@@ -1,4 +1,4 @@
-module AP {
+module Game.First.Phase {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.media;
