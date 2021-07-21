@@ -1,10 +1,11 @@
 package SceneController;
 
 
-import Controller.RegisterController;
-import Controller.ShopController;
-import Controller.UserController;
-import Model.Card;
+import Server.Controller.RegisterController;
+import Server.Controller.ShopController;
+import Server.Controller.UserController;
+import Server.Model.Card;
+import View.Main;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
@@ -45,24 +46,24 @@ public class ShopView {
 
 
     public void fillCards(Pane pane) {
-        for (int i = 0 ; i < 49 ; i++) {
+        for (int i = 0; i < 49; i++) {
             Rectangle rectangle = new Rectangle();
             rectangle.setHeight(247.9);
             rectangle.setWidth(170);
-            rectangle.setY((i / 4)*300 + 30);
-            rectangle.setX((i % 4)*170 + 30*((i % 4) + 1) + 32);
+            rectangle.setY((i / 4) * 300 + 30);
+            rectangle.setX((i % 4) * 170 + 30 * ((i % 4) + 1) + 32);
             rectangle.setFill(new ImagePattern(new Image(getClass().getResource("/Assets/" + getCardName(i) + ".jpg").toExternalForm())));
-            pane.getChildren().add(i+1 ,rectangle);
+            pane.getChildren().add(i + 1, rectangle);
         }
     }
 
     public void fillBuyItems(Pane pane) {
-        for (int i = 0 ; i < 49 ; i++) {
+        for (int i = 0; i < 49; i++) {
             Rectangle buyItem = new Rectangle();
             buyItem.setHeight(30);
             buyItem.setWidth(70);
-            buyItem.setY((i / 4)*300 + 30 + 217.9);
-            buyItem.setX((i % 4)*170 + 30*((i % 4) + 1) + 32);
+            buyItem.setY((i / 4) * 300 + 30 + 217.9);
+            buyItem.setX((i % 4) * 170 + 30 * ((i % 4) + 1) + 32);
             buyItem.setOnMouseEntered(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
@@ -79,38 +80,54 @@ public class ShopView {
             buyItem.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    buyItem(pane ,finalI);
+                    if (mouseEvent.isPrimaryButtonDown())
+                        buySell(pane, finalI, 1);
+                    else buySell(pane, finalI, 0);
                 }
             });
             buyItem.setFill(new ImagePattern(new Image(getClass().getResource("/Assets/BuyItem.png").toExternalForm())));
-            pane.getChildren().add(i+1+49 ,buyItem);
-            if (Card.getAllCards().get(i).getPrice() > UserController.getInstance().getLoggedInUser().getBalance()) {
+            pane.getChildren().add(i + 1 + 49, buyItem);
+            if (Card.getAllCards().get(i).getPrice() > MainView.loggedInUser.getBalance()) {
                 buyItem.setVisible(false);
             }
         }
     }
 
-    public void buyItem(Pane pane ,int i) {
-        try{
-            ShopController.getInstance().buyCard(UserController.getInstance().getLoggedInUser().getUsername() ,Card.getAllCards().get(i).getName());
-        } catch (Exception e){
-            Alert alert = new Alert(Alert.AlertType.NONE);
-            alert.setAlertType(Alert.AlertType.INFORMATION);
-            if (numberOfCard(i) <= 1) alert.setContentText(e.getMessage());
-            else alert.setContentText(e.getMessage() + "\n\nYou've bought " + numberOfCard(i) + " of this card");
+    public void buySell(Pane pane, int i, int flag) {
+        try {
+            if (flag == 1)
+                Main.dataOutputStream.writeUTF("buyCard," + Main.token + "," + Card.getAllCards().get(i).getName());
+            else
+                Main.dataOutputStream.writeUTF("sellCard," + Main.token + "," + Card.getAllCards().get(i).getName());
+            Main.dataOutputStream.flush();
+            Main.dataOutputStream.close();
+            String result = Main.dataInputStream.readUTF();
+            Alert alert;
+            if (result.startsWith("error")) {
+                alert = new Alert(Alert.AlertType.NONE);
+                alert.setAlertType(Alert.AlertType.INFORMATION);
+                if (numberOfCard(i) <= 1) alert.setContentText(result.substring(6));
+                else
+                    alert.setContentText(result.substring(6) + "\n\nYou've bought " + numberOfCard(i) + " of this card");
+            } else {
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("card " + Card.getAllCards().get(i).getName() + " added to your cards successfully");
+            }
             alert.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        for (int j = 0 ; j < 49 ; j++) {
-            if (Card.getAllCards().get(j).getPrice() > UserController.getInstance().getLoggedInUser().getBalance()) {
-                pane.getChildren().get(j+50).setVisible(false);
+        for (int j = 0; j < 49; j++) {
+            if (Card.getAllCards().get(j).getPrice() > MainView.loggedInUser.getBalance()) {
+                pane.getChildren().get(j + 50).setVisible(false);
             }
         }
     }
 
     public int numberOfCard(int i) {
         int number = 0;
-        if (UserController.getInstance().getLoggedInUser().doesUserHasThisCard(Card.getAllCards().get(i).getName()))
-            number = UserController.getInstance().getLoggedInUser().getUserAllCards().get(Card.getAllCards().get(i).getName());
+        if (MainView.loggedInUser.doesUserHasThisCard(Card.getAllCards().get(i).getName()))
+            number = MainView.loggedInUser.getUserAllCards().get(Card.getAllCards().get(i).getName());
         return number;
     }
 
@@ -122,9 +139,9 @@ public class ShopView {
     public String toCamelCase(String s) {
         String result = "";
         String[] tokens = s.split(" ");
-        for (int i = 0, L = tokens.length; i<L; i++) {
+        for (int i = 0, L = tokens.length; i < L; i++) {
             String token = tokens[i];
-            if (i==0) result += token.toLowerCase();
+            if (i == 0) result += token.toLowerCase();
             else
                 result += token.substring(0, 1).toUpperCase() +
                         token.substring(1, token.length()).toLowerCase();
@@ -156,7 +173,7 @@ public class ShopView {
                 }
             }
         });
-        pane.getChildren().add(99 , button);
+        pane.getChildren().add(99, button);
     }
 
 

@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import Controller.DeckController;
-import Controller.RegisterController;
+import Server.Controller.DeckController;
+import Server.Controller.RegisterController;
 
 
 public class RegisterMenu extends Menu {

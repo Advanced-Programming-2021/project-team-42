@@ -1,8 +1,8 @@
 package SceneController;
 
-import Controller.DeckController;
-import Controller.UserController;
-import Model.Deck;
+import Server.Controller.DeckController;
+import Server.Controller.UserController;
+import Server.Model.Deck;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -51,7 +51,7 @@ public class DeckControlView {
 
     public void addToMainDeck(MouseEvent mouseEvent) {
         try {
-            DeckController.getInstance().addCardToDeck(UserController.getInstance().getLoggedInUser().getUsername(),
+            DeckController.getInstance().addCardToDeck(MainView.loggedInUser.getUsername(),
                     deck.getName(), selectedCard, false);
             initialize();
         } catch (Exception e) {
@@ -64,7 +64,7 @@ public class DeckControlView {
 
     public void addToSideDeck(MouseEvent mouseEvent) {
         try {
-            DeckController.getInstance().addCardToDeck(UserController.getInstance().getLoggedInUser().getUsername(),
+            DeckController.getInstance().addCardToDeck(MainView.loggedInUser.getUsername(),
                     deck.getName(), selectedCard, true);
             initialize();
         } catch (Exception e) {
@@ -77,7 +77,7 @@ public class DeckControlView {
 
     public void removeFromDeck(MouseEvent mouseEvent) {
         try {
-            DeckController.getInstance().removeCardFromDeck(UserController.getInstance().getLoggedInUser().getUsername(),
+            DeckController.getInstance().removeCardFromDeck(MainView.loggedInUser.getUsername(),
                     deck.getName(), selectedCard, isSide);
             initialize();
         } catch (Exception e) {
@@ -90,7 +90,7 @@ public class DeckControlView {
 
     public void setActive(MouseEvent mouseEvent) {
         try {
-            DeckController.getInstance().setActiveDeck(UserController.getInstance().getLoggedInUser().getUsername(),
+            DeckController.getInstance().setActiveDeck(MainView.loggedInUser.getUsername(),
                     deck.getName());
             activationResponse.setVisible(true);
         } catch (Exception e){
@@ -101,7 +101,7 @@ public class DeckControlView {
 
     public void deleteDeck() {
         try {
-            DeckController.getInstance().deleteDeck(UserController.getInstance().getLoggedInUser().getUsername(),
+            DeckController.getInstance().deleteDeck(MainView.loggedInUser.getUsername(),
                     deck.getName());
             DeckView.getInstance().start(stage);
         } catch (Exception e) {

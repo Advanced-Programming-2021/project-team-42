@@ -1,7 +1,7 @@
 package SceneController;
 
-import Controller.DeckController;
-import Controller.UserController;
+import Server.Controller.DeckController;
+import Server.Controller.UserController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -44,7 +44,7 @@ public class DeckPopupView {
 
     public void createDeck() {
         try {
-            DeckController.getInstance().createDeck(UserController.getInstance().getLoggedInUser().getUsername(),
+            DeckController.getInstance().createDeck(MainView.loggedInUser.getUsername(),
                     deckName.getText());
             creationResponse.setText("Deck created successfully");
             creationResponse.setVisible(true);

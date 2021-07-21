@@ -1,19 +1,20 @@
-package Controller;
+package Server.Controller;
 
-import Model.GameBoard;
-import Model.User;
+import Server.Model.GameBoard;
+import Server.Model.User;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
+import java.util.HashMap;
 
 public class UserController {
     private static UserController instance = null;
     private final static File[] allProfilePicsPath = new File("src/main/resources/Assets/ProfileImages").listFiles();
     private static int counter = 0;
     private static String shownImageName;
-    private User loggedInUser;
+    private static HashMap<String, User> loggedInUsers = new HashMap<>();
     private User opponentUser;
     private GameBoard firstPlayersBoard;
     private GameBoard secondPlayersBoard;
@@ -39,11 +40,15 @@ public class UserController {
         }
     }
 
-    public void load (Label username, Label nickname, ImageView profilePic){
-        username.setText("Username: " + loggedInUser.getUsername());
-        nickname.setText("Nickname: " + loggedInUser.getNickname());
-        profilePic.setImage(new Image(getClass().getResource(loggedInUser.getPathToProfilePhoto()).toExternalForm()));
+    public static HashMap<String, User> getLoggedInUsers() {
+        return loggedInUsers;
     }
+
+    //    public void load (Label username, Label nickname, ImageView profilePic){
+//        username.setText("Username: " + loggedInUser.getUsername());
+//        nickname.setText("Nickname: " + loggedInUser.getNickname());
+//        profilePic.setImage(new Image(getClass().getResource(loggedInUser.getPathToProfilePhoto()).toExternalForm()));
+//    }
 
     public void increaseMoney(User user, int amount) {
         user.setBalance(user.getBalance() + amount);
@@ -58,18 +63,22 @@ public class UserController {
         return user.getPassword().equals(password);
     }
 
-    public User getLoggedInUser() {
-        return loggedInUser;
-    }
-
-    public void setLoggedInUser(User loggedInUser) {
-        this.loggedInUser = loggedInUser;
-    }
-
     public static UserController getInstance() {
         if (instance == null)
             instance = new UserController();
         return instance;
+    }
+
+    public static User getUserByToken (String token) {
+        return loggedInUsers.get(token);
+    }
+
+    public static void addUser (String token, User user){
+        loggedInUsers.put(token, user);
+    }
+
+    public static void removeUser (String token) {
+        loggedInUsers.remove(token);
     }
 
     public User getOpponentUser() {
@@ -112,11 +121,11 @@ public class UserController {
         shownProfilePic.setImage(new Image(getClass().getResource("/Assets/ProfileImages/" + imageFile.getName()).toExternalForm()));
     }
 
-    public void setProfilePic(ImageView profilePic) {
-        shownImageName = allProfilePicsPath[counter].getName();
-        loggedInUser.setPathToProfilePhoto("/Assets/ProfileImages/" + shownImageName);
-        shownImageName = null;
-        counter = 0;
-        profilePic.setImage(new Image(getClass().getResource(loggedInUser.getPathToProfilePhoto()).toExternalForm()));
-    }
+//    public void setProfilePic(ImageView profilePic) {
+//        shownImageName = allProfilePicsPath[counter].getName();
+//        loggedInUser.setPathToProfilePhoto("/Assets/ProfileImages/" + shownImageName);
+//        shownImageName = null;
+//        counter = 0;
+//        profilePic.setImage(new Image(getClass().getResource(loggedInUser.getPathToProfilePhoto()).toExternalForm()));
+//    }
 }

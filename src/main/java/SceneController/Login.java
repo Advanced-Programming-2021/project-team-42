@@ -1,7 +1,8 @@
 package SceneController;
 
-import Controller.DeckController;
-import Controller.RegisterController;
+import Server.Controller.DeckController;
+import Server.Controller.RegisterController;
+import Server.Model.User;
 import View.Main;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -51,12 +52,20 @@ public class Login {
 
     public void loginClicked() {
         try{
-            RegisterController.getInstance().loginUser(userName.getText(), passWord.getText());
-            MainView.getInstance().start(Main.stage);
-
+            Main.dataOutputStream.writeUTF("login," + userName.getText() + "," + passWord.getText());
+            Main.dataOutputStream.flush();
+            Main.dataOutputStream.close();
+            String result = Main.dataInputStream.readUTF();
+            if (result.startsWith("error")) {
+                error.setText(result.substring(6));
+                error.setVisible(true);
+            } else {
+                Main.token = result;
+                MainView.loggedInUser = User.getUserByUsername(userName.getText());
+                MainView.getInstance().start(Main.stage);
+            }
         } catch (Exception e){
-            error.setText(e.getMessage());
-            error.setVisible(true);
+            e.printStackTrace();
         }
     }
 

@@ -1,7 +1,6 @@
 package View;
 
-import Controller.CardController;
-import Controller.DeckController;
+import Server.Controller.DeckController;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;

@@ -1,6 +1,6 @@
 package SceneController;
 
-import Controller.DuelController;
+import Server.Controller.DuelController;
 import javafx.stage.Stage;
 
 

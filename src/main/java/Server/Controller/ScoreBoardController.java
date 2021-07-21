@@ -1,6 +1,6 @@
-package Controller;
+package Server.Controller;
 
-import Model.User;
+import Server.Model.User;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -37,7 +37,7 @@ public class ScoreBoardController {
         return result.toString();
     }
 
-    public void showScoreboard(VBox vBox) {
+    public synchronized void showScoreboard(VBox vBox, User loggedInUser) {
         int realRank = 1;
         int shownRank = 1;
         ArrayList<User> allUsers = User.getAllUsers();
@@ -51,8 +51,9 @@ public class ScoreBoardController {
                 shownRank = realRank;
             }
 
-            Text text = new Text(shownRank + "- " + user.getNickname() + ": " + user.getScore() + "\n");
-            if (user.getUsername().equals(UserController.getInstance().getLoggedInUser().getUsername()))
+            Text text = new Text(shownRank + "- " + user.getNickname() + ": " + user.getScore() +
+                    (UserController.getLoggedInUsers().containsValue(user) ? "(Online)" : "") + "\n");
+            if (user.getUsername().equals(loggedInUser.getUsername()))
                 text.setFill(Color.YELLOW);
             else
                 text.setFill(Color.WHITE);

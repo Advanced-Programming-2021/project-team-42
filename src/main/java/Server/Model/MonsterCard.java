@@ -1,8 +1,8 @@
-package Model;
+package Server.Model;
 
-import Model.Enums.Attribute;
-import Model.Enums.CardType;
-import Model.Enums.MonsterType;
+import Server.Model.Enums.Attribute;
+import Server.Model.Enums.CardType;
+import Server.Model.Enums.MonsterType;
 
 import java.util.ArrayList;
 

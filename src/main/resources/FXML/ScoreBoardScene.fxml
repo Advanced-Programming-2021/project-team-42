@@ -22,4 +22,9 @@
          </AnchorPane>
      </content>
    </ScrollPane>
+   <Button layoutX="14.0" layoutY="561.0" mnemonicParsing="false" onMouseClicked="#refresh" prefHeight="29.0" prefWidth="68.0" style="-fx-background-color: black;" text="Refresh" textFill="WHITE">
+      <font>
+         <Font name="System Bold Italic" size="12.0" />
+      </font>
+   </Button>
 </Pane>

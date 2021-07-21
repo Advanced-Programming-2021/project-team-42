@@ -1,5 +1,7 @@
-package Model;
+package Server.Model;
 
+
+import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +22,7 @@ public class User {
     private int balance;
     private int score;
     private int LP;
+    private VBox vBox;
 
     static {
         allUsers = new ArrayList<>();
@@ -125,6 +128,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public VBox getvBox() {
+        return vBox;
+    }
+
+    public void setvBox(VBox vBox) {
+        this.vBox = vBox;
     }
 
     public String getPathToProfilePhoto() {

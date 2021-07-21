@@ -1,7 +1,7 @@
 package SceneController;
 
-import Controller.DeckController;
-import Controller.UserController;
+import Server.Controller.DeckController;
+import Server.Controller.UserController;
 import View.Main;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -38,7 +38,7 @@ public class DeckView {
         selectDeck.setStroke(Color.TRANSPARENT);
         newDeck.setFill(new ImagePattern(new Image(getClass().getResource("/Assets/createNewDeck.png").toExternalForm())));
         newDeck.setStroke(Color.TRANSPARENT);
-        DeckController.getInstance().showAllDecks(UserController.getInstance().getLoggedInUser(),
+        DeckController.getInstance().showAllDecks(MainView.loggedInUser,
                 decksName);
     }
 

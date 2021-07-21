@@ -1,4 +1,4 @@
-package Model.Enums;
+package Server.Model.Enums;
 
 public enum Attribute {
     EARTH,

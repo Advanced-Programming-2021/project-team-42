@@ -1,7 +1,7 @@
 package SceneController;
 
-import Controller.DuelController;
-import Controller.UserController;
+import Server.Controller.DuelController;
+import Server.Controller.UserController;
 import View.Main;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -66,7 +66,7 @@ public class DuelView {
             return;
         }
         try {
-            DuelController.getInstance().startNewDuel(UserController.getInstance().getLoggedInUser().getUsername()
+            DuelController.getInstance().startNewDuel(MainView.loggedInUser.getUsername()
                     , secondPlayer.getText().trim(), rands);
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.NONE);

@@ -1,14 +1,13 @@
 package SceneController;
 
-import Controller.UserController;
-import Model.Deck;
+import Server.Controller.UserController;
+import Server.Model.Deck;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -44,7 +43,7 @@ public class SelectDeckPopup {
 
     public void selectDeck() throws Exception{
         String deckNameStr = deckName.getText();
-        if(!UserController.getInstance().getLoggedInUser().getUserDecks().contains(deckNameStr)){
+        if(!MainView.loggedInUser.getUserDecks().contains(deckNameStr)){
             selectionResponse.setText("You have no deck with name " + deckNameStr);
             selectionResponse.setVisible(true);
         } else {

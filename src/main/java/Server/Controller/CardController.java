@@ -1,9 +1,9 @@
-package Controller;
+package Server.Controller;
 
-import Model.Card;
-import Model.Enums.*;
-import Model.MonsterCard;
-import Model.SpellTrapCard;
+import Server.Model.Card;
+import Server.Model.Enums.*;
+import Server.Model.MonsterCard;
+import Server.Model.SpellTrapCard;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
@@ -38,6 +38,7 @@ public class CardController {
                         cardType, cardPath, attackPoint, defencePoint, price, level);
                 MonsterCard.addMonsterCardToList(monsterCard);
                 Card.addCardToList(monsterCard);
+                ShopController.firstCardAdd(monsterCard);
             }
             FileReader fileReaderSpellTrap = new FileReader(FILE_PATH + "\\SpellTrap (1).csv");
             Iterable<CSVRecord> recordsSpellTrap = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(fileReaderSpellTrap);
@@ -54,6 +55,7 @@ public class CardController {
                         icon, status, cardPath, price);
                 SpellTrapCard.addSpellTrapCardToList(spellTrapCard);
                 Card.addCardToList(spellTrapCard);
+                ShopController.firstCardAdd(spellTrapCard);
             }
         } catch (Exception e) {
             System.out.println("An Error occurred");

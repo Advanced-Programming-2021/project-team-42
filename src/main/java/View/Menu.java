@@ -1,8 +1,8 @@
 package View;
 
-import Controller.CardController;
-import Controller.UserController;
-import Model.User;
+import Server.Controller.CardController;
+import Server.Controller.UserController;
+import Server.Model.User;
 
 import java.util.HashMap;
 import java.util.Map;

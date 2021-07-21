@@ -1,6 +1,6 @@
 package SceneController;
 
-import Controller.IAndEController;
+import Server.Controller.IAndEController;
 import View.Main;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

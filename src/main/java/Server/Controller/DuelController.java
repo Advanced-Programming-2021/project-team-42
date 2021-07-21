@@ -1,14 +1,13 @@
-package Controller;
+package Server.Controller;
 
-import Model.*;
-import Model.Enums.Icon;
-import Model.Enums.MonsterType;
+import Server.Model.*;
+import Server.Model.Enums.Icon;
+import Server.Model.Enums.MonsterType;
 import SceneController.GamePlayView;
 import SceneController.Login;
 import SceneController.MainView;
 import View.GamePhases;
 import View.GamePlay;
-import View.Menu;
 import javafx.scene.control.Alert;
 
 import java.util.*;

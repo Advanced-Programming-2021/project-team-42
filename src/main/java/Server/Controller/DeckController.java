@@ -1,19 +1,17 @@
-package Controller;
+package Server.Controller;
 
-import Model.*;
+import SceneController.MainView;
+import Server.Model.*;
 import SceneController.DeckControlView;
 import com.google.gson.Gson;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -318,7 +316,7 @@ public class DeckController {
     public void loadYourCards(ScrollPane yourCards,
                               Button removeFromDeck, Button addToMainDeck, Button addToSideDeck) {
         HBox hBox = new HBox();
-        HashMap<String, Integer> cards = UserController.getInstance().getLoggedInUser().getUserAllCards();
+        HashMap<String, Integer> cards = MainView.loggedInUser.getUserAllCards();
         for(Map.Entry<String, Integer> entry : cards.entrySet()){
             for (int i = 0; i < entry.getValue(); i++) {
                 Image image = new Image(getClass().getResource("/Assets/" + toCamelCase(entry.getKey()) + ".jpg").toExternalForm());

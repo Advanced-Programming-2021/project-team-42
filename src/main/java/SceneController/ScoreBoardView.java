@@ -1,13 +1,11 @@
 package SceneController;
 
-import Controller.ScoreBoardController;
+import Server.Controller.ScoreBoardController;
+import Server.Model.User;
 import View.Main;
-import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -35,7 +33,14 @@ public class ScoreBoardView{
     }
 
     public void initialize() {
-        ScoreBoardController.getInstance().showScoreboard(vBox);
+        MainView.loggedInUser.setvBox(vBox);
+        try {
+            Main.dataOutputStream.writeUTF("updateScoreBoard," + Main.token);
+            Main.dataOutputStream.flush();
+            Main.dataOutputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static ScoreBoardView getInstance() {
@@ -50,5 +55,9 @@ public class ScoreBoardView{
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void refresh() {
+        initialize();
     }
 }

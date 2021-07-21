@@ -1,6 +1,6 @@
 package View;
 
-import Controller.ScoreBoardController;
+import Server.Controller.ScoreBoardController;
 
 import java.util.HashMap;
 import java.util.regex.Pattern;

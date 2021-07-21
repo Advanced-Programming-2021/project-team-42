@@ -1,7 +1,7 @@
 package SceneController;
 
-import Controller.DeckController;
-import Controller.RegisterController;
+import Server.Controller.DeckController;
+import Server.Controller.RegisterController;
 import View.Main;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -35,12 +35,17 @@ public class SignUp {
 
     public void signUpClicked() {
         try{
-            RegisterController.getInstance().createNewUser(userName.getText(), nickName.getText(), password.getText());
-            error.setText("User created successfully");
+            Main.dataOutputStream.writeUTF("signup," + userName.getText() + "," + nickName.getText() + "," + password.getText());
+            Main.dataOutputStream.flush();
+            Main.dataOutputStream.close();
+            String result = Main.dataInputStream.readUTF();
+            if (result.startsWith("error"))
+                error.setText(result.substring(6));
+            else
+                error.setText("User created successfully");
             error.setVisible(true);
         } catch (Exception e){
-            error.setText(e.getMessage());
-            error.setVisible(true);
+            e.printStackTrace();
         }
     }
 

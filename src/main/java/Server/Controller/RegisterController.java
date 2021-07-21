@@ -1,8 +1,6 @@
-package Controller;
+package Server.Controller;
 
-import Model.User;
-import View.MainMenu;
-import View.Menu;
+import Server.Model.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -10,6 +8,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.UUID;
 
 public class RegisterController {
     private static final String FILE_PATH = "src\\main\\java\\Database\\Users";
@@ -39,7 +38,7 @@ public class RegisterController {
         }
     }
 
-    public void createNewUser(String username, String nickname, String password) throws Exception {
+    public synchronized void createNewUser(String username, String nickname, String password) throws Exception {
         if (User.getUserByUsername(username) != null)
             throw new Exception("User with username " + username + " already exists");
         else {
@@ -52,15 +51,18 @@ public class RegisterController {
         }
     }
 
-    public void loginUser(String username, String password) throws Exception {
+    public synchronized String loginUser(String username, String password) throws Exception {
         if (User.getUserByUsername(username) == null)
             throw new Exception("Username and Password did not match!");
         else {
             User user = User.getUserByUsername(username);
             if (!user.getPassword().equals(password))
                 throw new Exception("Username and Password did not match!");
-            else
-                UserController.getInstance().setLoggedInUser(user);
+            else{
+                String token = UUID.randomUUID().toString();
+                UserController.addUser(token, user);
+                return token;
+            }
         }
     }
 

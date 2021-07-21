@@ -1,8 +1,8 @@
-package Controller;
+package Server.Controller;
 
-import Model.Card;
-import Model.MonsterCard;
-import Model.SpellTrapCard;
+import Server.Model.Card;
+import Server.Model.MonsterCard;
+import Server.Model.SpellTrapCard;
 import com.google.gson.Gson;
 
 import java.io.FileReader;

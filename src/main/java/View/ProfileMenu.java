@@ -1,6 +1,6 @@
 package View;
 
-import Controller.UserController;
+import Server.Controller.UserController;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;

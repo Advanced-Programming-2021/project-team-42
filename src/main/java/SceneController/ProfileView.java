@@ -1,6 +1,6 @@
 package SceneController;
 
-import Controller.UserController;
+import Server.Controller.UserController;
 import View.Main;
 
 import javafx.fxml.FXMLLoader;
@@ -39,7 +39,7 @@ public class ProfileView {
     }
 
     public void initialize() {
-        UserController.getInstance().load(username, nickname, profilePic);
+//        UserController.getInstance().load(username, nickname, profilePic);
         shownProfilePic.setImage(new Image(getClass().getResource("/Assets/ProfileImages/Chara001.dds1.png").toExternalForm()));
     }
 
@@ -50,7 +50,7 @@ public class ProfileView {
     }
 
     public void changeNickName() {
-        String username = UserController.getInstance().getLoggedInUser().getUsername();
+        String username = MainView.loggedInUser.getUsername();
         try {
             UserController.getInstance().changeNickname(username, newNickName.getText().trim());
             changeNickNameError.setText("Nickname changed successfully");
@@ -62,7 +62,7 @@ public class ProfileView {
     }
 
     public void changePassWord() {
-        String userName = UserController.getInstance().getLoggedInUser().getUsername();
+        String userName = MainView.loggedInUser.getUsername();
         try {
             UserController.getInstance().changePassword(userName, currentPassWord.getText().trim(), newPassWord.getText().trim());
             changePassWordError.setText("Password changed successfully");
@@ -89,7 +89,7 @@ public class ProfileView {
         UserController.getInstance().loadImage(shownProfilePic, false);
     }
 
-    public void changeProfilePic() {
-        UserController.getInstance().setProfilePic(profilePic);
-    }
+//    public void changeProfilePic() {
+//        UserController.getInstance().setProfilePic(profilePic);
+//    }
 }

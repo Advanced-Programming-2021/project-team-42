@@ -1,11 +1,11 @@
 package View;
 
-import Controller.DeckController;
-import Controller.DuelController;
-import Controller.UserController;
-import Model.Deck;
-import Model.GameBoard;
-import Model.User;
+import Server.Controller.DeckController;
+import Server.Controller.DuelController;
+import Server.Controller.UserController;
+import Server.Model.Deck;
+import Server.Model.GameBoard;
+import Server.Model.User;
 
 
 import java.util.HashMap;

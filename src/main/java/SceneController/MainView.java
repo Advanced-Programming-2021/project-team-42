@@ -1,5 +1,6 @@
 package SceneController;
 
+import Server.Model.User;
 import View.Main;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,6 +14,7 @@ import javafx.stage.Stage;
 
 public class MainView {
     private static MainView instance = null;
+    public static User loggedInUser = null;
     public static Stage stage;
     public String userName;
     public Rectangle deckItem;
@@ -111,6 +113,9 @@ public class MainView {
 
     public void ExitClicked() {
         try {
+            Main.dataOutputStream.writeUTF("logout," + Main.token);
+            Main.dataOutputStream.flush();
+            Main.dataOutputStream.close();
             Login.getInstance().stopMusic();
             Login.getInstance().start(MainView.stage);
         } catch (Exception e) {

@@ -1,7 +1,7 @@
-package Model;
+package Server.Model;
 
-import Model.Enums.Icon;
-import Model.Enums.Status;
+import Server.Model.Enums.Icon;
+import Server.Model.Enums.Status;
 
 import java.util.ArrayList;
 

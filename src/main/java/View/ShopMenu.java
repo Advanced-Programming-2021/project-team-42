@@ -1,7 +1,6 @@
 package View;
 
-import Controller.CardController;
-import Controller.ShopController;
+import Server.Controller.ShopController;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;

@@ -1,11 +1,11 @@
 package SceneController;
 
 
-import Controller.DuelController;
-import Controller.UserController;
-import Model.GameBoard;
-import Model.MonsterCard;
-import Model.SpellTrapCard;
+import Server.Controller.DuelController;
+import Server.Controller.UserController;
+import Server.Model.GameBoard;
+import Server.Model.MonsterCard;
+import Server.Model.SpellTrapCard;
 import View.GamePhases;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;

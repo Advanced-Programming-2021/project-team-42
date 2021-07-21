@@ -1,6 +1,6 @@
 package View;
 
-import Controller.IAndEController;
+import Server.Controller.IAndEController;
 
 import java.io.IOException;
 import java.util.HashMap;
