@@ -23,7 +23,8 @@ public class ServerMain {
     public static void adminThread() {
         System.out.println("1. Set Limit\n" +
                 "2. Increase Amount\n" +
-                "3. Decrease Amount");
+                "3. Decrease Amount\n" +
+                "4. Close Server");
         String input = scanner.nextLine();
         switch (input) {
             case "1":
@@ -57,6 +58,10 @@ public class ServerMain {
                     System.out.println("Done!");
                 }
                 break;
+            }
+            case "4": {
+                parsing();
+                System.exit(0);
             }
             default:
                 System.out.println("Please enter valid number");

@@ -28,7 +28,10 @@ public class ShopController {
     }
 
     public static void decreaseAmount(Card card, int count) {
-        shopCards.replace(card, shopCards.get(card) - count);
+        if (shopCards.get(card) > count)
+            shopCards.replace(card, shopCards.get(card) - count);
+        else
+            shopCards.replace(card, 0);
     }
 
     public static void firstCardAdd(Card card) {
@@ -41,7 +44,7 @@ public class ShopController {
             throw new Exception("there is no card with this name");
         else {
             Card card = Card.getCardByName(cardName);
-            if(shopCards.get(card) == 0)
+            if (shopCards.get(card) == 0)
                 throw new Exception("there is no " + cardName + " in shop");
             if (shopCards.get(card) <= limit)
                 throw new Exception("You cant buy this card duo to shop limits");
