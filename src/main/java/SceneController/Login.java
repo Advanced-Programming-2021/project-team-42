@@ -2,8 +2,10 @@ package SceneController;
 
 import Server.Controller.DeckController;
 import Server.Controller.RegisterController;
+import Server.Controller.UserController;
 import Server.Model.User;
 import View.Main;
+import com.google.gson.Gson;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -16,6 +18,8 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.io.FileReader;
 
 public class Login {
     private static Login instance = null;
@@ -54,14 +58,16 @@ public class Login {
         try{
             Main.dataOutputStream.writeUTF("login," + userName.getText() + "," + passWord.getText());
             Main.dataOutputStream.flush();
-            Main.dataOutputStream.close();
             String result = Main.dataInputStream.readUTF();
             if (result.startsWith("error")) {
                 error.setText(result.substring(6));
                 error.setVisible(true);
             } else {
                 Main.token = result;
-                MainView.loggedInUser = User.getUserByUsername(userName.getText());
+                Gson gson = new Gson();
+                FileReader fileReader = new FileReader("src/main/java/Database/Users" + "/" + userName.getText() + ".json");
+                MainView.loggedInUser = gson.fromJson(fileReader, User.class);
+                System.out.println(MainView.loggedInUser);
                 MainView.getInstance().start(Main.stage);
             }
         } catch (Exception e){

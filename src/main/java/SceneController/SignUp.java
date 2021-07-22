@@ -37,8 +37,9 @@ public class SignUp {
         try{
             Main.dataOutputStream.writeUTF("signup," + userName.getText() + "," + nickName.getText() + "," + password.getText());
             Main.dataOutputStream.flush();
-            Main.dataOutputStream.close();
+//            Main.dataOutputStream.close();
             String result = Main.dataInputStream.readUTF();
+            System.out.println(result);
             if (result.startsWith("error"))
                 error.setText(result.substring(6));
             else

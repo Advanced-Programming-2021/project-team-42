@@ -20,7 +20,7 @@ public class Main extends Application {
 
         new Thread(() -> {
             try {
-                socket = new Socket("localhost", 12345);
+                socket = new Socket("localhost", 1234);
                 dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 dataInputStream = new DataInputStream(socket.getInputStream());
                 System.out.println("socket created successfully");

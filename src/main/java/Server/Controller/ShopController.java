@@ -19,19 +19,19 @@ public class ShopController {
         return shopCards;
     }
 
-    public static void setLimit (int limit) {
+    public static void setLimit(int limit) {
         ShopController.limit = limit;
     }
 
-    public static void increaseAmount (Card card, int count){
+    public static void increaseAmount(Card card, int count) {
         shopCards.replace(card, shopCards.get(card) + count);
     }
 
-    public static void decreaseAmount (Card card, int count) {
+    public static void decreaseAmount(Card card, int count) {
         shopCards.replace(card, shopCards.get(card) - count);
     }
 
-    public static void firstCardAdd (Card card) {
+    public static void firstCardAdd(Card card) {
         shopCards.put(card, 5);
     }
 
@@ -41,7 +41,9 @@ public class ShopController {
             throw new Exception("there is no card with this name");
         else {
             Card card = Card.getCardByName(cardName);
-            if(shopCards.get(card) <= limit)
+            if(shopCards.get(card) == 0)
+                throw new Exception("there is no " + cardName + " in shop");
+            if (shopCards.get(card) <= limit)
                 throw new Exception("You cant buy this card duo to shop limits");
             int userBalance = user.getBalance();
             int cardPrice = card.getPrice();
@@ -49,17 +51,18 @@ public class ShopController {
                 throw new Exception("not enough money");
             } else {
                 user.setBalance(userBalance - cardPrice);
-                user.increaseCard(cardName);
+                if (user.getUserAllCards() != null)
+                    user.increaseCard(cardName);
                 decreaseAmount(card, 1);
             }
         }
     }
 
-    public void sellCard (String username, String cardName) throws Exception {
+    public void sellCard(String username, String cardName) throws Exception {
         User user = User.getUserByUsername(username);
         if (Card.getCardByName(cardName) == null)
             throw new Exception("there is no card with this name");
-        if(user.doesUserHasThisCard(cardName))
+        if (!user.doesUserHasThisCard(cardName))
             throw new Exception("you dont have this card");
         Card card = Card.getCardByName(cardName);
         user.setBalance(user.getBalance() + card.getPrice());

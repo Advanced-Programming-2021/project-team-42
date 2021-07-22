@@ -16,7 +16,7 @@ public class ServerMain {
 
     public static void main(String[] args) {
         parsing();
-        new Thread(ServerMain::adminThread);
+        new Thread(ServerMain::adminThread).start();
         initialize();
     }
 
@@ -62,20 +62,23 @@ public class ServerMain {
                 System.out.println("Please enter valid number");
                 break;
         }
+        scanner.nextLine();
         adminThread();
     }
 
     public static void parsing() {
-        RegisterController.parseUsers();
-        DeckController.parseDecks();
         CardController.parseCards();
+        DeckController.parseDecks();
+        RegisterController.parseUsers();
     }
 
     public static void initialize() {
         try {
             ServerSocket serverSocket = new ServerSocket(1234);
+            System.out.println("server socket created successfully");
             while (true) {
                 Socket socket = serverSocket.accept();
+                System.out.println("client connected");
                 new Thread(() -> {
                     try {
                         DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
@@ -97,51 +100,49 @@ public class ServerMain {
     }
 
     public static String process(String clientMessage) {
-        if(clientMessage.startsWith("signup")){
+        if (clientMessage.startsWith("signup")) {
             String[] messageParts = clientMessage.split(",");
-            try{
+            try {
                 RegisterController.getInstance().createNewUser(messageParts[1], messageParts[2], messageParts[3]);
                 return "success";
-            } catch (Exception e){
+            } catch (Exception e) {
                 return "error " + e.getMessage();
             }
-        }
-        else if(clientMessage.startsWith("login")){
+        } else if (clientMessage.startsWith("login")) {
             String[] messageParts = clientMessage.split(",");
-            try{
+            try {
                 return RegisterController.getInstance().loginUser(messageParts[1], messageParts[2]);
-            } catch (Exception e){
+            } catch (Exception e) {
                 return "error " + e.getMessage();
             }
-        }
-        else if(clientMessage.startsWith("logout")){
+        } else if (clientMessage.startsWith("logout")) {
             String token = clientMessage.substring(7);
             UserController.removeUser(token);
             return "success";
-        }
-        else if(clientMessage.startsWith("updateScoreBoard")){
+        } else if (clientMessage.startsWith("updateScoreBoard")) {
             String token = clientMessage.split(",")[1];
             User user = UserController.getUserByToken(token);
-            ScoreBoardController.getInstance().showScoreboard(user.getvBox(), user);
+//            ScoreBoardController.getInstance().showScoreboard(user.getvBox(), user);
             return "success";
-        } else if (clientMessage.startsWith("buyCard")){
+        } else if (clientMessage.startsWith("buyCard")) {
             String[] messageParts = clientMessage.split(",");
             String token = messageParts[1];
             String cardName = messageParts[2];
-            try{
-                ShopController.getInstance().buyCard(UserController.getUserByToken(token).getUsername(), cardName);
+            try {
+                if (UserController.getUserByToken(token) != null)
+                    ShopController.getInstance().buyCard(UserController.getUserByToken(token).getUsername(), cardName);
                 return "success";
-            } catch (Exception e){
+            } catch (Exception e) {
                 return "error " + e.getMessage();
             }
-        } else if (clientMessage.startsWith("sellCard")){
+        } else if (clientMessage.startsWith("sellCard")) {
             String[] messageParts = clientMessage.split(",");
             String token = messageParts[1];
             String cardName = messageParts[2];
-            try{
+            try {
                 ShopController.getInstance().sellCard(UserController.getUserByToken(token).getUsername(), cardName);
                 return "success";
-            } catch (Exception e){
+            } catch (Exception e) {
                 return "error " + e.getMessage();
             }
         } else

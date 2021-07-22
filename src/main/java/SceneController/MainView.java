@@ -115,7 +115,6 @@ public class MainView {
         try {
             Main.dataOutputStream.writeUTF("logout," + Main.token);
             Main.dataOutputStream.flush();
-            Main.dataOutputStream.close();
             Login.getInstance().stopMusic();
             Login.getInstance().start(MainView.stage);
         } catch (Exception e) {

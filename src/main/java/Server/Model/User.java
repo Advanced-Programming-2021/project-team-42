@@ -22,7 +22,7 @@ public class User {
     private int balance;
     private int score;
     private int LP;
-    private VBox vBox;
+//    private VBox verticalBox;
 
     static {
         allUsers = new ArrayList<>();
@@ -130,13 +130,13 @@ public class User {
         this.username = username;
     }
 
-    public VBox getvBox() {
-        return vBox;
-    }
-
-    public void setvBox(VBox vBox) {
-        this.vBox = vBox;
-    }
+//    public VBox getVerticalBox() {
+//        return verticalBox;
+//    }
+//
+//    public void setVerticalBox(VBox vBox) {
+//        this.verticalBox = vBox;
+//    }
 
     public String getPathToProfilePhoto() {
         return pathToProfilePhoto;

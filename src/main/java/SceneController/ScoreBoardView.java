@@ -33,11 +33,10 @@ public class ScoreBoardView{
     }
 
     public void initialize() {
-        MainView.loggedInUser.setvBox(vBox);
+//        MainView.loggedInUser.setvBox(vBox);
         try {
             Main.dataOutputStream.writeUTF("updateScoreBoard," + Main.token);
             Main.dataOutputStream.flush();
-            Main.dataOutputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

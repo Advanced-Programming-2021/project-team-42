@@ -1,6 +1,7 @@
 package SceneController;
 
 
+import Server.Controller.CardController;
 import Server.Controller.RegisterController;
 import Server.Controller.ShopController;
 import Server.Controller.UserController;
@@ -15,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
@@ -28,6 +30,7 @@ public class ShopView {
     private static ShopView instance = null;
 
     public void start(Stage stage) throws Exception {
+        CardController.parseCards();
         Image image = new Image(getClass().getResource("/Assets/50061.png").toExternalForm());
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(600);
@@ -80,9 +83,10 @@ public class ShopView {
             buyItem.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    if (mouseEvent.isPrimaryButtonDown())
+                    if (mouseEvent.getButton() == MouseButton.PRIMARY)
                         buySell(pane, finalI, 1);
-                    else buySell(pane, finalI, 0);
+                    else
+                        buySell(pane, finalI, 0);
                 }
             });
             buyItem.setFill(new ImagePattern(new Image(getClass().getResource("/Assets/BuyItem.png").toExternalForm())));
@@ -95,12 +99,12 @@ public class ShopView {
 
     public void buySell(Pane pane, int i, int flag) {
         try {
+            System.out.println("buyCard," + Main.token + "," + Card.getAllCards().get(i).getName());
             if (flag == 1)
                 Main.dataOutputStream.writeUTF("buyCard," + Main.token + "," + Card.getAllCards().get(i).getName());
             else
                 Main.dataOutputStream.writeUTF("sellCard," + Main.token + "," + Card.getAllCards().get(i).getName());
             Main.dataOutputStream.flush();
-            Main.dataOutputStream.close();
             String result = Main.dataInputStream.readUTF();
             Alert alert;
             if (result.startsWith("error")) {
@@ -111,7 +115,10 @@ public class ShopView {
                     alert.setContentText(result.substring(6) + "\n\nYou've bought " + numberOfCard(i) + " of this card");
             } else {
                 alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("card " + Card.getAllCards().get(i).getName() + " added to your cards successfully");
+                if (flag == 1)
+                    alert.setContentText("card " + Card.getAllCards().get(i).getName() + " added to your cards successfully");
+                else
+                    alert.setContentText("card " + Card.getAllCards().get(i).getName() + " sold successfully");
             }
             alert.show();
         } catch (Exception e) {

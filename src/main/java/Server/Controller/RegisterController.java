@@ -16,12 +16,6 @@ public class RegisterController {
     private static FileWriter FILE_WRITER;
     private static FileReader FILE_READER;
 
-    static {
-        RegisterController.parseUsers();
-        CardController.parseCards();
-        DeckController.parseDecks();
-    }
-
     private RegisterController() {
     }
 
@@ -69,7 +63,7 @@ public class RegisterController {
     public static void parseUsers() {
         try {
             User user;
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().create();
             File directory = new File(FILE_PATH);
             File[] usersArray = directory.listFiles();
             if (usersArray != null) {
