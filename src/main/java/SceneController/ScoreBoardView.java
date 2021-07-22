@@ -4,6 +4,7 @@ import Server.Controller.ScoreBoardController;
 import Server.Model.User;
 import View.Main;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -12,9 +13,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class ScoreBoardView{
+public class ScoreBoardView {
     private static ScoreBoardView instance = null;
     private static Stage stage;
     public VBox vBox;
@@ -33,12 +37,26 @@ public class ScoreBoardView{
     }
 
     public void initialize() {
-//        MainView.loggedInUser.setvBox(vBox);
         try {
-            Main.dataOutputStream.writeUTF("updateScoreBoard," + Main.token);
+            Main.dataOutputStream.writeUTF("updateScoreBoard");
             Main.dataOutputStream.flush();
+            String result = Main.dataInputStream.readUTF();
+            createVBox(vBox, result);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void createVBox(VBox vBox, String result) {
+        vBox.getChildren().clear();
+        String[] ranks = result.split("\n");
+        for (String rank : ranks) {
+            Text text = new Text(rank + "\n");
+            text.setFill(Color.WHITE);
+            Font font = new Font("Book Antiqua", 24);
+            text.setFont(font);
+            vBox.getChildren().add(text);
+            vBox.setAlignment(Pos.TOP_CENTER);
         }
     }
 

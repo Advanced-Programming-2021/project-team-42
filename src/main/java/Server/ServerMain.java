@@ -124,12 +124,9 @@ public class ServerMain {
             String token = clientMessage.substring(7);
             UserController.removeUser(token);
             return "success";
-        } else if (clientMessage.startsWith("updateScoreBoard")) {
-            String token = clientMessage.split(",")[1];
-            User user = UserController.getUserByToken(token);
-//            ScoreBoardController.getInstance().showScoreboard(user.getvBox(), user);
-            return "success";
-        } else if (clientMessage.startsWith("buyCard")) {
+        } else if (clientMessage.startsWith("updateScoreBoard"))
+            return ScoreBoardController.getInstance().showScoreboard();
+        else if (clientMessage.startsWith("buyCard")) {
             String[] messageParts = clientMessage.split(",");
             String token = messageParts[1];
             String cardName = messageParts[2];
