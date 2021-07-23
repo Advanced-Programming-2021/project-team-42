@@ -39,7 +39,6 @@ public class ProfileView {
     }
 
     public void initialize() {
-//        UserController.getInstance().load(username, nickname, profilePic);
         shownProfilePic.setImage(new Image(getClass().getResource("/Assets/ProfileImages/Chara001.dds1.png").toExternalForm()));
     }
 
@@ -88,8 +87,4 @@ public class ProfileView {
     public void previousPic() {
         UserController.getInstance().loadImage(shownProfilePic, false);
     }
-
-//    public void changeProfilePic() {
-//        UserController.getInstance().setProfilePic(profilePic);
-//    }
 }

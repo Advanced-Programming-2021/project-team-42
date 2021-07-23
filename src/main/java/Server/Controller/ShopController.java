@@ -38,7 +38,7 @@ public class ShopController {
         shopCards.put(card, 5);
     }
 
-    public void buyCard(String username, String cardName) throws Exception {
+    public synchronized void buyCard(String username, String cardName) throws Exception {
         User user = User.getUserByUsername(username);
         if (Card.getCardByName(cardName) == null)
             throw new Exception("there is no card with this name");
@@ -61,7 +61,7 @@ public class ShopController {
         }
     }
 
-    public void sellCard(String username, String cardName) throws Exception {
+    public synchronized void sellCard(String username, String cardName) throws Exception {
         User user = User.getUserByUsername(username);
         if (Card.getCardByName(cardName) == null)
             throw new Exception("there is no card with this name");

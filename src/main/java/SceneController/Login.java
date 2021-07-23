@@ -67,15 +67,13 @@ public class Login {
                 Gson gson = new Gson();
                 FileReader fileReader = new FileReader("src/main/java/Database/Users" + "/" + userName.getText() + ".json");
                 MainView.loggedInUser = gson.fromJson(fileReader, User.class);
-                System.out.println(MainView.loggedInUser);
+                fileReader.close();
                 MainView.getInstance().start(Main.stage);
             }
         } catch (Exception e){
             e.printStackTrace();
         }
     }
-
-
 
     public void moveToSignUp() {
         try {
@@ -84,8 +82,6 @@ public class Login {
             e.printStackTrace();
         }
     }
-
-
 
     public void exitGame() {
         RegisterController.rewriteData();

@@ -103,7 +103,6 @@ public class DuelView {
             String result = Main.dataInputStream.readUTF();
             if (result.equals("success")) {
                 System.out.println("ishala Badan!!");
-                //todo: startNewDuel, GamePlayView.start
             }
         } catch (Exception e){
             e.printStackTrace();

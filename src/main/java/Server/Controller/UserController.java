@@ -2,7 +2,6 @@ package Server.Controller;
 
 import Server.Model.GameBoard;
 import Server.Model.User;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -16,7 +15,6 @@ public class UserController {
     private static LinkedHashMap<String, String> allMessages = new LinkedHashMap<>();
     private final static File[] allProfilePicsPath = new File("src/main/resources/Assets/ProfileImages").listFiles();
     private static int counter = 0;
-    private static String shownImageName;
     private static HashMap<String, User> loggedInUsers = new HashMap<>();
     private User opponentUser;
     private GameBoard firstPlayersBoard;
@@ -47,12 +45,6 @@ public class UserController {
         return loggedInUsers;
     }
 
-    //    public void load (Label username, Label nickname, ImageView profilePic){
-//        username.setText("Username: " + loggedInUser.getUsername());
-//        nickname.setText("Nickname: " + loggedInUser.getNickname());
-//        profilePic.setImage(new Image(getClass().getResource(loggedInUser.getPathToProfilePhoto()).toExternalForm()));
-//    }
-
     public void increaseMoney(User user, int amount) {
         user.setBalance(user.getBalance() + amount);
     }
@@ -79,7 +71,7 @@ public class UserController {
         return result.toString();
     }
 
-    public static void addNewMessage (String message, String username){
+    public synchronized static void addNewMessage (String message, String username){
         allMessages.put(message, username);
     }
 
@@ -87,7 +79,7 @@ public class UserController {
         return loggedInUsers.get(token);
     }
 
-    public static void addUser (String token, User user){
+    public synchronized static void addUser (String token, User user){
         loggedInUsers.put(token, user);
     }
 
@@ -135,11 +127,4 @@ public class UserController {
         shownProfilePic.setImage(new Image(getClass().getResource("/Assets/ProfileImages/" + imageFile.getName()).toExternalForm()));
     }
 
-//    public void setProfilePic(ImageView profilePic) {
-//        shownImageName = allProfilePicsPath[counter].getName();
-//        loggedInUser.setPathToProfilePhoto("/Assets/ProfileImages/" + shownImageName);
-//        shownImageName = null;
-//        counter = 0;
-//        profilePic.setImage(new Image(getClass().getResource(loggedInUser.getPathToProfilePhoto()).toExternalForm()));
-//    }
 }

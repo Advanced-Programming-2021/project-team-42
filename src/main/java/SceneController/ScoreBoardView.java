@@ -1,7 +1,5 @@
 package SceneController;
 
-import Server.Controller.ScoreBoardController;
-import Server.Model.User;
 import View.Main;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -9,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;

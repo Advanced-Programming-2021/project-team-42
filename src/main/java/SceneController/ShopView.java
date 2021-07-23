@@ -3,8 +3,6 @@ package SceneController;
 
 import Server.Controller.CardController;
 import Server.Controller.RegisterController;
-import Server.Controller.ShopController;
-import Server.Controller.UserController;
 import Server.Model.Card;
 import View.Main;
 import javafx.event.EventHandler;
@@ -99,7 +97,6 @@ public class ShopView {
 
     public void buySell(Pane pane, int i, int flag) {
         try {
-            System.out.println("buyCard," + Main.token + "," + Card.getAllCards().get(i).getName());
             if (flag == 1)
                 Main.dataOutputStream.writeUTF("buyCard," + Main.token + "," + Card.getAllCards().get(i).getName());
             else
@@ -151,7 +148,7 @@ public class ShopView {
             if (i == 0) result += token.toLowerCase();
             else
                 result += token.substring(0, 1).toUpperCase() +
-                        token.substring(1, token.length()).toLowerCase();
+                        token.substring(1).toLowerCase();
         }
         return result.substring(0, 1).toUpperCase() + result.substring(1);
     }
