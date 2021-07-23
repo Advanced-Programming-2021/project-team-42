@@ -24,7 +24,8 @@ public class ServerMain {
         System.out.println("1. Set Limit\n" +
                 "2. Increase Amount\n" +
                 "3. Decrease Amount\n" +
-                "4. Close Server");
+                "4. Close Server\n" +
+                "Tip: Do not pay attention to outputs in the console! you can use commands above every time :)");
         String input = scanner.nextLine();
         switch (input) {
             case "1":

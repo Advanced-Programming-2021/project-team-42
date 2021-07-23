@@ -84,7 +84,7 @@ public class UserController {
     }
 
     public static void removeUser (String token) {
-        loggedInUsers.remove(token);
+        loggedInUsers.remove(token, getUserByToken(token));
     }
 
     public User getOpponentUser() {
