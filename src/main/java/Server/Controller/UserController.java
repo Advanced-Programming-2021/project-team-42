@@ -8,9 +8,12 @@ import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class UserController {
     private static UserController instance = null;
+    private static LinkedHashMap<String, String> allMessages = new LinkedHashMap<>();
     private final static File[] allProfilePicsPath = new File("src/main/resources/Assets/ProfileImages").listFiles();
     private static int counter = 0;
     private static String shownImageName;
@@ -67,6 +70,17 @@ public class UserController {
         if (instance == null)
             instance = new UserController();
         return instance;
+    }
+
+    public static String getAllMessages() {
+        StringBuilder result = new StringBuilder();
+        for(Map.Entry<String, String> entry : allMessages.entrySet())
+            result.append(entry.getValue()).append(": ").append(entry.getKey()).append("\n");
+        return result.toString();
+    }
+
+    public static void addNewMessage (String message, String username){
+        allMessages.put(message, username);
     }
 
     public static User getUserByToken (String token) {

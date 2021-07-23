@@ -60,7 +60,8 @@ public class ServerMain {
                 break;
             }
             case "4": {
-                parsing();
+                RegisterController.rewriteData();
+                DeckController.rewriteData();
                 System.exit(0);
             }
             default:
@@ -147,7 +148,26 @@ public class ServerMain {
             } catch (Exception e) {
                 return "error " + e.getMessage();
             }
-        } else
+        } else if (clientMessage.startsWith("cancel")){
+            String[] messageParts = clientMessage.split(",");
+            User user = UserController.getUserByToken(messageParts[2]);
+            DuelController.removeUser(user);
+            return "success";
+        } else if (clientMessage.startsWith("newGame")){
+            String[] messageParts = clientMessage.split(",");
+            int rounds = Integer.parseInt(messageParts[1]);
+            User user = UserController.getUserByToken(messageParts[2]);
+            DuelController.addNewPlayer(rounds, user);
+            return "success";
+        } else if (clientMessage.startsWith("loadMessages")){
+            return UserController.getAllMessages();
+        } else if (clientMessage.startsWith("newMessage")){
+            String[] messageParts = clientMessage.split(",");
+            User user = UserController.getUserByToken(messageParts[1]);
+            UserController.addNewMessage(messageParts[2], user.getUsername());
+            return "success";
+        }
+        else
             return "WTF!";
     }
 }

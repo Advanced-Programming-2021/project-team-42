@@ -6,14 +6,19 @@ import View.Main;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -27,7 +32,8 @@ public class DuelView {
     public String rands = null;
     public Button applyButton;
     public Button backButton;
-    public TextField secondPlayer;
+    public TextField messageField;
+    public VBox vBox;
     private int rounds;
 
     public void start(Stage stage) throws IOException {
@@ -41,6 +47,31 @@ public class DuelView {
         backGround.setFill(new ImagePattern(new Image(getClass().getResource("/Assets/DuelScenePhoto.png").toExternalForm())));
         setCursor(applyButton);
         setCursor(backButton);
+        loadMessages();
+    }
+
+    private void loadMessages() {
+        try {
+            Main.dataOutputStream.writeUTF("loadMessages");
+            Main.dataOutputStream.flush();
+            String result = Main.dataInputStream.readUTF();
+            createVBox(vBox, result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createVBox(VBox vBox, String result) {
+        vBox.getChildren().clear();
+        String[] ranks = result.split("\n");
+        for (String rank : ranks) {
+            Text text = new Text(rank + "\n");
+            text.setFill(Color.BLACK);
+            Font font = new Font("Book Antiqua", 24);
+            text.setFont(font);
+            vBox.getChildren().add(text);
+            vBox.setAlignment(Pos.TOP_LEFT);
+        }
     }
 
     public void setCursor(Button button) {
@@ -59,24 +90,23 @@ public class DuelView {
     }
 
 
-    public void applyClicked(MouseEvent mouseEvent) throws Exception {
+    public void applyClicked() {
         if (rands == null) {
-            Error.setText("choose number of rands");
+            Error.setText("choose number of rounds");
             Error.setVisible(true);
             return;
         }
+
         try {
-            DuelController.getInstance().startNewDuel(MainView.loggedInUser.getUsername()
-                    , secondPlayer.getText().trim(), rands);
-        } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.NONE);
-            alert.setAlertType(Alert.AlertType.INFORMATION);
-            alert.setContentText(e.getMessage());
-            alert.show();
-            if (e.getMessage().startsWith("new")) {
-                GamePlayView.rounds = rounds;
-                GamePlayView.getInstance().start(MainView.stage);
+            Main.dataOutputStream.writeUTF("newGame," + rounds + "," + Main.token);
+            Main.dataOutputStream.flush();
+            String result = Main.dataInputStream.readUTF();
+            if (result.equals("success")) {
+                System.out.println("ishala Badan!!");
+                //todo: startNewDuel, GamePlayView.start
             }
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -88,8 +118,10 @@ public class DuelView {
     }
 
 
-    public void exitClicked(MouseEvent mouseEvent) {
+    public void exitClicked() {
         try {
+            Main.dataOutputStream.writeUTF("cancel," + Main.token);
+            Main.dataOutputStream.flush();
             MainView.getInstance().start(Main.stage);
         } catch (Exception e) {
             e.printStackTrace();
@@ -106,5 +138,21 @@ public class DuelView {
         rands = "3";
         rounds = Integer.parseInt(rands);
         chooseRands.setText("3 rands");
+    }
+
+    public void sendMessage() {
+        String message = messageField.getText();
+        try {
+            Main.dataOutputStream.writeUTF("newMessage," + Main.token + "," + message);
+            Main.dataOutputStream.flush();
+            String result = Main.dataInputStream.readUTF();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        loadMessages();
+    }
+
+    public void refresh(MouseEvent mouseEvent) {
+        loadMessages();
     }
 }

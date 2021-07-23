@@ -14,8 +14,30 @@ import java.util.*;
 
 public class DuelController {
     private static DuelController instance = null;
+    private static ArrayList<User> oneRoundMatch = new ArrayList<>();
+    private static ArrayList<User> threeRoundsMatch = new ArrayList<>();
 
     private DuelController() {
+    }
+
+    public static ArrayList<User> getOneRoundMatch() {
+        return oneRoundMatch;
+    }
+
+    public static void addNewPlayer(int rounds, User user){
+        if(rounds == 1)
+            oneRoundMatch.add(user);
+        else
+            threeRoundsMatch.add(user);
+    }
+
+    public static void removeUser (User user){
+        oneRoundMatch.remove(user);
+        threeRoundsMatch.remove(user);
+    }
+
+    public static ArrayList<User> getThreeRoundsMatch() {
+        return threeRoundsMatch;
     }
 
     public void startNewDuel(String player1, String player2, String rounds) throws Exception {

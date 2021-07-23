@@ -33,7 +33,7 @@ public class User {
         this.password = password;
         this.nickname = nickname;
         this.activeDeck = null;
-        this.balance = 10000000;
+        this.balance = 10000;
         this.score = 0;
         this.LP = 8000;
         usersAllCards = new HashMap<>();

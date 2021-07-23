@@ -6,6 +6,7 @@ import Server.Controller.UserController;
 import Server.Model.GameBoard;
 import Server.Model.MonsterCard;
 import Server.Model.SpellTrapCard;
+import Server.Model.User;
 import View.GamePhases;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -45,6 +46,7 @@ public class GamePlayView {
     public Label gamePhaseLabel;
     public static GameBoard firstPlayersBoard = UserController.getInstance().getFirstPlayersBoard();
     public static GameBoard secondPlayersBoard = UserController.getInstance().getSecondPlayersBoard();
+    public static User playerTurn = firstPlayersBoard.getPlayer();
     public Pane firstPlayersMonsterZone;
     public Pane firstPlayersSpellTrapZone;
     public Pane firstPlayersFieldZone;

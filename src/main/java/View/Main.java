@@ -20,7 +20,7 @@ public class Main extends Application {
 
         new Thread(() -> {
             try {
-                socket = new Socket("2.tcp.ngrok.io", 12006);
+                socket = new Socket("localhost", 1234);
                 dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 dataInputStream = new DataInputStream(socket.getInputStream());
                 System.out.println("socket created successfully");
